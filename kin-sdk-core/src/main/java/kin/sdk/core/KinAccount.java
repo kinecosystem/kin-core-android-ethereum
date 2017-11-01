@@ -22,7 +22,8 @@ public interface KinAccount {
     /**
      * Create, sign and send a transaction of the given amount in kin to the specified public address
      * Ethereum gas will be handled internally.
-     * The method will run on a background thread.
+     * The method will run on a background thread and callback calls will be done
+     * on the main thread
      * @param publicAddress the account address to send the specified kin amount
      * @param amount the amount of kin to transfer
      * @param callback to be called when method has completed
@@ -43,7 +44,8 @@ public interface KinAccount {
 
     /**
      * Get the current confirmed balance in kin
-     * The method will run on a background thread
+     * The method will run on a background thread and callback calls will be done
+     * on the main thread
      * @param callback to be called when method has completed
      */
      void getBalance(ResultCallback<Balance> callback);
@@ -58,7 +60,8 @@ public interface KinAccount {
 
     /**
      * Get the pending balance in kin
-     * The method will run on a background thread
+     * The method will run on a background thread and callback calls will be done
+     * on the main thread
      * @param callback to be called when method has completed
      * @return BigDecimal the balance in kin
      */

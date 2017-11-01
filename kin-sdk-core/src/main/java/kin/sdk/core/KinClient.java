@@ -21,7 +21,7 @@ public class KinClient {
      * @param passphrase a passphrase provided by the user that will be used to store
      * the account private key securely.
      */
-    public void createAccountIfNecessary(String passphrase) throws CreateAccountException {
+    public void initAccount(String passphrase) throws CreateAccountException {
 
         if (kinAccount != null) {
             kinAccount = new MockKinAccount();
