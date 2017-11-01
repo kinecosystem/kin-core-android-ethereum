@@ -3,7 +3,6 @@
 A library responsible for creating a new ethereum account 
 and managing balance and transactions in Kin.
 
-Initial interface 
 
 #### KinClient
 ```java
@@ -11,18 +10,23 @@ Initial interface
 public class KinClient {
 
     /**
-     * Responsible for
-     * @param nodeProviderUrl url of the node provider to use
+     * KinClient is an account manager for a single KinAccount on the
+     * ethereum blockchain.
+     *
+     * @param provider the service provider to use to connect to an ethereum node
      */
-    public KinClient(String nodeProviderUrl);
+    public KinClient(ServiceProvider provider);
 
     /**
-     * Create the initial account if it hasn't yet been created.
+     * Create the account if it hasn't yet been created.
      * Multiple calls to this method will not create an additional account.
+     * Once created, the account information will be stored securely on device and can
+     * be accessed again via the getAccount method
      * @param passphrase a passphrase provided by the user that will be used to store
      * the account private key securely.
+     * @return KinAccount the account created
      */
-    void initAccount(String passphrase) throws CreateAccountException;
+    KinAccount createAccount(String passphrase) throws CreateAccountException;
 
     /**
      * @return the main account if that has been created or null if there is no such account
@@ -36,6 +40,28 @@ public class KinClient {
 }
 ```
 
+#### ServiceProvider
+```java
+
+public class ServiceProvider {
+
+   /** main ethereum network */
+   static final NETWORK_ID_MAIN = 1;
+
+   /** ropsten ethereum TEST network */
+   static final NETWORK_ID_ROPSTEN = 3;
+
+   /** rinkeby ethereum TEST network */
+   static final NETWORK_ID_RINKEBY = 4;
+
+   /**
+    * @param providerUrl the provider to use
+    * @param networkId should be one of NETWORK_ID_MAIN, NETWORK_ID_ROPSTEN, NETWORK_ID_RINKEBY
+    */
+   public ServiceProvider(String providerUrl, int networkId);
+}
+
+```
 
 #### KinAccount
 ```java

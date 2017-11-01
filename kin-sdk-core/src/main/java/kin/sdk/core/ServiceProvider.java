@@ -1,0 +1,38 @@
+package kin.sdk.core;
+
+public class ServiceProvider {
+
+   /** main ethereum network */
+   public static final int NETWORK_ID_MAIN = 1;
+
+   /** ropsten ethereum TEST network */
+   public static final int NETWORK_ID_ROPSTEN = 3;
+
+   /** rinkeby ethereum TEST network */
+   public static final int NETWORK_ID_RINKEBY = 4;
+
+
+   private String providerUrl;
+   private int networkId;
+
+   /**
+    * A ServiceProvider used to connect to an ethereum node.
+    *
+    * For example to connect to an infura test node use
+    * new ServiceProvider("infura", NETWORK_ID_ROPSTEN);
+    * @param providerUrl the provider to use
+    * @param networkId should be one of {@value #NETWORK_ID_MAIN} {@value NETWORK_ID_ROPSTEN} {@value NETWORK_ID_RINKEBY}
+    */
+   public ServiceProvider(String providerUrl, int networkId){
+      this.providerUrl = providerUrl;
+      this.networkId = networkId;
+   }
+
+   public String getProviderUrl(){
+      return providerUrl;
+   }
+
+   public int getNetworkId(){
+      return networkId;
+   }
+}
