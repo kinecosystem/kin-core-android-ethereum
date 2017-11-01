@@ -22,7 +22,7 @@ public class KinClient {
      * @param passphrase a passphrase provided by the user that will be used to store
      * the account private key securely.
      */
-    void createAccountIfNecessary(String passphrase) throws CreateAccountException;
+    void initAccount(String passphrase) throws CreateAccountException;
 
     /**
      * @return the main account if that has been created or null if there is no such account
@@ -56,7 +56,8 @@ public interface KinAccount {
     /**
      * Create, sign and send a transaction of the given amount in kin to the specified public address
      * Ethereum gas will be handled internally.
-     * The method will run on a background thread.
+     * The method will run on a background thread and callback calls will be done
+     * on the main thread
      * @param publicAddress the account address to send the specified kin amount
      * @param amount the amount of kin to transfer
      * @param callback to be called when transaction is sent
@@ -92,7 +93,8 @@ public interface KinAccount {
 
     /**
      * Get the pending balance in kin
-     * The method will run on a background thread
+     * The method will run on a background thread and callback calls will be done
+     * on the main thread
      * @param callback to be called when balance is ready or on error
      * @return BigDecimal the balance in kin
      */
@@ -112,7 +114,16 @@ public interface KinAccount {
 ```java
 
 public interface ResultCallback<T> {
+    /**
+     * Method will be called when operation has completed successfully
+     * @param T the result received
+     */
     void onResult(T result);
+
+    /**
+     * Method will be called when operation has completed with error
+     * @param the exception in case of error
+     */
     void onError(Exception e);
 }
 ```
@@ -121,8 +132,21 @@ public interface ResultCallback<T> {
 ```java
 
 public interface Balance {
+
+    /**
+     * @return BigDecimal the balance value
+     */
     BigDecimal value();
+
+    /**
+     * @param precision the number of decimals points
+     * @return String the balance value as a string with specified precision
+     */
     String value(int precision);
+
+    /**
+     * The regular toString method will return a String representation of the balance value
+     */
     String toString();
 }
 ```
@@ -131,6 +155,9 @@ public interface Balance {
 ```java
 
 public interface TransactionId {
+    /**
+     * @return the transaction id
+     */
     String id();
 }
 ```
