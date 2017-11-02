@@ -10,7 +10,7 @@ and managing balance and transactions in Kin.
 public class KinClient {
 
     /**
-     * KinClient is an account manager for a single KinAccount on the
+     * KinClient is an account manager for a single {@link KinAccount} on the
      * ethereum network.
      *
      * @param provider the service provider to use to connect to an ethereum node
