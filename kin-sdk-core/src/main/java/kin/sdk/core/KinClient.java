@@ -1,6 +1,8 @@
 package kin.sdk.core;
 
 
+import android.content.Context;
+
 import kin.sdk.core.exception.CreateAccountException;
 import kin.sdk.core.mock.MockKinAccount;
 
@@ -12,9 +14,10 @@ public class KinClient {
      * KinClient is an account manager for a single {@link KinAccount} on the
      * ethereum network.
      *
+     * @param context the android application context
      * @param provider the service provider to use to connect to an ethereum node
      */
-    public KinClient(ServiceProvider provider) {
+    public KinClient(Context context, ServiceProvider provider) {
     }
 
     /**

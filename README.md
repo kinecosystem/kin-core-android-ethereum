@@ -14,8 +14,9 @@ public class KinClient {
      * ethereum network.
      *
      * @param provider the service provider to use to connect to an ethereum node
+     * @param context the android application context
      */
-    public KinClient(ServiceProvider provider);
+    public KinClient(Context context, ServiceProvider provider);
 
     /**
      * Create the account if it hasn't yet been created.
