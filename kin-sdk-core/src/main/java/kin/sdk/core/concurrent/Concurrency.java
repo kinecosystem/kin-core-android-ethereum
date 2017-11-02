@@ -7,7 +7,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * Created by shaybaz on 01/11/2017.
+ * For calling method to run on ui thread or main thread
+ * Background thread using default CachedThreadPool
  */
 
 public class Concurrency {

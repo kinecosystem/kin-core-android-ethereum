@@ -7,17 +7,17 @@ import kin.sdk.core.Balance;
 public class MockBalance implements Balance {
 
     @Override
-    public BigDecimal value(){
-        return new BigDecimal("152.65");
+    public BigDecimal value() {
+        return new BigDecimal("1234.56");
     }
 
     @Override
     public String value(int precision) {
-        return "152.65";
+        return "1234.56";
     }
 
     @Override
     public String toString() {
-        return "152.65";
+        return "1234.56";
     }
 }

@@ -1,90 +1,61 @@
 package kin.sdk.core.mock;
 
-import android.util.Log;
-
 import java.math.BigDecimal;
 
 import kin.sdk.core.Balance;
-import kin.sdk.core.KinAccount;
-import kin.sdk.core.ResultCallback;
 import kin.sdk.core.TransactionId;
-import kin.sdk.core.concurrent.Concurrency;
 import kin.sdk.core.exception.InsufficientBalanceException;
 import kin.sdk.core.exception.OperationFailedException;
 import kin.sdk.core.exception.PassphraseException;
+import kin.sdk.core.impl.AbstractKinAccount;
 
-public class MockKinAccount implements KinAccount {
+public class MockKinAccount extends AbstractKinAccount {
 
+    private final long PROCESSING_DURATION = 3000;
 
     @Override
     public String getPublicAddress() {
-        return "thePublicAddress";
+        return "#1234567890";
     }
 
     @Override
     public String getPrivateKey(String passphrase) throws PassphraseException {
-        return "thePrivateKey";
-    }
-
-    @Override
-    public void sendTransaction(String publicAddress, String passphrase, BigDecimal amount,
-                                ResultCallback<TransactionId> callback) {
-        callback.onResult(new MockTransactionId());
+        return "PrivateKey";
     }
 
     @Override
     public TransactionId sendTransactionSync(String publicAddress, String passphrase, BigDecimal amount)
             throws InsufficientBalanceException, OperationFailedException, PassphraseException {
-        return new MockTransactionId();
-    }
-
-    @Override
-    public void getBalance(ResultCallback<Balance> callback) {
-        callback.onResult(new MockBalance());
+        try {
+            Thread.sleep(PROCESSING_DURATION);
+            return new MockTransactionId();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            throw new InsufficientBalanceException();
+        }
     }
 
     @Override
     public Balance getBalanceSync() throws OperationFailedException {
-        return new MockBalance();
-    }
+        try {
+            Thread.sleep(PROCESSING_DURATION);
+            return new MockBalance();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            throw new OperationFailedException();
+        }
 
-    @Override
-    public void getPendingBalance(final ResultCallback<Balance> callback) {
-        final Concurrency concurrency = getConcurrency();
-        concurrency.executeOnBackground(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    final Balance balance = getBalanceSync();
-                    Log.d("####", "###find balance...");
-                    Thread.sleep(5000);
-                    concurrency.executeOnMainThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            callback.onResult(balance);
-                        }
-                    });
-                } catch (final Exception e) {
-                    concurrency.executeOnMainThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            callback.onError(e);
-                        }
-                    });
-                    e.printStackTrace();
-                }
-
-            }
-        });
     }
 
     @Override
     public Balance getPendingBalanceSync() throws OperationFailedException {
-        return new MockBalance();
-    }
-
-    public Concurrency getConcurrency(){
-        return Concurrency.getInstance();
+        try {
+            Thread.sleep(PROCESSING_DURATION);
+            return new MockBalance();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            throw new OperationFailedException();
+        }
     }
 }
 
