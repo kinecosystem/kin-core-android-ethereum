@@ -1,196 +1,155 @@
-
 # kin-sdk-core-android
-A library responsible for creating a new ethereum account 
+![Kin Token](kin_android.png)
+
+A library responsible for creating a new ethereum account
 and managing balance and transactions in Kin.
 
+## Build
 
-#### KinClient
-```java
+Add this in your root `build.gradle` file (**not** your module `build.gradle` file):
 
-public class KinClient {
-
-    /**
-     * KinClient is an account manager for a single {@link KinAccount} on the
-     * ethereum network.
-     *
-     * @param provider the service provider to use to connect to an ethereum node
-     * @param context the android application context
-     */
-    public KinClient(Context context, ServiceProvider provider);
-
-    /**
-     * Create the account if it hasn't yet been created.
-     * Multiple calls to this method will not create an additional account.
-     * Once created, the account information will be stored securely on the device and can
-     * be accessed again via the {@link #getAccount()} method
-     * @param passphrase a passphrase provided by the user that will be used to store
-     * the account private key securely.
-     * @return KinAccount the account created
-     */
-    KinAccount createAccount(String passphrase) throws CreateAccountException;
-
-    /**
-     * The method will return an account that has previously been create and stored on the device
-     * via the {@link #createAccount(String)} method.
-     * @return the account if it has been created or null if there is no such account
-     */
-    KinAccount getAccount();
-
-    /**
-     * @return true if there is an existing account
-     */
-    boolean hasAccounts();
+```gradle
+allprojects {
+	repositories {
+		...
+		maven { url "https://jitpack.io" }
+	}
 }
 ```
 
-#### ServiceProvider
-```java
+Add this to your module's `build.gradle` file
 
-public class ServiceProvider {
-
-   /** main ethereum network */
-   static final NETWORK_ID_MAIN = 1;
-
-   /** ropsten ethereum TEST network */
-   static final NETWORK_ID_ROPSTEN = 3;
-
-   /** rinkeby ethereum TEST network */
-   static final NETWORK_ID_RINKEBY = 4;
-
-   /**
-    * A ServiceProvider used to connect to an ethereum node.
-    *
-    * For example to connect to an infura test node use
-    * new ServiceProvider("https://ropsten.infura.io/YOURTOKEN", NETWORK_ID_ROPSTEN);
-    * @param providerUrl the provider to use
-    * @param networkId for example see {@value #NETWORK_ID_MAIN} {@value NETWORK_ID_ROPSTEN} {@value NETWORK_ID_RINKEBY}
-    */
-   public ServiceProvider(String providerUrl, int networkId);
-}
-
-```
-
-#### KinAccount
-```java
-
-public interface KinAccount {
-
-    /**
-     * @return String the public address of the account
-     */
-    String getPublicAddress();
-
-    /**
-     * @param passphrase the passphrase used when creating the account
-     * @return String the private key
-     */
-    String getPrivateKey(String passphrase) throws PassphraseException;
-
-    /**
-     * Create, sign and send a transaction of the given amount in kin to the specified public address
-     * Ethereum gas will be handled internally.
-     * The method will run on a background thread and callback calls will be done
-     * on the main thread
-     * @param publicAddress the account address to send the specified kin amount
-     * @param amount the amount of kin to transfer
-     * @param callback to be called when transaction is sent
-     */
-     void sendTransaction(String publicAddress, String passphrase, BigDecimal amount, ResultCallback<TransactionId> callback);
-
-    /**
-     * Create, sign and send a transaction of the given amount in kin to the specified public address
-     * Ethereum gas will be handled internally.
-     * The method will accesses a blockchain
-     * node on the network and should not be called on the android main thread.
-     * @param publicAddress the account address to send the specified kin amount
-     * @param amount the amount of kin to transfer
-     * @return TransactionId the transaction identifier
-     */
-    TransactionId sendTransactionSync(String publicAddress, String passphrase, BigDecimal amount)
-                  throws InsufficientBalanceException, OperationFailedException, PassphraseException;
-
-    /**
-     * Get the current confirmed balance in kin
-     * The method will run on a background thread
-     * @param callback to be called when balance is ready or on error
-     */
-    void getBalance(ResultCallback<Balance> callback);
-
-    /**
-     * Get the current confirmed balance in kin
-     * The method will accesses a blockchain
-     * node on the network and should not be called on the android main thread.
-     * @return Balance the balance in kin
-     */
-    Balance getBalanceSync() throws OperationFailedException;
-
-    /**
-     * Get the pending balance in kin
-     * The method will run on a background thread and callback calls will be done
-     * on the main thread
-     * @param callback to be called when balance is ready or on error
-     * @return BigDecimal the balance in kin
-     */
-    void getPendingBalance(ResultCallback<Balance> callback);
-
-    /**
-     * Get the pending balance in kin
-     * The method will accesses a blockchain
-     * node on the network and should not be called on the android main thread.
-     * @return Balance the balance amount in kin
-     */
-    Balance getPendingBalanceSync() throws OperationFailedException;    
+```gradle
+dependencies {
+	...
+	compile 'com.github.TO-BE-ADDED-SOON'
 }
 ```
 
-#### ResultCallback
+## Usage
+### Creating and retrieving an account
+Create a new KinClient passing to it the android application context and a ServiceProvider. 
+The example below creates a ServiceProvider that will be used to connect to the main ethereum 
+network, via Infura. To obtain an infura token you can register [here](https://infura.io/register.html)
 ```java
 
-public interface ResultCallback<T> {
-    /**
-     * Method will be called when operation has completed successfully
-     * @param T the result received
-     */
-    void onResult(T result);
-
-    /**
-     * Method will be called when operation has completed with error
-     * @param the exception in case of error
-     */
-    void onError(Exception e);
-}
+   KinClient kinClient = new KinClient(context,
+             new ServiceProvider("https://main.infura.io/YOUR_UNFURA_TOKEN",
+                                 ServiceProvider.NETWORK_ID_MAIN));
 ```
-
-#### Balance
+ 
+The first time you use the client you need to create a new account, using a passphrase. 
+The details of the account created will be securely stored on the device.
 ```java
-
-public interface Balance {
-
-    /**
-     * @return BigDecimal the balance value
-     */
-    BigDecimal value();
-
-    /**
-     * @param precision the number of decimals points
-     * @return String the balance value as a string with specified precision
-     */
-    String value(int precision);
-
-    /**
-     * The regular toString method will return a String representation of the balance value
-     */
-    String toString();
-}
+        KinAccount account;
+        try {
+            if ( !kinClient.hasAccounts() ) {
+                account = kinClient.createAccount("yourPassphrase");
+            }
+        } catch (CreateAccountException e) {
+        
+        }
 ```
 
-#### TransactionId
+Once an account has been created there is no need to call createAccount again on the same device. 
+From then on calling getAccount() will retrieve the account stored on the device.
 ```java
+        if ( kinClient.hasAccounts() ) {
+            account = kinClient.getAccount();
+        }
+``` 
 
-public interface TransactionId {
-    /**
-     * @return the transaction id
-     */
-    String id();
-}
+Your account can be identified via it's public address. To retrieve the account public address use:
+```java
+        account.getPublicAddress();
+```    
+   
+### Retrieving Balance
+To retrieve the confirmed balance of your account in Kin call the getBalance method: 
+getBalance will run on a background thread and access the ethereum network. 
+onResult & onError are executed on the android UI thread.
+```java
+        account.getBalance(new ResultCallback<Balance>() {
+            @Override
+            public void onResult(Balance result) {
+                Log.d("example", "The balance is "+result.toString());
+            }
+
+            @Override
+            public void onError(Exception e) {
+                e.printStackTrace();
+            }
+        });
 ```
+
+### Transfering Kin to another account
+To transfer kin to another account, you need the public address of the account you want 
+to transfer the kin to. The following code will transfer 20Kin to account:AB1234. 
+sendTransaction runs on a background thread and accesses the ethereum network. 
+onResult & onError are executed on the android UI thread.
+```java
+        account.sendTransaction("AB1234", "yourPassphrase",
+                new BigDecimal("20"), new ResultCallback<TransactionId>() {
+            @Override
+            public void onResult(TransactionId result) {
+                Log.d("example","The transaction id"+result.toString());
+            }
+
+            @Override
+            public void onError(Exception e) {
+                e.printStackTrace();
+            }
+        });
+```
+
+### Retrieving Pending Balance
+It takes some time for the transaction to be confirmed. Until then, you should be able to see the
+difference in your balance by accessing the account pending balance: 
+getPendingBalance will run on a background thread and access the ethereum network. 
+onResult & onError are executed on the android UI thread.
+```java
+        account.getPendingBalance(new ResultCallback<Balance>() {
+            @Override
+            public void onResult(Balance result) {
+                Log.d("example", "The balance is "+result.toString());
+            }
+
+            @Override
+            public void onError(Exception e) {
+                e.printStackTrace();
+            }
+        });
+```
+
+### Sync vs Async
+If you are already on a background thread and wish to use a synchronous version of getBalance, 
+sendTransaction and getPendingBalance you can use the following methods instead:
+```java
+    account.getBalanceSync();
+    account.getPendingBalanceSync();
+    account.sendTransactionSync("AB1234", "yourPassphrase", new BigDecimal("20"));
+```
+
+### Sample Application 
+For a more detailed example on how to use the library you are welcome to take a look at our sample
+application [here](sample/)
+
+## Contributing
+
+Please review our [CONTRIBUTING.md](CONTRIBUTING.md) guide before opening issues and pull requests.
+
+## Thanks and credits
+
+Many thanks to all of our colleagues at KIK who have contributed to this project directly 
+and indirectly!  In addition we would like to thank:
+* [geth](https://github.com/ethereum/go-ethereum)
+* [Infura](https://infura.io/)
+* [Jitpack](https://jitpack.io/)
+* [gradle](https://github.com/gradle/gradle)
+* [travis](https://travis-ci.org/)
+* [google styleguide](https://github.com/google/styleguide)
+
+
+## License
+
+The kin-sdk-core-android library is licensed under **GPL LICENCE TO BE ADDED**

@@ -33,9 +33,12 @@ proguard/
 # Android Studio captures folder
 captures/
 
-# Intellij
+# Intellij - ignore most things
 *.iml
 .idea/*
+# ...but keep these
+!.idea/intellij-java-google-style.xml
+
 
 # OSX Finder config files
 .DS_Store
