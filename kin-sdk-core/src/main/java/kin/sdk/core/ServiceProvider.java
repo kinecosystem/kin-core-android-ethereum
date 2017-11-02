@@ -19,9 +19,9 @@ public class ServiceProvider {
     * A ServiceProvider used to connect to an ethereum node.
     *
     * For example to connect to an infura test node use
-    * new ServiceProvider("infura", NETWORK_ID_ROPSTEN);
+    * new ServiceProvider("https://ropsten.infura.io/YOURTOKEN", NETWORK_ID_ROPSTEN);
     * @param providerUrl the provider to use
-    * @param networkId should be one of {@value #NETWORK_ID_MAIN} {@value NETWORK_ID_ROPSTEN} {@value NETWORK_ID_RINKEBY}
+    * @param networkId for example see {@value #NETWORK_ID_MAIN} {@value NETWORK_ID_ROPSTEN} {@value NETWORK_ID_RINKEBY}
     */
    public ServiceProvider(String providerUrl, int networkId){
       this.providerUrl = providerUrl;
