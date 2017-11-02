@@ -3,8 +3,11 @@ package kin.sdk.core.concurrent;
 import android.os.Handler;
 import android.os.Looper;
 
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import kin.sdk.core.ResultCallback;
 
 /**
  * For calling method to run on ui thread or main thread
@@ -29,6 +32,30 @@ public class Concurrency {
 
     public void executeOnMainThread(Runnable task) {
         mainHandler.post(task);
+    }
+
+    public <T> void execute(final Callable<T> callable, final ResultCallback<T> callback) {
+        executeOnBackground(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    final T result = callable.call();
+                    executeOnMainThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            callback.onResult(result);
+                        }
+                    });
+                } catch (final Exception e) {
+                    executeOnMainThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            callback.onError(e);
+                        }
+                    });
+                }
+            }
+        });
     }
 
     private Concurrency() {
