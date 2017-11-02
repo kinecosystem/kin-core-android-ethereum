@@ -21,7 +21,8 @@ public class MainActivity extends AppCompatActivity {
         // we will create a nice sample app
         // that demonstrates usage of the library soon.
         String infuraToken = "yourinfuratoken";
-        KinClient kinClient = new KinClient(new ServiceProvider("https://ropsten.infura.io/"+infuraToken, ServiceProvider.NETWORK_ID_ROPSTEN));
+        KinClient kinClient = new KinClient(getApplicationContext(),
+                new ServiceProvider("https://ropsten.infura.io/"+infuraToken, ServiceProvider.NETWORK_ID_ROPSTEN));
         try {
             kinClient.createAccount("abcd1234");
         } catch (CreateAccountException e) {
