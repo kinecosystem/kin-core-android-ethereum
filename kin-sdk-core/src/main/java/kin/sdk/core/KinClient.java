@@ -9,27 +9,36 @@ public class KinClient {
     KinAccount kinAccount;
 
     /**
-     * Responsible for
-     * @param nodeProviderUrl url of the node provider to use
+     * KinClient is an account manager for a single {@link KinAccount} on the
+     * ethereum network.
+     *
+     * @param provider the service provider to use to connect to an ethereum node
      */
-    public KinClient(String nodeProviderUrl) {
+    public KinClient(ServiceProvider provider) {
     }
 
     /**
-     * Create the initial account if it hasn't yet been created.
+     * Create the account if it hasn't yet been created.
      * Multiple calls to this method will not create an additional account.
+     * Once created, the account information will be stored securely on the device and can
+     * be accessed again via the {@link #getAccount()} method
      * @param passphrase a passphrase provided by the user that will be used to store
      * the account private key securely.
+     * @return KinAccount the account created
      */
-    public void initAccount(String passphrase) throws CreateAccountException {
+    public KinAccount createAccount(String passphrase) throws CreateAccountException {
 
         if (kinAccount != null) {
             kinAccount = new MockKinAccount();
         }
+
+        return kinAccount;
     }
 
     /**
-     * @return the main account if that has been created or null if there is no such account
+     * The method will return an account that has previously been create and stored on the device
+     * via the {@link #createAccount(String)} method.
+     * @return the account if it has been created or null if there is no such account
      */
     public KinAccount getAccount() {
 

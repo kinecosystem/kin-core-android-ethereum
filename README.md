@@ -3,7 +3,6 @@
 A library responsible for creating a new ethereum account 
 and managing balance and transactions in Kin.
 
-Initial interface 
 
 #### KinClient
 ```java
@@ -11,21 +10,28 @@ Initial interface
 public class KinClient {
 
     /**
-     * Responsible for
-     * @param nodeProviderUrl url of the node provider to use
+     * KinClient is an account manager for a single {@link KinAccount} on the
+     * ethereum network.
+     *
+     * @param provider the service provider to use to connect to an ethereum node
      */
-    public KinClient(String nodeProviderUrl);
+    public KinClient(ServiceProvider provider);
 
     /**
-     * Create the initial account if it hasn't yet been created.
+     * Create the account if it hasn't yet been created.
      * Multiple calls to this method will not create an additional account.
+     * Once created, the account information will be stored securely on the device and can
+     * be accessed again via the {@link #getAccount()} method
      * @param passphrase a passphrase provided by the user that will be used to store
      * the account private key securely.
+     * @return KinAccount the account created
      */
-    void initAccount(String passphrase) throws CreateAccountException;
+    KinAccount createAccount(String passphrase) throws CreateAccountException;
 
     /**
-     * @return the main account if that has been created or null if there is no such account
+     * The method will return an account that has previously been create and stored on the device
+     * via the {@link #createAccount(String)} method.
+     * @return the account if it has been created or null if there is no such account
      */
     KinAccount getAccount();
 
@@ -36,6 +42,32 @@ public class KinClient {
 }
 ```
 
+#### ServiceProvider
+```java
+
+public class ServiceProvider {
+
+   /** main ethereum network */
+   static final NETWORK_ID_MAIN = 1;
+
+   /** ropsten ethereum TEST network */
+   static final NETWORK_ID_ROPSTEN = 3;
+
+   /** rinkeby ethereum TEST network */
+   static final NETWORK_ID_RINKEBY = 4;
+
+   /**
+    * A ServiceProvider used to connect to an ethereum node.
+    *
+    * For example to connect to an infura test node use
+    * new ServiceProvider("https://ropsten.infura.io/YOURTOKEN", NETWORK_ID_ROPSTEN);
+    * @param providerUrl the provider to use
+    * @param networkId for example see {@value #NETWORK_ID_MAIN} {@value NETWORK_ID_ROPSTEN} {@value NETWORK_ID_RINKEBY}
+    */
+   public ServiceProvider(String providerUrl, int networkId);
+}
+
+```
 
 #### KinAccount
 ```java
