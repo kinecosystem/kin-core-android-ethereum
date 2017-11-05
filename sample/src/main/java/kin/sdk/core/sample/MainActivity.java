@@ -14,8 +14,10 @@ import kin.sdk.core.exception.EthereumClientException;
 
 public class MainActivity extends AppCompatActivity {
 
-    TextView textView;
-    KinClient kinClient;
+    private TextView textView;
+    private KinClient kinClient;
+
+    private final String INFURA_ROPSTEN_BASE_URL = "https://ropsten.infura.io/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,14 +35,14 @@ public class MainActivity extends AppCompatActivity {
         String infuraToken = "yourinfuratoken";
         try {
             kinClient = new KinClient(getApplicationContext(),
-                    new ServiceProvider("https://ropsten.infura.io/"+infuraToken, ServiceProvider.NETWORK_ID_ROPSTEN));
+                    new ServiceProvider(INFURA_ROPSTEN_BASE_URL + infuraToken, ServiceProvider.NETWORK_ID_ROPSTEN));
         } catch (EthereumClientException e) {
             e.printStackTrace();
         }
     }
 
     public void checkBalance(View view) {
-        if(kinClient.hasAccounts()) {
+        if (kinClient.hasAccounts()) {
             kinClient.getAccount().getBalance(new ResultCallback<Balance>() {
                 @Override
                 public void onResult(Balance result) {
@@ -52,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
                     updateOutput("error " + e.getMessage());
                 }
             });
-        }else{
+        } else {
             updateOutput("Account not created");
         }
     }

@@ -16,7 +16,7 @@ import kin.sdk.core.exception.EthereumClientException;
  * Project - Kin SDK
  * Created by Oren Zakay on 02/11/2017.
  * Copyright © 2017 Kin Foundation. All rights reserved.
- *
+ * <p>
  * Responsible to preform all the calls to kin smart-contract.
  */
 public class EthClientWrapper {
@@ -85,7 +85,7 @@ public class EthClientWrapper {
     /**
      * @return the network id that the client is connected to.
      */
-    public int getNetworkId(){
+    public int getNetworkId() {
         return serviceProvider.getNetworkId();
     }
 

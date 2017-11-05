@@ -61,8 +61,7 @@ public class KinClient {
     public KinAccount getAccount() {
         if (kinAccount != null) {
             return kinAccount;
-        }
-        else {
+        } else {
             Accounts accounts = ethClient.getKeyStore().getAccounts();
             Account account;
             try {
@@ -81,12 +80,11 @@ public class KinClient {
      * @return true if there is an existing account
      */
     public boolean hasAccounts() {
-        if(kinAccount != null){
+        if (kinAccount != null) {
             return true;
-        }
-        else{
+        } else {
             Accounts accounts = ethClient.getKeyStore().getAccounts();
-            return  accounts != null && accounts.size() > 0;
+            return accounts != null && accounts.size() > 0;
         }
     }
 }
