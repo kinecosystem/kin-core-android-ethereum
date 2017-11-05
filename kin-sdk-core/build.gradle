@@ -28,5 +28,4 @@ dependencies {
     compile supportDependencies.appCompat
 
     testCompile testingDependencies.junit
-    testCompile testingDependencies.mockito
 }
