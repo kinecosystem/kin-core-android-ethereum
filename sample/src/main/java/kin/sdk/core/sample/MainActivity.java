@@ -10,6 +10,7 @@ import kin.sdk.core.KinClient;
 import kin.sdk.core.ResultCallback;
 import kin.sdk.core.ServiceProvider;
 import kin.sdk.core.exception.CreateAccountException;
+import kin.sdk.core.exception.EthereumClientException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,8 +31,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void initKinClient() {
         String infuraToken = "yourinfuratoken";
-        kinClient = new KinClient(getApplicationContext(),
-                new ServiceProvider("https://ropsten.infura.io/"+infuraToken, ServiceProvider.NETWORK_ID_ROPSTEN));
+        try {
+            kinClient = new KinClient(getApplicationContext(),
+                    new ServiceProvider("https://ropsten.infura.io/"+infuraToken, ServiceProvider.NETWORK_ID_ROPSTEN));
+        } catch (EthereumClientException e) {
+            e.printStackTrace();
+        }
     }
 
     public void checkBalance(View view) {
