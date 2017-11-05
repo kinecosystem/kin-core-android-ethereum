@@ -27,9 +27,27 @@ public class KinAccountImpl extends AbstractKinAccount {
     private EthClientWrapper ethClient;
     private Account account;
 
+    /**
+     * Creates a new {@link Account}.
+     * @param ethClientWrapper that will be use to call to Kin smart-contract.
+     * @param passphrase that will be used to store the account private key securely.
+     * @throws Exception if go-ethereum was unable to generate the account
+     * (unable to generate new key or store the key).
+     */
     public KinAccountImpl(EthClientWrapper ethClientWrapper, String passphrase) throws Exception {
         this.keyStore = ethClientWrapper.getKeyStore();
         this.account = keyStore.newAccount(passphrase);
+        this.ethClient = ethClientWrapper;
+    }
+
+    /**
+     * Creates a {@link KinAccount} from existing {@link Account}
+     * @param ethClientWrapper that will be use to call to Kin smart-contract.
+     * @param account the existing Account.
+     */
+    public KinAccountImpl(EthClientWrapper ethClientWrapper, Account account){
+        this.keyStore = ethClientWrapper.getKeyStore();
+        this.account = account;
         this.ethClient = ethClientWrapper;
     }
 

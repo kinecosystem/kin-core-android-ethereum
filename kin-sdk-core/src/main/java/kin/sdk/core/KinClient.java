@@ -3,6 +3,9 @@ package kin.sdk.core;
 
 import android.content.Context;
 
+import org.ethereum.geth.Account;
+import org.ethereum.geth.Accounts;
+
 import kin.sdk.core.ethereum.EthClientWrapper;
 import kin.sdk.core.exception.CreateAccountException;
 import kin.sdk.core.exception.EthereumClientException;
@@ -20,7 +23,7 @@ public class KinClient {
      * @param context  the android application context
      * @param provider the service provider to use to connect to an ethereum node
      * @throws EthereumClientException if could not connect to service provider
-     * or connection problem with Kin smart-contract problems.
+     *                                 or connection problem with Kin smart-contract problems.
      */
     public KinClient(Context context, ServiceProvider provider) throws EthereumClientException {
         this.ethClient = new EthClientWrapper(context, provider);
@@ -36,7 +39,7 @@ public class KinClient {
      *                   the account private key securely.
      * @return KinAccount the account created
      * @throws CreateAccountException if go-ethereum was unable to generate the account
-     * (unable to generate new key or store the key).
+     *                                (unable to generate new key or store the key).
      */
     public KinAccount createAccount(String passphrase) throws CreateAccountException {
         if (kinAccount != null) {
@@ -56,6 +59,21 @@ public class KinClient {
      * @return the account if it has been created or null if there is no such account
      */
     public KinAccount getAccount() {
+        if (kinAccount != null) {
+            return kinAccount;
+        }
+        else {
+            Accounts accounts = ethClient.getKeyStore().getAccounts();
+            Account account;
+            try {
+                account = accounts.get(0);
+            } catch (Exception e) {
+                //There is no account
+                return null;
+            }
+            // The Account is not null
+            kinAccount = new KinAccountImpl(ethClient, account);
+        }
         return kinAccount;
     }
 
@@ -63,6 +81,12 @@ public class KinClient {
      * @return true if there is an existing account
      */
     public boolean hasAccounts() {
-        return kinAccount != null;
+        if(kinAccount != null){
+            return true;
+        }
+        else{
+            Accounts accounts = ethClient.getKeyStore().getAccounts();
+            return  accounts != null && accounts.size() > 0;
+        }
     }
 }
