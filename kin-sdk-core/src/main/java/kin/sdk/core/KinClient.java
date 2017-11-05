@@ -42,14 +42,14 @@ public class KinClient {
      *                                (unable to generate new key or store the key).
      */
     public KinAccount createAccount(String passphrase) throws CreateAccountException {
-        if (kinAccount != null) {
+        if (!hasAccounts()) {
             try {
                 kinAccount = new KinAccountImpl(ethClient, passphrase);
             } catch (Exception e) {
                 throw new CreateAccountException(e);
             }
         }
-        return kinAccount;
+        return getAccount();
     }
 
     /**

@@ -34,29 +34,49 @@ public class EthClientWrapper {
     public EthClientWrapper(android.content.Context androidContext, ServiceProvider serviceProvider) throws EthereumClientException {
         this.serviceProvider = serviceProvider;
         this.gethContext = new Context();
+        initEthereumClient();
+        initKinContract();
+        initKeyStore(androidContext);
+    }
+
+    /**
+     * Create {@link EthereumClient}, that will be a connection to Ethereum network.
+     *
+     * @throws EthereumClientException if go-ethereum could not establish connection to the provider.
+     */
+    private void initEthereumClient() throws EthereumClientException {
         try {
             this.ethereumClient = Geth.newEthereumClient(serviceProvider.getProviderUrl());
         } catch (Exception e) {
             throw new EthereumClientException("provider - could not establish connection to the provider");
         }
+    }
 
+    /**
+     * Create {@link BoundContract}, that will handle all the calls to Kin smart-contract.
+     *
+     * @throws EthereumClientException if go-ethereum could not establish connection to Kin smart-contract.
+     */
+    private void initKinContract() throws EthereumClientException {
         try {
-            Address contractAddress = Geth.newAddressFromHex("0xEF2Fcc998847DB203DEa15fC49d0872C7614910C");
+            String kinContractAddress = "0xEF2Fcc998847DB203DEa15fC49d0872C7614910C";
+            Address contractAddress = Geth.newAddressFromHex(kinContractAddress);
             this.boundContract = Geth.bindContract(contractAddress, ABI, ethereumClient);
         } catch (Exception e) {
-            throw new EthereumClientException("contract - could not establish connection to kin contract");
+            throw new EthereumClientException("contract - could not establish connection to Kin smart-contract");
         }
-        initKeyStore(androidContext);
     }
 
     /**
      * Create {@link KeyStore}, to have control over the account management.
      * And the ability to store accounts securely according to go-ethereum encryption protocol.
+     * The keystore path is unique to each network id,
+     * for example Ropsten network will be: ../data/kin/keystore/3/
      *
      * @param context provide the path to internal data directories.
      */
     private void initKeyStore(android.content.Context context) {
-        String networkId = String.valueOf(getNetworkId());
+        String networkId = String.valueOf(serviceProvider.getNetworkId());
         String keyStorePath = new StringBuilder(context.getFilesDir().getAbsolutePath())
                 .append(File.separator)
                 .append("kin")
@@ -81,12 +101,4 @@ public class EthClientWrapper {
     public KeyStore getKeyStore() {
         return keyStore;
     }
-
-    /**
-     * @return the network id that the client is connected to.
-     */
-    public int getNetworkId() {
-        return serviceProvider.getNetworkId();
-    }
-
 }
