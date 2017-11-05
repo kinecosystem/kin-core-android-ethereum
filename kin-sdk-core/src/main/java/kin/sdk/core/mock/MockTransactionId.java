@@ -8,7 +8,7 @@ import kin.sdk.core.TransactionId;
 public class MockTransactionId implements TransactionId {
 
     @Override
-    public String id(){
-        return "abc12349def" + new Random().nextInt();
+    public String id() {
+        return "transaction#555" + new Random().nextInt();
     }
 }

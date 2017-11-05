@@ -31,7 +31,7 @@ public class KinClient {
      */
     public KinAccount createAccount(String passphrase) throws CreateAccountException {
 
-        if (kinAccount != null) {
+        if (kinAccount == null) {
             kinAccount = new MockKinAccount();
         }
 
