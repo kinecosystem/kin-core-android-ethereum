@@ -1,0 +1,22 @@
+ext {
+
+    //Version
+    supportVersion = '26.+'
+    junitVersion = '4.12'
+
+    //Packages
+    supportPackage = 'com.android.support'
+    junitPackage = 'junit'
+
+    supportDependencies = [
+            appCompat       : buildDependency(supportPackage, 'appcompat-v7', supportVersion),
+    ]
+
+    testingDependencies = [
+            junit      : buildDependency(junitPackage, 'junit', junitVersion),
+    ]
+}
+
+static String buildDependency(String pack, String dependency, String version) {
+    return "${pack}:${dependency}:${version}"
+}
