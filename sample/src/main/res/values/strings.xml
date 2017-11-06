@@ -1,3 +1,9 @@
 <resources>
-    <string name="app_name">KinWalletSample</string>
+    <string name="app_name">Kin SDK Usage</string>
+    <string name="test_net">Test Net</string>
+    <string name="main_net">Main Net</string>
+    <string name="balance">Balance</string>
+    <string name="transaction">Transaction</string>
+    <string name="create_account">Create Account</string>
+
 </resources>
