@@ -3,8 +3,10 @@
     <color name="colorPrimary">@color/grey</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="colorTest">#26BEFF</color>
-    <color name="colorMain">#FF8A00</color>
+    <color name="testBg">#26BEFF</color>
+    <color name="mainBg">#FF8A00</color>
+    <color name="mainBgSelected">#D07100</color>
+    <color name="testBgSelected">#1392C9</color>
     <color name="grey">#696969</color>
     <color name="white">#fff</color>
 </resources>

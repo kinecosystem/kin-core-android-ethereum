@@ -14,23 +14,17 @@ import kin.sdk.core.exception.EthereumClientException;
 public class KinClientApplication extends Application {
     private final String INFURA_ROPSTEN_BASE_URL = "https://ropsten.infura.io/";
     private final String INFURA_MAIN_BASE_URL = "https://mainnet.infura.io/";
+    public static final String PASSPHRASE = "12345";
     //replace with your infura token
     private final String infuraToken = "yourInfuraToken";
-    private NetWorkType netWorkType;
 
     public enum NetWorkType {
-        MAIN(Color.parseColor("#FF8A00")),
-        ROPSTEN(Color.parseColor("#26BEFF"));
-
-        NetWorkType(int color){
-            this.color = color;
-        }
-        int color;
+        MAIN,
+        ROPSTEN;
     }
 
-
-
-    private KinClient kinClient;
+    private NetWorkType netWorkType = NetWorkType.ROPSTEN;
+    private KinClient kinClient = null;
 
     public KinClient initKinClient(NetWorkType type) {
         netWorkType = type;
@@ -58,11 +52,16 @@ public class KinClientApplication extends Application {
         return kinClient;
     }
 
-    public int getNetWorkColor(){
-        return netWorkType.color;
+
+    public boolean isMainNet(){
+        return netWorkType == NetWorkType.MAIN;
     }
 
     public KinClient getKinClient() {
         return kinClient;
+    }
+
+    public String getPassphrase(){
+        return PASSPHRASE;
     }
 }

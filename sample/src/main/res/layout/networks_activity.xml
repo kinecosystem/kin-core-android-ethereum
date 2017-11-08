@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="kin.sdk.core.sample.MainActivity">
+    tools:context="kin.sdk.core.sample.NetWorksActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,10 +18,8 @@
             android:id="@+id/btn_test_net"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorTest"
-            android:textColor="@color/white"
-            android:textSize="18dp"
             android:text="@string/test_net"
+            style="@style/KinButtonStyle.TestNet"
             />
 
         <Button
@@ -29,10 +27,8 @@
             android:layout_marginTop="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorMain"
-            android:textColor="@color/white"
-            android:textSize="18dp"
-            android:text="@string/main_net" />
+            android:text="@string/main_net"
+            style="@style/KinButtonStyle.MainNet"/>
 
     </LinearLayout>
 

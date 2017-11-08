@@ -2,6 +2,8 @@ package kin.sdk.core.sample;
 
 import android.app.Application;
 import android.app.IntentService;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -13,10 +15,13 @@ import kin.sdk.core.KinClient;
  * Created by shaybaz on 06/11/2017.
  */
 
-public class NetWorksActivity extends AppCompatActivity {
+public class NetWorksActivity extends BaseActivity {
 
     public static final String TAG = NetWorksActivity.class.getSimpleName();
 
+    public static Intent getIntent(Context context) {
+        return new Intent(context, NetWorksActivity.class);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,14 +48,14 @@ public class NetWorksActivity extends AppCompatActivity {
         KinClientApplication application = (KinClientApplication) getApplication();
         KinClient kinClient = application.initKinClient(netWorkType);
         if (kinClient.hasAccounts()) {
-
             startActivity(WalletActivity.getIntent(this));
         } else {
             startActivity(CreateAccountActivity.getIntent(this));
         }
-
-
     }
 
-
+    @Override
+    Intent getBackIntent() {
+        return null;
+    }
 }
