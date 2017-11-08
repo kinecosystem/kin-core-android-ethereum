@@ -66,13 +66,7 @@ public class KinAccountImpl extends AbstractKinAccount {
     @Override
     public TransactionId sendTransactionSync(String publicAddress, String passphrase, BigDecimal amount)
             throws InsufficientBalanceException, OperationFailedException, PassphraseException {
-        try {
-            Thread.sleep(PROCESSING_DURATION);
-            return ethClient.sendTransaction(account, publicAddress, passphrase, amount);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            throw new InsufficientBalanceException();
-        }
+        return ethClient.sendTransaction(account, publicAddress, passphrase, amount);
     }
 
     @Override
