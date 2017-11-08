@@ -30,7 +30,7 @@ import kin.sdk.core.mock.MockBalance;
  * Project - Kin SDK
  * Created by Oren Zakay on 02/11/2017.
  * <p>
- * Responsible to preform all the calls to kin smart-contract.
+ * Responsible to preform all the calls to Kin smart-contract.
  */
 public class EthClientWrapper {
 
@@ -122,14 +122,14 @@ public class EthClientWrapper {
     }
 
     /**
-     * Transfer amount of Kin from account to the specified public address.
+     * Transfer amount of KIN from account to the specified public address.
      *
      * @param from          the sender {@link Account}
      * @param passphrase    the passphrase used to create the account
      * @param publicAddress the address to send the KIN to
-     * @param amount        the amount of Kin to send
+     * @param amount        the amount of KIN to send
      * @return {@link TransactionId} of the transaction
-     * @throws InsufficientBalanceException if the account has not enough Kin
+     * @throws InsufficientBalanceException if the account has not enough KIN
      * @throws PassphraseException          if the transaction could not be signed with the passphrase specified
      * @throws OperationFailedException     another error occurred
      */
