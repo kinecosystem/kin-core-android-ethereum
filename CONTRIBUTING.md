@@ -1,5 +1,4 @@
 # Contributing to kin-sdk-core-android
-
 Thank you very much for helping out with this project!
 Before opening a pull request please read the following guidelines:
 
