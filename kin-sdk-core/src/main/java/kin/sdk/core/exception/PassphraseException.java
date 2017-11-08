@@ -2,8 +2,8 @@ package kin.sdk.core.exception;
 
 public class PassphraseException extends Exception {
 
-    public PassphraseException(Exception e) {
-        super(e);
+    public PassphraseException() {
+        super("Wrong passphrase - could not decrypt key with given passphrase");
     }
 }
 

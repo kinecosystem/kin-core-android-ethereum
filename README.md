@@ -63,7 +63,7 @@ public class ServiceProvider {
     * For example to connect to an infura test node use
     * new ServiceProvider("https://ropsten.infura.io/YOURTOKEN", NETWORK_ID_ROPSTEN);
     * @param providerUrl the provider to use
-    * @param networkId for example see {@value #NETWORK_ID_MAIN} {@value NETWORK_ID_ROPSTEN} {@value NETWORK_ID_RINKEBY}
+    * @param networkId for example see {@valueInKin #NETWORK_ID_MAIN} {@valueInKin NETWORK_ID_ROPSTEN} {@valueInKin NETWORK_ID_RINKEBY}
     */
    public ServiceProvider(String providerUrl, int networkId);
 }
@@ -167,18 +167,18 @@ public interface ResultCallback<T> {
 public interface Balance {
 
     /**
-     * @return BigDecimal the balance value
+     * @return BigDecimal the balance valueInKin
      */
-    BigDecimal value();
+    BigDecimal valueInKin();
 
     /**
      * @param precision the number of decimals points
-     * @return String the balance value as a string with specified precision
+     * @return String the balance valueInKin as a string with specified precision
      */
-    String value(int precision);
+    String valueInKin(int precision);
 
     /**
-     * The regular toString method will return a String representation of the balance value
+     * The regular toString method will return a String representation of the balance valueInKin
      */
     String toString();
 }

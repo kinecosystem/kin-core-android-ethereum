@@ -13,13 +13,11 @@ import kin.sdk.core.exception.InsufficientBalanceException;
 import kin.sdk.core.exception.OperationFailedException;
 import kin.sdk.core.exception.PassphraseException;
 import kin.sdk.core.mock.MockBalance;
-import kin.sdk.core.mock.MockTransactionId;
 
 
 /**
  * Project - Kin SDK
  * Created by Oren Zakay on 02/11/2017.
- * Copyright © 2017 Kin Foundation. All rights reserved.
  */
 public class KinAccountImpl extends AbstractKinAccount {
 
@@ -70,7 +68,7 @@ public class KinAccountImpl extends AbstractKinAccount {
             throws InsufficientBalanceException, OperationFailedException, PassphraseException {
         try {
             Thread.sleep(PROCESSING_DURATION);
-            return new MockTransactionId();
+            return ethClient.sendTransaction(account, publicAddress, passphrase, amount);
         } catch (InterruptedException e) {
             e.printStackTrace();
             throw new InsufficientBalanceException();
@@ -81,12 +79,11 @@ public class KinAccountImpl extends AbstractKinAccount {
     public Balance getBalanceSync() throws OperationFailedException {
         try {
             Thread.sleep(PROCESSING_DURATION);
-            return new MockBalance();
+            return ethClient.getBalance();
         } catch (InterruptedException e) {
             e.printStackTrace();
-            throw new OperationFailedException();
+            throw new OperationFailedException("Failed - could not get balance");
         }
-
     }
 
     @Override
@@ -96,7 +93,7 @@ public class KinAccountImpl extends AbstractKinAccount {
             return new MockBalance();
         } catch (InterruptedException e) {
             e.printStackTrace();
-            throw new OperationFailedException();
+            throw new OperationFailedException("Failed - could not get pending balance");
         }
     }
 }
