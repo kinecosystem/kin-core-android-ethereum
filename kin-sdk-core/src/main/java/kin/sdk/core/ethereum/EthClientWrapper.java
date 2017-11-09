@@ -4,6 +4,7 @@ import org.ethereum.geth.Account;
 import org.ethereum.geth.Address;
 import org.ethereum.geth.BigInt;
 import org.ethereum.geth.BoundContract;
+import org.ethereum.geth.CallOpts;
 import org.ethereum.geth.Context;
 import org.ethereum.geth.EthereumClient;
 import org.ethereum.geth.Geth;
@@ -23,8 +24,8 @@ import kin.sdk.core.exception.EthereumClientException;
 import kin.sdk.core.exception.InsufficientBalanceException;
 import kin.sdk.core.exception.OperationFailedException;
 import kin.sdk.core.exception.PassphraseException;
+import kin.sdk.core.impl.BalanceImpl;
 import kin.sdk.core.impl.TransactionIdImpl;
-import kin.sdk.core.mock.MockBalance;
 
 /**
  * Project - Kin SDK
@@ -135,7 +136,7 @@ public class EthClientWrapper {
             throws InsufficientBalanceException, OperationFailedException, PassphraseException {
         Transaction transaction;
         Address toAddress;
-        BigInt amountBigInt = null;
+        BigInt amountBigInt;
         try {
             // Verify public address is valid.
             if (publicAddress == null || publicAddress.isEmpty()) {
@@ -144,10 +145,10 @@ public class EthClientWrapper {
             // Create the public Address.
             toAddress = Geth.newAddressFromHex(publicAddress);
 
-            // Make sure the amount is positive and the sender account has enough Kin to send.
+            // Make sure the amount is positive and the sender account has enough KIN to send.
             if (amount.signum() != -1) {
                 amount = KinConverter.toKin(amount);
-                if (hasEnoughBalance(amount)) {
+                if (hasEnoughBalance(from, amount)) {
                     amountBigInt = KinConverter.fromKin(amount);
                 } else {
                     throw new InsufficientBalanceException();
@@ -174,7 +175,6 @@ public class EthClientWrapper {
             Interface paramAmount = Geth.newInterface();
             paramAmount.setBigInt(amountBigInt);
 
-            // Set param values to the slice.
             Interfaces params = Geth.newInterfaces(2);
             params.set(0, paramToAddress);
             params.set(1, paramAmount);
@@ -188,13 +188,49 @@ public class EthClientWrapper {
         return new TransactionIdImpl(transaction.getHash().getHex());
     }
 
-    private boolean hasEnoughBalance(BigDecimal amount) {
-        Balance balance = getBalance();
-        // (== -1) means bigger than the amount.
-        return balance.value().subtract(amount).compareTo(BigDecimal.ZERO) == -1;
+    /**
+     * Get balance for the specified account.
+     *
+     * @param account the {@link Account} to check balance
+     * @return the account {@link Balance}
+     * @throws OperationFailedException if could not retrieve balance
+     */
+    public Balance getBalance(Account account) throws OperationFailedException {
+        Interface balanceResult;
+        try {
+            Interface paramAddress = Geth.newInterface();
+            paramAddress.setAddress(account.getAddress());
+
+            Interfaces params = Geth.newInterfaces(1);
+            params.set(0, paramAddress);
+
+            balanceResult = Geth.newInterface();
+            balanceResult.setDefaultBigInt();
+
+            Interfaces results = Geth.newInterfaces(1);
+            results.set(0, balanceResult);
+
+            CallOpts opts = Geth.newCallOpts();
+            opts.setContext(gethContext);
+
+            // Send balanceOf call to Kin smart-contract.
+            boundContract.call(opts, results, "balanceOf", params);
+        } catch (Exception e) {
+            throw new OperationFailedException(e);
+        }
+
+        // Check for result, could be null if there was a problem with go-ethereum.
+        if (balanceResult.getBigInt() != null) {
+            BigDecimal valueInKin = KinConverter.toKin(balanceResult.getBigInt());
+            return new BalanceImpl(valueInKin);
+        } else {
+            throw new OperationFailedException("Could not retrieve balance");
+        }
     }
 
-    public Balance getBalance() {
-        return new MockBalance();
+    private boolean hasEnoughBalance(Account account, BigDecimal amount) throws OperationFailedException {
+        Balance balance = getBalance(account);
+        // (== -1) means bigger than the amount.
+        return balance.value().subtract(amount).compareTo(BigDecimal.ZERO) == -1;
     }
 }
