@@ -72,7 +72,7 @@ You can export the account keystore file as JSON using the `exportKeyStore` meth
 **At the moment this will always return a mock JSON String**
 ```java
  try {
-    String passphrase = "yourPassphrase";
+    String oldPassphrase = "yourPassphrase";
     String newPassphrase = "newPassphrase";
     String json = account.exportKeyStore(oldPassphrase, newPassphrase);
     Log.d("example", "The keystore JSON: " + json);
