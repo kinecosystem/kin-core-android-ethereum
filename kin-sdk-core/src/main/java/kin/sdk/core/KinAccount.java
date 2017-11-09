@@ -14,10 +14,12 @@ public interface KinAccount {
     String getPublicAddress();
 
     /**
+     * Exports the keystore json file
+     * @param oldPassphrase the passphrase used to create the acount
      * @param passphrase the passphrase used when creating the account
-     * @return String the private key
+     * @return String the json string
      */
-    String getPrivateKey(String passphrase) throws PassphraseException;
+    String exportKeyStore(String oldPassphrase, String newPassphrase) throws PassphraseException;
 
     /**
      * Create, sign and send a transaction of the given amount in kin to the specified public address
