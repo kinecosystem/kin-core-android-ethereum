@@ -57,6 +57,7 @@ public class KinAccountImpl extends AbstractKinAccount {
 
     @Override
     public String exportKeyStore(String oldPassphrase, String newPassphrase) throws PassphraseException {
+        // TODO replace with real implementation
         return "{\"address\":\"82cdc15705ce9f4565dda07d78c92ff3d2717854\",\"crypto\":{\"cipher\":\"aes-128-ctr\",\"ciphertext\":\"189f02138a83be004e97a531224b00b99423a0825d676e5ef92b910c274d8f8d\",\"cipherparams\":{\"iv\":\"d0b2f7fd02923d4b54bc2eb9fd4509f5\"},\"kdf\":\"scrypt\",\"kdfparams\":{\"dklen\":32,\"n\":4096,\"p\":6,\"r\":8,\"salt\":\"ce0915bfe693c918de990cee29493b03dc78c657627922c9ac83a00b44e231d6\"},\"mac\":\"601dec6cacfe5f7c651b7ad8bfda3a24e641f97cb78d6a1aaa56b918937c6894\"},\"id\":\"84d6035d-8d0f-4343-9d23-dfbae8f0ce6d\",\"version\":3}";
     }
 
