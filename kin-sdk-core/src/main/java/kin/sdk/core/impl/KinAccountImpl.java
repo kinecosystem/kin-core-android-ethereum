@@ -59,7 +59,7 @@ public class KinAccountImpl extends AbstractKinAccount {
     }
 
     @Override
-    public String getPrivateKey(String passphrase) throws PassphraseException {
+    public String exportKey(String oldPassphrase, String newPassphrase) throws PassphraseException {
         return "0xMock01ForPrivateKey";
     }
 
