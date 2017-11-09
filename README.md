@@ -3,23 +3,30 @@ Android library responsible for creating a new Ethereum account and managing KIN
 ![Kin Token](kin_android.png)
 
 ## Build
-Add this in your root `build.gradle` file (**not** your module `build.gradle` file):
+Temporary way to add the library to the project
+(Yes we know it's far from ideal!)
+
+1. Clone this repository
+2. Run `./gradlew clean assembleRelease`
+3. Copy `kin-sdk-core/build/outputs/aar/kin-sdk-core-debug.aar` AND `kin-sdk-core/libs/geth.aar` 
+to a library folder named `aars` for example
+4. Add this to your module's `build.gradle` file
+
 ```gradle
-allprojects {
-    repositories {
-        ...
-        maven { url "https://jitpack.io" }
+repositories {
+    ...
+    flatDir {
+       dirs 'aars'
     }
 }
-```
-
-Add this to your module's `build.gradle` file
-```gradle
+...
 dependencies {
     ...
-    compile 'com.github.TO-BE-ADDED-SOON'
+    compile(name:'geth', ext:'aar')
+    compile(name:'kin-sdk-core-release', ext:'aar')
 }
 ```
+In future, we will provide a solution to pull the library by dependency using jitpack 
 
 ## Usage
 ### Creating and retrieving an account
@@ -54,9 +61,25 @@ if (kinClient.hasAccounts()) {
 }
 ``` 
 
+### Public Address and JSON keystore 
 Your account can be identified via it's public address. To retrieve the account public address use:
 ```java
 account.getPublicAddress();
+```
+
+You can export the account keystore file as JSON using the `exportKeyStore` method
+**`exportKeyStore` is NOT IMPLEMENTED YET.**
+**At the moment this will always return a mock JSON String**
+```java
+ try {
+    String oldPassphrase = "yourPassphrase";
+    String newPassphrase = "newPassphrase";
+    String json = account.exportKeyStore(oldPassphrase, newPassphrase);
+    Log.d("example", "The keystore JSON: " + json);
+ }
+ catch (PassphraseException e){
+    e.printStackTrace();
+ }
 ```
 
 ### Retrieving Balance
@@ -66,7 +89,7 @@ account.getBalance(new ResultCallback<Balance>() {
     
     @Override
     public void onResult(Balance result) {
-        Log.d("example", "The balance is: " + result.toString());
+        Log.d("example", "The balance is: " + result.value(2));
     }
 
     @Override
@@ -101,6 +124,11 @@ account.sendTransaction(toAddress, passphrase, amountInKin, new ResultCallback<T
 ```
 
 ### Retrieving Pending Balance
+**`getPendingBalance` IS NOT IMPLEMENTED YET.**
+**At the moment `account.getPendingBalance()` always returns the same value as `account.getBalance()`***
+
+In the meantime, you are welcome to read here how it is intended to work:
+
 It takes some time for transactions to be confirmed.  In the meantime you can call `getPendingBalance` 
 to get the amount of KIN that you will have once all your pending transactions are confirmed.
 
@@ -139,8 +167,7 @@ account.sendTransactionSync(toAddress, passphrase, amountInKin);
 ```
 
 ### Sample Application 
-For a more detailed example on how to use the library you are welcome to take a look at our sample
-application [here](sample/)
+For a more detailed example on how to use the library we will soon be providing a sample app.
 
 ## Contributing
 Please review our [CONTRIBUTING.md](CONTRIBUTING.md) guide before opening issues and pull requests.
