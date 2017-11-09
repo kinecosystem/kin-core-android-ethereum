@@ -12,7 +12,6 @@ import kin.sdk.core.ethereum.EthClientWrapper;
 import kin.sdk.core.exception.InsufficientBalanceException;
 import kin.sdk.core.exception.OperationFailedException;
 import kin.sdk.core.exception.PassphraseException;
-import kin.sdk.core.mock.MockBalance;
 
 
 /**
@@ -20,8 +19,6 @@ import kin.sdk.core.mock.MockBalance;
  * Created by Oren Zakay on 02/11/2017.
  */
 public class KinAccountImpl extends AbstractKinAccount {
-
-    private final long PROCESSING_DURATION = 3000;
 
     private KeyStore keyStore;
     private EthClientWrapper ethClient;
@@ -71,23 +68,12 @@ public class KinAccountImpl extends AbstractKinAccount {
 
     @Override
     public Balance getBalanceSync() throws OperationFailedException {
-        try {
-            Thread.sleep(PROCESSING_DURATION);
-            return ethClient.getBalance();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            throw new OperationFailedException("Failed - could not get balance");
-        }
+        return ethClient.getBalance(account);
     }
 
     @Override
     public Balance getPendingBalanceSync() throws OperationFailedException {
-        try {
-            Thread.sleep(PROCESSING_DURATION);
-            return new MockBalance();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            throw new OperationFailedException("Failed - could not get pending balance");
-        }
+        //TODO need to be implemented, now it returns only current balance.
+        return ethClient.getBalance(account);
     }
 }

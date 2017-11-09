@@ -22,4 +22,8 @@ class KinConverter {
     static BigDecimal toKin(BigDecimal value) {
         return value.multiply(KIN);
     }
+
+    static BigDecimal toKin(BigInt value) {
+        return new BigDecimal(value.string()).divide(KIN, 18, BigDecimal.ROUND_FLOOR);
+    }
 }
