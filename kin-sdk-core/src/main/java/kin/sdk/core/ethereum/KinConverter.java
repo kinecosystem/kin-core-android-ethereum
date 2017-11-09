@@ -4,6 +4,7 @@ import org.ethereum.geth.BigInt;
 import org.ethereum.geth.Geth;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 /**
  * Project - Kin SDK
@@ -25,5 +26,9 @@ class KinConverter {
 
     static BigDecimal toKin(BigInt value) {
         return new BigDecimal(value.string()).divide(KIN, 18, BigDecimal.ROUND_FLOOR);
+    }
+
+    static BigDecimal toKin(BigInteger value) {
+        return new BigDecimal(value).divide(KIN, 18, BigDecimal.ROUND_FLOOR);
     }
 }
