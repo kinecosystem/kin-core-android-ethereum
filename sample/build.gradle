@@ -26,5 +26,5 @@ dependencies {
     })
     implementation 'com.android.support:appcompat-v7:26.+'
     testImplementation 'junit:junit:4.12'
-    implementation project(':kin-sdk-core')
+    api project(':kin-sdk-core')
 }

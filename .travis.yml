@@ -2,20 +2,19 @@ language: android
 android:
   components:
     - tools
-    # The SDK version used to compile your project
-    - android-26
+    - platform-tools
+    - tools
+
     # The BuildTools version used by your project
     - build-tools-26.0.2
+
+    # The SDK version used to compile your project
+    - android-26
+
     - extra-google-m2repository
     - extra-android-m2repository
     - extra-android-support
 
-branches:
-  only:
-    - master
-    - dev
-    - /^rc(\/.*)?/
-    - /^epic\/.*/
 
 ֿֿscript:
   - ./gradlew build -PisRelease=true -Pandroid.buildOnlyTargetAbi=false -Ptravis
