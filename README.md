@@ -4,7 +4,7 @@ Android library responsible for creating a new Ethereum account and managing KIN
 
 ## Build
 
-* Copy [`kin-sdk-core/libs/geth.aar`](kin-sdk-core/libs/geth.aar) to a library folder in your project module.  
+* Copy [kin-sdk-core/libs/geth.aar](kin-sdk-core/libs/geth.aar) to a library folder in your project module.  
 _Note: In the near future we will upload the aar to jcenter so that you can pull it too by dependency_
 
 * Add this to your module's `build.gradle` file. Where:
@@ -12,7 +12,7 @@ _Note: In the near future we will upload the aar to jcenter so that you can pull
 repositories {
     ...
     flatDir {
-       dirs 'YOUR-FOLDER-NAME'
+       dirs 'YOUR-LIB-FOLDER-NAME'
     }
     maven {
         url 'https://jitpack.io'
@@ -27,10 +27,10 @@ dependencies {
 }
 ```
 In the above `build.gradle`:
-* YOUR-FOLDER-NAME is the folder you copied geth.aar to
-* YOUR-JITPACK-AUTHTOKEN won't be needed once repository is opened source.
+* YOUR-LIB-FOLDER-NAME is the folder you copied geth.aar to
+* YOUR-JITPACK-AUTHTOKEN won't be needed once repository is changed to public.
 For the time being to get a token, go to https://jitpack.io and sign in with your github account. 
-Authorize jitpack, then navigate to https://jitpack.io/w/userto get your AccessToken. Ensure that jitpack is authorized 
+Authorize jitpack, then navigate to https://jitpack.io/w/user to get your AccessToken. Ensure that jitpack is authorized 
 for private repositories
 * LATEST-COMMIT-ON-DEV-BRANCH is an abbreviated commit hash for example: f367f300f5
 
@@ -179,4 +179,5 @@ For a more detailed example on how to use the library we will soon be providing 
 Please review our [CONTRIBUTING.md](CONTRIBUTING.md) guide before opening issues and pull requests.
 
 ## License
-The kin-sdk-core-android library is licensed under **LGPL LICENCE TO BE ADDED**
+The kin-sdk-core-android library is licensed under GNU Lesser General Public License v3.0, 
+also included in our repository in the [COPYING.LESSER](COPYING.LESSER) file.
