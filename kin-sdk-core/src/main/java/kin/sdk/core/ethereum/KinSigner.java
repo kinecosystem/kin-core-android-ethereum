@@ -11,9 +11,6 @@ import org.ethereum.geth.Transaction;
 import kin.sdk.core.exception.PassphraseException;
 
 /**
- * Project - Kin SDK
- * Created by Oren Zakay on 06/11/2017.
- *
  * Responsible for signing transactions with passphrase.
  */
 class KinSigner implements Signer {
