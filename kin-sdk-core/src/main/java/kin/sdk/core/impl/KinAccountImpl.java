@@ -13,11 +13,6 @@ import kin.sdk.core.exception.InsufficientBalanceException;
 import kin.sdk.core.exception.OperationFailedException;
 import kin.sdk.core.exception.PassphraseException;
 
-
-/**
- * Project - Kin SDK
- * Created by Oren Zakay on 02/11/2017.
- */
 public class KinAccountImpl extends AbstractKinAccount {
 
     private KeyStore keyStore;

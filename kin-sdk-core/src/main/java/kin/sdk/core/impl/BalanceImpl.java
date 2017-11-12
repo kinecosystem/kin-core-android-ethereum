@@ -4,10 +4,6 @@ import java.math.BigDecimal;
 
 import kin.sdk.core.Balance;
 
-/**
- * Project - Kin SDK
- * Created by Oren Zakay on 08/11/2017.
- */
 public class BalanceImpl implements Balance {
 
     private BigDecimal valueInKin;
