@@ -1,16 +1,9 @@
 package kin.sdk.core.sample;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-
 import kin.sdk.core.KinClient;
-
-/**
- * Created by shaybaz on 09/11/2017.
- */
 
 public abstract class BaseActivity extends AppCompatActivity {
 
@@ -47,16 +40,4 @@ public abstract class BaseActivity extends AppCompatActivity {
         finish();
     }
 
-    public void alert(String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(message)
-                .setCancelable(false)
-                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                    }
-                });
-        AlertDialog alert = builder.create();
-        alert.show();
-    }
 }

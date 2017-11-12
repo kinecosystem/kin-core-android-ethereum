@@ -17,46 +17,24 @@
             style="@style/kinText.Bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="getPublicAddress:" />
+            android:text="getPublicAddress:"/>
 
         <TextView
             android:id="@+id/public_key"
             style="@style/kinText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"
             android:textIsSelectable="true"
-            tools:text="public key" />
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center">
-
-            <TextView
-                style="@style/kinText.Bold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left|center"
-                android:text="getPrivateKey" />
-
-            <Button
-                android:id="@+id/reveal_btn"
-                style="@style/KinButtonStyle.TestNet"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right|center"
-                android:text="@string/reveal" />
-
-        </FrameLayout>
+            tools:text="public key"/>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginBottom="20dp"
             android:layout_marginTop="20dp"
-            android:background="@color/grey" />
+            android:layout_marginBottom="20dp"
+            android:background="@color/grey"/>
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -69,7 +47,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right|center"
-                android:text="@string/refresh" />
+                android:text="@string/refresh"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -82,15 +60,15 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:gravity="center|left"
-                    android:text="getBalance:" />
+                    android:text="getBalance:"/>
 
                 <ProgressBar
                     android:id="@+id/balance_progress"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:layout_gravity="bottom"
                     android:layout_marginLeft="10dp"
-                    android:visibility="gone" />
+                    android:layout_gravity="bottom"
+                    android:visibility="gone"/>
             </LinearLayout>
 
         </FrameLayout>
@@ -102,7 +80,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:gravity="left"
-            tools:text="123.0" />
+            tools:text="123.0"/>
 
 
         <LinearLayout
@@ -116,15 +94,15 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:gravity="center|left"
-                android:text="getPendingBalance:" />
+                android:text="getPendingBalance:"/>
 
             <ProgressBar
                 android:id="@+id/pending_balance_progress"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:layout_gravity="bottom"
                 android:layout_marginLeft="10dp"
-                android:visibility="gone" />
+                android:layout_gravity="bottom"
+                android:visibility="gone"/>
         </LinearLayout>
 
 
@@ -134,7 +112,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            tools:text="555.5" />
+            tools:text="555.5"/>
 
 
         <Button
@@ -143,7 +121,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
-            android:text="@string/send_transaction" />
+            android:text="@string/send_transaction"/>
 
         <Button
             android:id="@+id/get_kin_btn"
@@ -151,7 +129,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:text="@string/get_kin" />
+            android:text="@string/get_kin"/>
 
     </LinearLayout>
 

@@ -4,15 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ProgressBar;
+import android.view.View.OnClickListener;
 import android.widget.TextView;
-
 import kin.sdk.core.Balance;
-import kin.sdk.core.ResultCallback;
-
-/**
- * Created by shaybaz on 06/11/2017.
- */
 
 public class WalletActivity extends BaseActivity {
 
@@ -24,6 +18,7 @@ public class WalletActivity extends BaseActivity {
 
     private TextView balance, pendingBalance, publicKey;
     private View balanceProgress, pendingBalanceProgress;
+    private DisplayCallback<Balance> balanceCallback, pendingBalanceCallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +38,7 @@ public class WalletActivity extends BaseActivity {
         updatePendingBalance();
     }
 
-    private void initWidgets(){
+    private void initWidgets() {
         balance = (TextView) findViewById(R.id.balance);
         pendingBalance = (TextView) findViewById(R.id.pending_balance);
         publicKey = (TextView) findViewById(R.id.public_key);
@@ -53,14 +48,20 @@ public class WalletActivity extends BaseActivity {
 
         final View transaction = findViewById(R.id.send_transaction_btn);
         final View refresh = findViewById(R.id.refresh_btn);
-        final View reveal = findViewById(R.id.reveal_btn);
         final View getKin = findViewById(R.id.get_kin_btn);
 
-        if(getKinClientApplication().isMainNet()) {
+        if (getKinClientApplication().isMainNet()) {
             transaction.setBackgroundResource(R.drawable.button_main_network_bg);
             refresh.setBackgroundResource(R.drawable.button_main_network_bg);
-            reveal.setBackgroundResource(R.drawable.button_main_network_bg);
             getKin.setVisibility(View.GONE);
+        }
+        else {
+            getKin.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ViewUtils.alert(view.getContext(), "This is not implemented yet");
+                }
+            });
         }
 
         transaction.setOnClickListener(new View.OnClickListener() {
@@ -78,51 +79,47 @@ public class WalletActivity extends BaseActivity {
         });
     }
 
-    private void updatePublicKey(){
+    private void updatePublicKey() {
         publicKey.setText(getKinClient().getAccount().getPublicAddress());
     }
 
-    private void updateBalance(){
+    private void updateBalance() {
         balanceProgress.setVisibility(View.VISIBLE);
-        getKinClient().getAccount().getBalance(new ResultCallback<Balance>() {
+        balanceCallback = new DisplayCallback<Balance>(balanceProgress, balance) {
             @Override
-            public void onResult(Balance result) {
-                balanceProgress.setVisibility(View.GONE);
+            public void displayResult(Context context, View view, Balance result) {
                 balance.setText(result.value(3));
             }
-
-            @Override
-            public void onError(Exception e) {
-                balanceProgress.setVisibility(View.GONE);
-                alert(e.getMessage());
-            }
-        });
+        };
+        getKinClient().getAccount().getBalance(balanceCallback);
     }
 
-    private void updatePendingBalance(){
+    private void updatePendingBalance() {
         pendingBalanceProgress.setVisibility(View.VISIBLE);
-        getKinClient().getAccount().getPendingBalance(new ResultCallback<Balance>() {
+        pendingBalanceCallback = new DisplayCallback<Balance>(pendingBalanceProgress, pendingBalance) {
             @Override
-            public void onResult(Balance result) {
-                pendingBalanceProgress.setVisibility(View.GONE);
+            public void displayResult(Context context, View view, Balance result) {
                 pendingBalance.setText(result.value(3));
             }
-
-            @Override
-            public void onError(Exception e) {
-                pendingBalanceProgress.setVisibility(View.GONE);
-                alert(e.getMessage());
-            }
-        });
+        };
+        getKinClient().getAccount().getPendingBalance(pendingBalanceCallback);
     }
 
     @Override
     Intent getBackIntent() {
-        return NetWorksActivity.getIntent(this);
+        return ChooseNetworkActivity.getIntent(this);
     }
 
-
-    private void sendTransaction() {
-        startActivity(TransactionActivity.getIntent(this));
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (pendingBalanceCallback != null) {
+            pendingBalanceCallback.cancel();
+        }
+        if (balanceCallback != null) {
+            balanceCallback.cancel();
+        }
+        pendingBalance = null;
+        balance = null;
     }
 }

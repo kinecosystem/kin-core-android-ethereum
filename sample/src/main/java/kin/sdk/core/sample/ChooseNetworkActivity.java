@@ -1,32 +1,24 @@
 package kin.sdk.core.sample;
 
-import android.app.Application;
-import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 
 import kin.sdk.core.KinClient;
 
-/**
- * Created by shaybaz on 06/11/2017.
- */
+public class ChooseNetworkActivity extends BaseActivity {
 
-public class NetWorksActivity extends BaseActivity {
-
-    public static final String TAG = NetWorksActivity.class.getSimpleName();
+    public static final String TAG = ChooseNetworkActivity.class.getSimpleName();
 
     public static Intent getIntent(Context context) {
-        return new Intent(context, NetWorksActivity.class);
+        return new Intent(context, ChooseNetworkActivity.class);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.networks_activity);
+        setContentView(R.layout.choose_network_activity);
         getSupportActionBar().setTitle(R.string.app_name);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         findViewById(R.id.btn_main_net).setOnClickListener(new View.OnClickListener() {

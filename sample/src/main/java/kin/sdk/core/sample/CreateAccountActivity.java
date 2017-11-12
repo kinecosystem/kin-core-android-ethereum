@@ -8,10 +8,6 @@ import android.view.View;
 import kin.sdk.core.KinClient;
 import kin.sdk.core.exception.CreateAccountException;
 
-/**
- * Created by shaybaz on 06/11/2017.
- */
-
 public class CreateAccountActivity extends BaseActivity {
 
     public static final String TAG = CreateAccountActivity.class.getSimpleName();
@@ -49,13 +45,13 @@ public class CreateAccountActivity extends BaseActivity {
             kinClient.createAccount(passphrase);
             startActivity(WalletActivity.getIntent(this));
         } catch (CreateAccountException e) {
-            alert(e.getMessage());
+            ViewUtils.alert(this, e.getMessage());
         }
     }
 
     @Override
     Intent getBackIntent() {
-        return NetWorksActivity.getIntent(this);
+        return ChooseNetworkActivity.getIntent(this);
     }
 
 }

@@ -3,23 +3,12 @@ package kin.sdk.core.sample;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ProgressBar;
-
 import java.math.BigDecimal;
-
-import kin.sdk.core.KinAccount;
-import kin.sdk.core.ResultCallback;
 import kin.sdk.core.TransactionId;
-
-/**
- * Created by shaybaz on 06/11/2017.
- */
 
 public class TransactionActivity extends BaseActivity {
 
@@ -31,6 +20,7 @@ public class TransactionActivity extends BaseActivity {
 
     private View sendTransaction, progressBar;
     private EditText toAddressInput, amountInput;
+    private DisplayCallback<TransactionId> transactionCallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,13 +32,13 @@ public class TransactionActivity extends BaseActivity {
         initWidgets();
     }
 
-    private void initWidgets(){
+    private void initWidgets() {
         sendTransaction = findViewById(R.id.send_transaction_btn);
         progressBar = findViewById(R.id.transaction_progress);
         toAddressInput = (EditText) findViewById(R.id.to_address_input);
         amountInput = (EditText) findViewById(R.id.amount_input);
 
-        if(getKinClientApplication().isMainNet()) {
+        if (getKinClientApplication().isMainNet()) {
             sendTransaction.setBackgroundResource(R.drawable.button_main_network_bg);
         }
         toAddressInput.addTextChangedListener(new TextWatcher() {
@@ -59,9 +49,9 @@ public class TransactionActivity extends BaseActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if(!sendTransaction.isEnabled() && charSequence.length() !=0 && amountInput.getText().length() != 0){
+                if (!sendTransaction.isEnabled() && charSequence.length() != 0 && amountInput.getText().length() != 0) {
                     sendTransaction.setEnabled(true);
-                }else if(sendTransaction.isEnabled()){
+                } else if (sendTransaction.isEnabled()) {
                     sendTransaction.setEnabled(false);
                 }
             }
@@ -80,9 +70,10 @@ public class TransactionActivity extends BaseActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if(!sendTransaction.isEnabled() && charSequence.length() !=0 && toAddressInput.getText().length() != 0){
+                if (!sendTransaction.isEnabled() && charSequence.length() != 0
+                    && toAddressInput.getText().length() != 0) {
                     sendTransaction.setEnabled(true);
-                }else if(sendTransaction.isEnabled()){
+                } else if (sendTransaction.isEnabled()) {
                     sendTransaction.setEnabled(false);
                 }
             }
@@ -106,25 +97,25 @@ public class TransactionActivity extends BaseActivity {
         return WalletActivity.getIntent(this);
     }
 
-    private void sendTransaction(String toAdress, BigDecimal amount) {
+    private void sendTransaction(String toAddress, BigDecimal amount) {
 
         final String passphrase = getKinClientApplication().getPassphrase();
         progressBar.setVisibility(View.VISIBLE);
-        getKinClient().getAccount().sendTransaction(toAdress, passphrase, amount, new ResultCallback<TransactionId>() {
+        transactionCallback = new DisplayCallback<TransactionId>(progressBar) {
             @Override
-            public void onResult(TransactionId result) {
-                progressBar.setVisibility(View.GONE);
+            public void displayResult(Context context, View view, TransactionId transactionId) {
+                ViewUtils.alert(context, "Transaction id " + transactionId.id());
             }
-
-            @Override
-            public void onError(Exception e) {
-                progressBar.setVisibility(View.GONE);
-                alert(e.getMessage());
-            }
-        });
-        Log.d("###", "#### sendTransaction");
-
+        };
+        getKinClient().getAccount().sendTransaction(toAddress, passphrase, amount, transactionCallback);
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (transactionCallback != null) {
+            transactionCallback.cancel();
+        }
+        progressBar = null;
+    }
 }

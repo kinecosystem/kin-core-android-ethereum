@@ -3,14 +3,14 @@
     package="kin.sdk.core.sample">
 
     <application
-        android:name=".KinClientApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:name=".KinClientApplication"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".NetWorksActivity" >
+        <activity android:name=".ChooseNetworkActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -19,13 +19,13 @@
         </activity>
         <activity
             android:name=".CreateAccountActivity"
-            android:parentActivityName=".NetWorksActivity" />
+            android:parentActivityName=".ChooseNetworkActivity"/>
         <activity
             android:name=".WalletActivity"
-            android:parentActivityName=".NetWorksActivity" />
+            android:parentActivityName=".ChooseNetworkActivity"/>
         <activity
             android:name=".TransactionActivity"
-            android:parentActivityName=".WalletActivity" />
+            android:parentActivityName=".WalletActivity"/>
 
     </application>
 
