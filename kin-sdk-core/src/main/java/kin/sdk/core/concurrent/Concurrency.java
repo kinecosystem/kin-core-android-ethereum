@@ -15,6 +15,7 @@ import kin.sdk.core.ResultCallback;
  */
 
 public class Concurrency {
+
     private ExecutorService executorService;
     private static Concurrency instance;
     private Handler mainHandler;

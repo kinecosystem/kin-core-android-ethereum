@@ -14,7 +14,8 @@ public abstract class AbstractKinAccount implements KinAccount {
     private final Concurrency concurrency = Concurrency.getInstance();
 
     @Override
-    public void sendTransaction(final String publicAddress, final String passphrase, final BigDecimal amount, final ResultCallback<TransactionId> callback) {
+    public void sendTransaction(final String publicAddress, final String passphrase, final BigDecimal amount,
+        final ResultCallback<TransactionId> callback) {
         concurrency.execute(new Callable<TransactionId>() {
             @Override
             public TransactionId call() throws Exception {

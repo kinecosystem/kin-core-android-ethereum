@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         String infuraToken = "yourinfuratoken";
         try {
             kinClient = new KinClient(getApplicationContext(),
-                    new ServiceProvider(INFURA_ROPSTEN_BASE_URL + infuraToken, ServiceProvider.NETWORK_ID_ROPSTEN));
+                new ServiceProvider(INFURA_ROPSTEN_BASE_URL + infuraToken, ServiceProvider.NETWORK_ID_ROPSTEN));
         } catch (EthereumClientException e) {
             e.printStackTrace();
         }
