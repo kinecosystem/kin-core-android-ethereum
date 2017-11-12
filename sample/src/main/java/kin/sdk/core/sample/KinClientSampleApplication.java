@@ -1,33 +1,25 @@
 package kin.sdk.core.sample;
 
 import android.app.Application;
-import android.graphics.Color;
-
 import kin.sdk.core.KinClient;
 import kin.sdk.core.ServiceProvider;
 import kin.sdk.core.exception.EthereumClientException;
 
-/**
- * Created by shaybaz on 08/11/2017.
- */
+public class KinClientSampleApplication extends Application {
 
-public class KinClientApplication extends Application {
     private final String INFURA_ROPSTEN_BASE_URL = "https://ropsten.infura.io/";
     private final String INFURA_MAIN_BASE_URL = "https://mainnet.infura.io/";
-    public static final String PASSPHRASE = "12345";
     //replace with your infura token
-    private final String infuraToken = "yourInfuraToken";
+    private final String infuraToken = "your-infura-token-here";
 
     public enum NetWorkType {
         MAIN,
         ROPSTEN;
     }
 
-    private NetWorkType netWorkType = NetWorkType.ROPSTEN;
     private KinClient kinClient = null;
 
-    public KinClient initKinClient(NetWorkType type) {
-        netWorkType = type;
+    public KinClient createKinClient(NetWorkType type) {
         String baseUrl;
         int netWorkId;
         switch (type) {
@@ -45,23 +37,15 @@ public class KinClientApplication extends Application {
         }
         try {
             kinClient = new KinClient(this,
-                    new ServiceProvider(baseUrl + infuraToken, netWorkId));
+                new ServiceProvider(baseUrl + infuraToken, netWorkId));
         } catch (EthereumClientException e) {
             e.printStackTrace();
         }
         return kinClient;
     }
 
-
-    public boolean isMainNet(){
-        return netWorkType == NetWorkType.MAIN;
-    }
-
     public KinClient getKinClient() {
         return kinClient;
     }
 
-    public String getPassphrase(){
-        return PASSPHRASE;
-    }
 }

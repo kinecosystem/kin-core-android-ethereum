@@ -86,4 +86,8 @@ public class KinClient {
             return accounts != null && accounts.size() > 0;
         }
     }
+
+    public boolean isMainNet() {
+        return ethClient.getNetworkId() == ServiceProvider.NETWORK_ID_MAIN;
+    }
 }

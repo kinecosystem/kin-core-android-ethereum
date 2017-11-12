@@ -1,19 +1,18 @@
 package kin.sdk.core.sample;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-
 import kin.sdk.core.KinClient;
-
-/**
- * Created by shaybaz on 09/11/2017.
- */
 
 public abstract class BaseActivity extends AppCompatActivity {
 
+    // ideally user should be asked for a passphrase when
+    // creating an account and then the same passphrase
+    // should be used when sending transactions
+    // To make the UI simpler for the sample application
+    // we are using a hardcoded passphrase.
+    static final String PASSPHRASE = "12345";
     abstract Intent getBackIntent();
 
     @Override
@@ -27,11 +26,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public KinClient getKinClient() {
-        return getKinClientApplication().getKinClient();
-    }
-
-    public KinClientApplication getKinClientApplication() {
-        return ((KinClientApplication) getApplication());
+        KinClientSampleApplication application = (KinClientSampleApplication) getApplication();
+        return application.getKinClient();
     }
 
     @Override
@@ -47,16 +43,4 @@ public abstract class BaseActivity extends AppCompatActivity {
         finish();
     }
 
-    public void alert(String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(message)
-                .setCancelable(false)
-                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                    }
-                });
-        AlertDialog alert = builder.create();
-        alert.show();
-    }
 }

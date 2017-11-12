@@ -11,56 +11,56 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="top"
         android:layout_margin="35dp"
+        android:layout_gravity="top"
         android:orientation="vertical">
 
         <TextView
             style="@style/kinText.Bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/public_address" />
+            android:text="@string/public_address"/>
 
         <EditText
             android:id="@+id/to_address_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"
             android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
-            tools:text="public key" />
+            tools:text="public key"/>
 
 
         <TextView
             style="@style/kinText.Bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/amount" />
+            android:text="@string/amount"/>
 
         <EditText
             android:id="@+id/amount_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"
             android:inputType="numberSigned|numberDecimal"
-            tools:text="10" />
+            tools:text="10"/>
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="35dp"
         android:layout_gravity="bottom"
-        android:orientation="vertical"
-        android:layout_margin="35dp">
+        android:orientation="vertical">
 
         <ProgressBar
             android:id="@+id/transaction_progress"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_gravity="center"
             android:layout_marginBottom="15dp"
+            android:layout_gravity="center"
             android:visibility="gone"/>
 
         <Button
@@ -69,8 +69,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:enabled="false"
-            android:text="sendTransaction" />
-
+            android:text="sendTransaction"/>
 
 
     </LinearLayout>

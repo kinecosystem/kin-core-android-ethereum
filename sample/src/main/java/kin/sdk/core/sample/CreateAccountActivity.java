@@ -9,9 +9,9 @@ import kin.sdk.core.KinClient;
 import kin.sdk.core.exception.CreateAccountException;
 
 /**
- * Created by shaybaz on 06/11/2017.
+ * This activity is displayed only if there is no existing account stored on device for the given network
+ * The activity will just display a button to create an account
  */
-
 public class CreateAccountActivity extends BaseActivity {
 
     public static final String TAG = CreateAccountActivity.class.getSimpleName();
@@ -31,7 +31,7 @@ public class CreateAccountActivity extends BaseActivity {
 
     private void initButtons() {
         View view = findViewById(R.id.btn_create_account);
-        if (getKinClientApplication().isMainNet()) {
+        if (getKinClient().isMainNet()) {
             view.setBackgroundResource(R.drawable.button_main_network_bg);
         }
         view.setOnClickListener(new View.OnClickListener() {
@@ -45,17 +45,16 @@ public class CreateAccountActivity extends BaseActivity {
     private void createAccount() {
         try {
             final KinClient kinClient = getKinClient();
-            final String passphrase = getKinClientApplication().getPassphrase();
-            kinClient.createAccount(passphrase);
+            kinClient.createAccount(PASSPHRASE);
             startActivity(WalletActivity.getIntent(this));
         } catch (CreateAccountException e) {
-            alert(e.getMessage());
+            ViewUtils.alert(this, e.getMessage());
         }
     }
 
     @Override
     Intent getBackIntent() {
-        return NetWorksActivity.getIntent(this);
+        return ChooseNetworkActivity.getIntent(this);
     }
 
 }
