@@ -6,9 +6,6 @@ import org.ethereum.geth.Geth;
 import java.math.BigDecimal;
 
 /**
- * Project - Kin SDK
- * Created by Oren Zakay on 07/11/2017.
- *
  * A Utility class used to convert currency values to/from Kin.
  */
 class KinConverter {

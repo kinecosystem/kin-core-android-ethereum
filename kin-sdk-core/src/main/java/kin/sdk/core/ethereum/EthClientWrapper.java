@@ -28,10 +28,9 @@ import kin.sdk.core.impl.BalanceImpl;
 import kin.sdk.core.impl.TransactionIdImpl;
 
 /**
- * Project - Kin SDK
- * Created by Oren Zakay on 02/11/2017.
- * <p>
- * Responsible to preform all the calls to Kin smart-contract.
+ * A Wrapper to the geth (go ethereum) library.
+ * Responsible for account creation/storage/retrieval, connection to Kin contract
+ * retrieving balance and sending transactions
  */
 public class EthClientWrapper {
 
