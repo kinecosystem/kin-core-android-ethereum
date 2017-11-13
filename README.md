@@ -32,7 +32,7 @@ In the above `build.gradle`:
 For the time being to get a token, go to https://jitpack.io and sign in with your github account. 
 Authorize jitpack, then navigate to https://jitpack.io/w/user to get your AccessToken. Ensure that jitpack is authorized 
 for private repositories
-* LATEST-COMMIT-ON-DEV-BRANCH is an abbreviated commit hash for example: f367f300f5
+* LATEST-COMMIT-ON-DEV-BRANCH is a short commit hash for example 1st 10 characters of a commit: f367f300f5
 
 ## Usage
 ### Creating and retrieving an account
