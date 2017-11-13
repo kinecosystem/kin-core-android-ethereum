@@ -3,30 +3,36 @@ Android library responsible for creating a new Ethereum account and managing KIN
 ![Kin Token](kin_android.png)
 
 ## Build
-Temporary way to add the library to the project
-(Yes we know it's far from ideal!)
 
-1. Clone this repository
-2. Run `./gradlew clean assembleRelease`
-3. Copy `kin-sdk-core/build/outputs/aar/kin-sdk-core-debug.aar` AND `kin-sdk-core/libs/geth.aar` 
-to a library folder named `aars` for example
-4. Add this to your module's `build.gradle` file
+* Copy [kin-sdk-core/libs/geth.aar](kin-sdk-core/libs/geth.aar) to a library folder in your project module.  
+_Note: In the near future we will upload the aar to jcenter so that you can pull it too by dependency_
 
+* Add this to your module's `build.gradle` file. Where:
 ```gradle
 repositories {
     ...
     flatDir {
-       dirs 'aars'
+       dirs 'YOUR-LIB-FOLDER-NAME'
+    }
+    maven {
+        url 'https://jitpack.io'
+        credentials { username YOUR-JITPACK-AUTHTOKEN }
     }
 }
 ...
 dependencies {
     ...
     compile(name:'geth', ext:'aar')
-    compile(name:'kin-sdk-core-release', ext:'aar')
+    compile "com.github.kinfoundation:kin-sdk-core-android:LATEST-COMMIT-ON-DEV-BRANCH"
 }
 ```
-In future, we will provide a solution to pull the library by dependency using jitpack 
+In the above `build.gradle`:
+* YOUR-LIB-FOLDER-NAME is the folder you copied geth.aar to
+* YOUR-JITPACK-AUTHTOKEN won't be needed once repository is changed to public.
+For the time being to get a token, go to https://jitpack.io and sign in with your github account. 
+Authorize jitpack, then navigate to https://jitpack.io/w/user to get your AccessToken. Ensure that jitpack is authorized 
+for private repositories
+* LATEST-COMMIT-ON-DEV-BRANCH is an abbreviated commit hash for example: f367f300f5
 
 ## Usage
 ### Creating and retrieving an account
@@ -125,7 +131,7 @@ account.sendTransaction(toAddress, passphrase, amountInKin, new ResultCallback<T
 
 ### Retrieving Pending Balance
 **`getPendingBalance` IS NOT IMPLEMENTED YET.**
-**At the moment `account.getPendingBalance()` always returns the same value as `account.getBalance()`***
+**At the moment `account.getPendingBalance()` always returns the same value as `account.getBalance()`**
 
 In the meantime, you are welcome to read here how it is intended to work:
 
@@ -173,4 +179,5 @@ For a more detailed example on how to use the library we will soon be providing 
 Please review our [CONTRIBUTING.md](CONTRIBUTING.md) guide before opening issues and pull requests.
 
 ## License
-The kin-sdk-core-android library is licensed under **LGPL LICENCE TO BE ADDED**
+The kin-sdk-core-android library is licensed under GNU Lesser General Public License v3.0, 
+also included in our repository in the [COPYING.LESSER](COPYING.LESSER) file.
