@@ -69,7 +69,6 @@ public class KinAccountImpl extends AbstractKinAccount {
 
     @Override
     public Balance getPendingBalanceSync() throws OperationFailedException {
-        //TODO need to be implemented, now it returns only current balance.
-        return ethClient.getBalance(account);
+        return ethClient.getPendingBalance(account);
     }
 }

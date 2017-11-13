@@ -1,5 +1,16 @@
 package kin.sdk.core.ethereum;
 
+import java.io.File;
+import java.math.BigDecimal;
+import kin.sdk.core.Balance;
+import kin.sdk.core.ServiceProvider;
+import kin.sdk.core.TransactionId;
+import kin.sdk.core.exception.EthereumClientException;
+import kin.sdk.core.exception.InsufficientBalanceException;
+import kin.sdk.core.exception.OperationFailedException;
+import kin.sdk.core.exception.PassphraseException;
+import kin.sdk.core.impl.BalanceImpl;
+import kin.sdk.core.impl.TransactionIdImpl;
 import org.ethereum.geth.Account;
 import org.ethereum.geth.Address;
 import org.ethereum.geth.BigInt;
@@ -14,19 +25,6 @@ import org.ethereum.geth.KeyStore;
 import org.ethereum.geth.TransactOpts;
 import org.ethereum.geth.Transaction;
 
-import java.io.File;
-import java.math.BigDecimal;
-
-import kin.sdk.core.Balance;
-import kin.sdk.core.ServiceProvider;
-import kin.sdk.core.TransactionId;
-import kin.sdk.core.exception.EthereumClientException;
-import kin.sdk.core.exception.InsufficientBalanceException;
-import kin.sdk.core.exception.OperationFailedException;
-import kin.sdk.core.exception.PassphraseException;
-import kin.sdk.core.impl.BalanceImpl;
-import kin.sdk.core.impl.TransactionIdImpl;
-
 /**
  * A Wrapper to the geth (go ethereum) library.
  * Responsible for account creation/storage/retrieval, connection to Kin contract
@@ -34,20 +32,14 @@ import kin.sdk.core.impl.TransactionIdImpl;
  */
 public class EthClientWrapper {
 
-    private static final long DEFAULT_GAS_LIMIT = 4300000;
-
     private Context gethContext;
     private EthereumClient ethereumClient;
     private BoundContract boundContract;
-
     private KeyStore keyStore;
-
     private ServiceProvider serviceProvider;
-
     private long nonce = -1;
     private BigInt gasPrice = null;
-
-    private static final String ABI = "[{\"constant\":true,\"inputs\":[],\"name\":\"name\",\"outputs\":[{\"name\":\"\",\"type\":\"string\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_newOwnerCandidate\",\"type\":\"address\"}],\"name\":\"requestOwnershipTransfer\",\"outputs\":[],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_spender\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"approve\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"totalSupply\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_from\",\"type\":\"address\"},{\"name\":\"_to\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"transferFrom\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"isMinting\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"decimals\",\"outputs\":[{\"name\":\"\",\"type\":\"uint8\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_to\",\"type\":\"address\"},{\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"mint\",\"outputs\":[],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"_owner\",\"type\":\"address\"}],\"name\":\"balanceOf\",\"outputs\":[{\"name\":\"balance\",\"type\":\"uint256\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[],\"name\":\"acceptOwnership\",\"outputs\":[],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"symbol\",\"outputs\":[{\"name\":\"\",\"type\":\"string\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_to\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"transfer\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"newOwnerCandidate\",\"outputs\":[{\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_tokenAddress\",\"type\":\"address\"},{\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"transferAnyERC20Token\",\"outputs\":[{\"name\":\"success\",\"type\":\"bool\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"_owner\",\"type\":\"address\"},{\"name\":\"_spender\",\"type\":\"address\"}],\"name\":\"allowance\",\"outputs\":[{\"name\":\"remaining\",\"type\":\"uint256\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[],\"name\":\"endMinting\",\"outputs\":[],\"payable\":false,\"type\":\"function\"},{\"anonymous\":false,\"inputs\":[],\"name\":\"MintingEnded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"spender\",\"type\":\"address\"},{\"indexed\":false,\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"Approval\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"to\",\"type\":\"address\"},{\"indexed\":false,\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"_by\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"_to\",\"type\":\"address\"}],\"name\":\"OwnershipRequested\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"_from\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"_to\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"}]";
+    private final PendingBalance pendingBalance;
 
     public EthClientWrapper(android.content.Context androidContext, ServiceProvider serviceProvider)
         throws EthereumClientException {
@@ -56,6 +48,7 @@ public class EthClientWrapper {
         initEthereumClient();
         initKinContract();
         initKeyStore(androidContext);
+        pendingBalance = new PendingBalance(ethereumClient, gethContext);
     }
 
     /**
@@ -78,9 +71,8 @@ public class EthClientWrapper {
      */
     private void initKinContract() throws EthereumClientException {
         try {
-            String kinContractAddress = "0xEF2Fcc998847DB203DEa15fC49d0872C7614910C";
-            Address contractAddress = Geth.newAddressFromHex(kinContractAddress);
-            this.boundContract = Geth.bindContract(contractAddress, ABI, ethereumClient);
+            Address kinContractAddress = Geth.newAddressFromHex(KinConsts.CONTRACT_ADDRESS_HEX);
+            this.boundContract = Geth.bindContract(kinContractAddress, KinConsts.ABI, ethereumClient);
         } catch (Exception e) {
             throw new EthereumClientException("contract - could not establish connection to Kin smart-contract");
         }
@@ -147,9 +139,9 @@ public class EthClientWrapper {
 
             // Make sure the amount is positive and the sender account has enough KIN to send.
             if (amount.signum() != -1) {
-                amount = KinConverter.toKin(amount);
+                amount = KinConverter.fromKin(amount);
                 if (hasEnoughBalance(from, amount)) {
-                    amountBigInt = KinConverter.fromKin(amount);
+                    amountBigInt = KinConverter.toBigInt(amount);
                 } else {
                     throw new InsufficientBalanceException();
                 }
@@ -163,7 +155,7 @@ public class EthClientWrapper {
             // Create TransactionOps and send to Kin smart-contract with the required params.
             TransactOpts transactOpts = new TransactOpts();
             transactOpts.setContext(gethContext);
-            transactOpts.setGasLimit(DEFAULT_GAS_LIMIT);
+            transactOpts.setGasLimit(KinConsts.DEFAULT_GAS_LIMIT);
             transactOpts.setGasPrice(gasPrice);
             transactOpts.setNonce(nonce);
             transactOpts.setFrom(from.getAddress());
@@ -232,5 +224,10 @@ public class EthClientWrapper {
         Balance balance = getBalance(account);
         // (== -1) means bigger than the amount.
         return balance.value().subtract(amount).compareTo(BigDecimal.ZERO) == -1;
+    }
+
+    public Balance getPendingBalance(Account account) throws OperationFailedException {
+        Balance balance = getBalance(account);
+        return pendingBalance.calculate(account, balance);
     }
 }
