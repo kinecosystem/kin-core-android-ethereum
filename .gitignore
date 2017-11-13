@@ -37,7 +37,7 @@ captures/
 *.iml
 .idea/*
 # ...but keep these
-!.idea/intellij-java-google-style.xml
+!.idea/codeStyleSettings.xml
 
 
 # OSX Finder config files

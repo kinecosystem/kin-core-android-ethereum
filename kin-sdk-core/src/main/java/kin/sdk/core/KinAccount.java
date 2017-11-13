@@ -17,7 +17,7 @@ public interface KinAccount {
      * Exports the keystore json file
      *
      * @param oldPassphrase the passphrase used to create the acount
-     * @param passphrase    the passphrase used when creating the account
+     * @param passphrase the passphrase used when creating the account
      * @return String the json string
      */
     String exportKeyStore(String oldPassphrase, String newPassphrase) throws PassphraseException;
@@ -29,10 +29,11 @@ public interface KinAccount {
      * on the main thread
      *
      * @param publicAddress the account address to send the specified kin amount
-     * @param amount        the amount of kin to transfer
-     * @param callback      to be called when method has completed
+     * @param amount the amount of kin to transfer
+     * @param callback to be called when method has completed
      */
-    void sendTransaction(String publicAddress, String passphrase, BigDecimal amount, ResultCallback<TransactionId> callback);
+    void sendTransaction(String publicAddress, String passphrase, BigDecimal amount,
+        ResultCallback<TransactionId> callback);
 
     /**
      * Create, sign and send a transaction of the given amount in kin to the specified public address
@@ -41,11 +42,11 @@ public interface KinAccount {
      * node on the network and should not be called on the android main thread.
      *
      * @param publicAddress the account address to send the specified kin amount
-     * @param amount        the amount of kin to transfer
+     * @param amount the amount of kin to transfer
      * @return TransactionId the transaction identifier
      */
     TransactionId sendTransactionSync(String publicAddress, String passphrase, BigDecimal amount)
-            throws InsufficientBalanceException, OperationFailedException, PassphraseException;
+        throws InsufficientBalanceException, OperationFailedException, PassphraseException;
 
     /**
      * Get the current confirmed balance in kin
