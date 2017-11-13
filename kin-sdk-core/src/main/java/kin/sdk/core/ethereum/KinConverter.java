@@ -1,10 +1,9 @@
 package kin.sdk.core.ethereum;
 
-import org.ethereum.geth.BigInt;
-import org.ethereum.geth.Geth;
-
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import org.ethereum.geth.BigInt;
+import org.ethereum.geth.Geth;
 
 /**
  * Project - Kin SDK
@@ -16,11 +15,11 @@ class KinConverter {
 
     private static final BigDecimal KIN = BigDecimal.TEN.pow(18);
 
-    static BigInt fromKin(BigDecimal valueInKin) {
+    static BigInt toBigInt(BigDecimal valueInKin) {
         return Geth.newBigInt(valueInKin.longValue());
     }
 
-    static BigDecimal toKin(BigDecimal value) {
+    static BigDecimal fromKin(BigDecimal value) {
         return value.multiply(KIN);
     }
 

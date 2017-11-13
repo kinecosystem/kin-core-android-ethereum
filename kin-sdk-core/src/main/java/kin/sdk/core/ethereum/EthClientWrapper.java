@@ -1,5 +1,16 @@
 package kin.sdk.core.ethereum;
 
+import java.io.File;
+import java.math.BigDecimal;
+import kin.sdk.core.Balance;
+import kin.sdk.core.ServiceProvider;
+import kin.sdk.core.TransactionId;
+import kin.sdk.core.exception.EthereumClientException;
+import kin.sdk.core.exception.InsufficientBalanceException;
+import kin.sdk.core.exception.OperationFailedException;
+import kin.sdk.core.exception.PassphraseException;
+import kin.sdk.core.impl.BalanceImpl;
+import kin.sdk.core.impl.TransactionIdImpl;
 import org.ethereum.geth.Account;
 import org.ethereum.geth.Address;
 import org.ethereum.geth.BigInt;
@@ -13,19 +24,6 @@ import org.ethereum.geth.Interfaces;
 import org.ethereum.geth.KeyStore;
 import org.ethereum.geth.TransactOpts;
 import org.ethereum.geth.Transaction;
-
-import java.io.File;
-import java.math.BigDecimal;
-
-import kin.sdk.core.Balance;
-import kin.sdk.core.ServiceProvider;
-import kin.sdk.core.TransactionId;
-import kin.sdk.core.exception.EthereumClientException;
-import kin.sdk.core.exception.InsufficientBalanceException;
-import kin.sdk.core.exception.OperationFailedException;
-import kin.sdk.core.exception.PassphraseException;
-import kin.sdk.core.impl.BalanceImpl;
-import kin.sdk.core.impl.TransactionIdImpl;
 
 /**
  * Project - Kin SDK
@@ -42,7 +40,7 @@ public class EthClientWrapper {
     private ServiceProvider serviceProvider;
     private long nonce = -1;
     private BigInt gasPrice = null;
-    private final PendingBalanceResolver pendingBalanceResolver;
+    private final PendingBalance pendingBalance;
 
     public EthClientWrapper(android.content.Context androidContext, ServiceProvider serviceProvider) throws EthereumClientException {
         this.serviceProvider = serviceProvider;
@@ -50,7 +48,7 @@ public class EthClientWrapper {
         initEthereumClient();
         initKinContract();
         initKeyStore(androidContext);
-        pendingBalanceResolver = new PendingBalanceResolver(ethereumClient, gethContext);
+        pendingBalance = new PendingBalance(ethereumClient, gethContext);
     }
 
     /**
@@ -141,9 +139,9 @@ public class EthClientWrapper {
 
             // Make sure the amount is positive and the sender account has enough KIN to send.
             if (amount.signum() != -1) {
-                amount = KinConverter.toKin(amount);
+                amount = KinConverter.fromKin(amount);
                 if (hasEnoughBalance(from, amount)) {
-                    amountBigInt = KinConverter.fromKin(amount);
+                    amountBigInt = KinConverter.toBigInt(amount);
                 } else {
                     throw new InsufficientBalanceException();
                 }
@@ -230,7 +228,6 @@ public class EthClientWrapper {
 
     public Balance getPendingBalance(Account account) throws OperationFailedException {
         Balance balance = getBalance(account);
-
-        return pendingBalanceResolver.resolvePendingBalance(account, balance);
+        return pendingBalance.calculate(account, balance);
     }
 }
