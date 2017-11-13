@@ -3,30 +3,36 @@ Android library responsible for creating a new Ethereum account and managing KIN
 ![Kin Token](kin_android.png)
 
 ## Build
-Temporary way to add the library to the project
-(Yes we know it's far from ideal!)
 
-1. Clone this repository
-2. Run `./gradlew clean assembleRelease`
-3. Copy `kin-sdk-core/build/outputs/aar/kin-sdk-core-debug.aar` AND `kin-sdk-core/libs/geth.aar` 
-to a library folder named `aars` for example
-4. Add this to your module's `build.gradle` file
+* Copy [kin-sdk-core/libs/geth.aar](kin-sdk-core/libs/geth.aar) to a library folder in your project module.  
+_Note: In the near future we will upload the aar to jcenter so that you can pull it too by dependency_
 
+* Add this to your module's `build.gradle` file. Where:
 ```gradle
 repositories {
     ...
     flatDir {
-       dirs 'aars'
+       dirs 'YOUR-LIB-FOLDER-NAME'
+    }
+    maven {
+        url 'https://jitpack.io'
+        credentials { username YOUR-JITPACK-AUTHTOKEN }
     }
 }
 ...
 dependencies {
     ...
     compile(name:'geth', ext:'aar')
-    compile(name:'kin-sdk-core-release', ext:'aar')
+    compile "com.github.kinfoundation:kin-sdk-core-android:LATEST-COMMIT-ON-DEV-BRANCH"
 }
 ```
-In future, we will provide a solution to pull the library by dependency using jitpack 
+In the above `build.gradle`:
+* YOUR-LIB-FOLDER-NAME is the folder you copied geth.aar to
+* YOUR-JITPACK-AUTHTOKEN won't be needed once repository is changed to public.
+For the time being to get a token, go to https://jitpack.io and sign in with your github account. 
+Authorize jitpack, then navigate to https://jitpack.io/w/user to get your AccessToken. Ensure that jitpack is authorized 
+for private repositories
+* LATEST-COMMIT-ON-DEV-BRANCH is a short commit hash for example 1st 10 characters of a commit: f367f300f5
 
 ## Usage
 ### Creating and retrieving an account
@@ -125,7 +131,7 @@ account.sendTransaction(toAddress, passphrase, amountInKin, new ResultCallback<T
 
 ### Retrieving Pending Balance
 **`getPendingBalance` IS NOT IMPLEMENTED YET.**
-**At the moment `account.getPendingBalance()` always returns the same value as `account.getBalance()`***
+**At the moment `account.getPendingBalance()` always returns the same value as `account.getBalance()`**
 
 In the meantime, you are welcome to read here how it is intended to work:
 
@@ -153,17 +159,42 @@ account.getPendingBalance(new ResultCallback<Balance>() {
 ```
 
 ### Sync vs Async
-The `getBalance`, `getPendingBalance` and `sendTransaction` methods described above, run on a background thread 
-and accesses the Ethereum network. 
+As you have seen above we have provided a very simple solution for accessing the ethereum network on a background thread.
+In this solution `getBalance`, `getPendingBalance` and `sendTransaction` methods, run on a background thread 
+and accesses the Ethereum network. The `onResult` and `onError` callback methods are executed on the android UI thread.
+This solution suffers from inability to cancel the tasks and it need to be used very carefully to avoid leaking Activity context.
+We will be providing with a better solution shortly.
 
-The `onResult` and `onError` callback methods are executed on the android UI thread.
-
-If you are already on a background thread and wish to use a synchronous version of `getBalance`, 
-`sendTransaction` and `getPendingBalance` methods, then use the following methods instead:
+In the meantime it is **recommended** that you use the synchronous version of `getBalance`, 
+`sendTransaction` and `getPendingBalance` methods making sure you call them in a background thread in any way you are accustomed.
 ```java
-account.getBalanceSync();
-account.getPendingBalanceSync();
-account.sendTransactionSync(toAddress, passphrase, amountInKin);
+try {
+    account.getBalanceSync();
+}
+catch (OperationFailedException e) {
+   // something went wrong - check the exception message
+}
+
+try {
+    account.getPendingBalanceSync();
+}
+catch (OperationFailedException e){
+   // something went wrong - check the exception message
+}
+
+try {
+    account.sendTransactionSync(toAddress, passphrase, amountInKin);
+}
+catch (InsufficientBalanceException e){
+    // you don't have enough kin in your account
+    // this could also occur if you don't have enough ether for gas
+} 
+catch (PassphraseException e){
+    // there passphrase used was wrong
+}
+catch (OperationFailedException e){
+    // something else went wrong - check the exception message
+} 
 ```
 
 ### Sample Application 
