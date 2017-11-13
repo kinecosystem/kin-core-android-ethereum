@@ -20,10 +20,10 @@ public class KinClient {
      * KinClient is an account manager for a single {@link KinAccount} on
      * ethereum network.
      *
-     * @param context  the android application context
+     * @param context the android application context
      * @param provider the service provider to use to connect to an ethereum node
-     * @throws EthereumClientException if could not connect to service provider
-     *                                 or connection problem with Kin smart-contract problems.
+     * @throws EthereumClientException if could not connect to service provider or connection problem with Kin
+     * smart-contract problems.
      */
     public KinClient(Context context, ServiceProvider provider) throws EthereumClientException {
         this.ethClient = new EthClientWrapper(context, provider);
@@ -35,11 +35,10 @@ public class KinClient {
      * Once created, the account information will be stored securely on the device and can
      * be accessed again via the {@link #getAccount()} method.
      *
-     * @param passphrase a passphrase provided by the user that will be used to store
-     *                   the account private key securely.
+     * @param passphrase a passphrase provided by the user that will be used to store the account private key securely.
      * @return KinAccount the account created
-     * @throws CreateAccountException if go-ethereum was unable to generate the account
-     *                                (unable to generate new key or store the key).
+     * @throws CreateAccountException if go-ethereum was unable to generate the account (unable to generate new key or
+     * store the key).
      */
     public KinAccount createAccount(String passphrase) throws CreateAccountException {
         if (!hasAccounts()) {

@@ -1,8 +1,13 @@
 apply plugin: 'com.android.library'
 
+// maven plugin and group definition
+// needed for jitpack support
+apply plugin: 'maven'
+group = 'com.github.kinfoundation'
+
 android {
     compileSdkVersion 26
-    buildToolsVersion "26.0.0"
+    buildToolsVersion "26.0.2"
 
     defaultConfig {
         minSdkVersion 16
@@ -23,9 +28,9 @@ android {
 
 dependencies {
 
-    compile(name: 'geth', ext: 'aar')
+    implementation(name: 'geth', ext: 'aar')
 
-    compile supportDependencies.appCompat
+    implementation supportDependencies.appCompat
 
-    testCompile testingDependencies.junit
+    testImplementation testingDependencies.junit
 }

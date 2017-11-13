@@ -3,23 +3,36 @@ Android library responsible for creating a new Ethereum account and managing KIN
 ![Kin Token](kin_android.png)
 
 ## Build
-Add this in your root `build.gradle` file (**not** your module `build.gradle` file):
+
+* Copy [kin-sdk-core/libs/geth.aar](kin-sdk-core/libs/geth.aar) to a library folder in your project module.  
+_Note: In the near future we will upload the aar to jcenter so that you can pull it too by dependency_
+
+* Add this to your module's `build.gradle` file. Where:
 ```gradle
-allprojects {
-    repositories {
-        ...
-        maven { url "https://jitpack.io" }
+repositories {
+    ...
+    flatDir {
+       dirs 'YOUR-LIB-FOLDER-NAME'
+    }
+    maven {
+        url 'https://jitpack.io'
+        credentials { username YOUR-JITPACK-AUTHTOKEN }
     }
 }
-```
-
-Add this to your module's `build.gradle` file
-```gradle
+...
 dependencies {
     ...
-    compile 'com.github.TO-BE-ADDED-SOON'
+    compile(name:'geth', ext:'aar')
+    compile "com.github.kinfoundation:kin-sdk-core-android:LATEST-COMMIT-ON-DEV-BRANCH"
 }
 ```
+In the above `build.gradle`:
+* YOUR-LIB-FOLDER-NAME is the folder you copied geth.aar to
+* YOUR-JITPACK-AUTHTOKEN won't be needed once repository is changed to public.
+For the time being to get a token, go to https://jitpack.io and sign in with your github account. 
+Authorize jitpack, then navigate to https://jitpack.io/w/user to get your AccessToken. Ensure that jitpack is authorized 
+for private repositories
+* LATEST-COMMIT-ON-DEV-BRANCH is a short commit hash for example 1st 10 characters of a commit: f367f300f5
 
 ## Usage
 ### Creating and retrieving an account
@@ -54,9 +67,25 @@ if (kinClient.hasAccounts()) {
 }
 ``` 
 
+### Public Address and JSON keystore 
 Your account can be identified via it's public address. To retrieve the account public address use:
 ```java
 account.getPublicAddress();
+```
+
+You can export the account keystore file as JSON using the `exportKeyStore` method
+**`exportKeyStore` is NOT IMPLEMENTED YET.**
+**At the moment this will always return a mock JSON String**
+```java
+ try {
+    String oldPassphrase = "yourPassphrase";
+    String newPassphrase = "newPassphrase";
+    String json = account.exportKeyStore(oldPassphrase, newPassphrase);
+    Log.d("example", "The keystore JSON: " + json);
+ }
+ catch (PassphraseException e){
+    e.printStackTrace();
+ }
 ```
 
 ### Retrieving Balance
@@ -66,7 +95,7 @@ account.getBalance(new ResultCallback<Balance>() {
     
     @Override
     public void onResult(Balance result) {
-        Log.d("example", "The balance is: " + result.toString());
+        Log.d("example", "The balance is: " + result.value(2));
     }
 
     @Override
@@ -101,6 +130,11 @@ account.sendTransaction(toAddress, passphrase, amountInKin, new ResultCallback<T
 ```
 
 ### Retrieving Pending Balance
+**`getPendingBalance` IS NOT IMPLEMENTED YET.**
+**At the moment `account.getPendingBalance()` always returns the same value as `account.getBalance()`**
+
+In the meantime, you are welcome to read here how it is intended to work:
+
 It takes some time for transactions to be confirmed.  In the meantime you can call `getPendingBalance` 
 to get the amount of KIN that you will have once all your pending transactions are confirmed.
 
@@ -125,22 +159,46 @@ account.getPendingBalance(new ResultCallback<Balance>() {
 ```
 
 ### Sync vs Async
-The `getBalance`, `getPendingBalance` and `sendTransaction` methods described above, run on a background thread 
-and accesses the Ethereum network. 
+As you have seen above we have provided a very simple solution for accessing the ethereum network on a background thread.
+In this solution `getBalance`, `getPendingBalance` and `sendTransaction` methods, run on a background thread 
+and accesses the Ethereum network. The `onResult` and `onError` callback methods are executed on the android UI thread.
+This solution suffers from inability to cancel the tasks and it need to be used very carefully to avoid leaking Activity context.
+We will be providing with a better solution shortly.
 
-The `onResult` and `onError` callback methods are executed on the android UI thread.
-
-If you are already on a background thread and wish to use a synchronous version of `getBalance`, 
-`sendTransaction` and `getPendingBalance` methods, then use the following methods instead:
+In the meantime it is **recommended** that you use the synchronous version of `getBalance`, 
+`sendTransaction` and `getPendingBalance` methods making sure you call them in a background thread in any way you are accustomed.
 ```java
-account.getBalanceSync();
-account.getPendingBalanceSync();
-account.sendTransactionSync(toAddress, passphrase, amountInKin);
+try {
+    account.getBalanceSync();
+}
+catch (OperationFailedException e) {
+   // something went wrong - check the exception message
+}
+
+try {
+    account.getPendingBalanceSync();
+}
+catch (OperationFailedException e){
+   // something went wrong - check the exception message
+}
+
+try {
+    account.sendTransactionSync(toAddress, passphrase, amountInKin);
+}
+catch (InsufficientBalanceException e){
+    // you don't have enough kin in your account
+    // this could also occur if you don't have enough ether for gas
+} 
+catch (PassphraseException e){
+    // there passphrase used was wrong
+}
+catch (OperationFailedException e){
+    // something else went wrong - check the exception message
+} 
 ```
 
 ### Sample Application 
-For a more detailed example on how to use the library you are welcome to take a look at our sample
-application [here](sample/)
+For a more detailed example on how to use the library we will soon be providing a sample app.
 
 ## Contributing
 Please review our [CONTRIBUTING.md](CONTRIBUTING.md) guide before opening issues and pull requests.

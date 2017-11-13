@@ -26,10 +26,9 @@ import org.ethereum.geth.TransactOpts;
 import org.ethereum.geth.Transaction;
 
 /**
- * Project - Kin SDK
- * Created by Oren Zakay on 02/11/2017.
- * <p>
- * Responsible to preform all the calls to Kin smart-contract.
+ * A Wrapper to the geth (go ethereum) library.
+ * Responsible for account creation/storage/retrieval, connection to Kin contract
+ * retrieving balance and sending transactions
  */
 public class EthClientWrapper {
 
@@ -42,7 +41,8 @@ public class EthClientWrapper {
     private BigInt gasPrice = null;
     private final PendingBalance pendingBalance;
 
-    public EthClientWrapper(android.content.Context androidContext, ServiceProvider serviceProvider) throws EthereumClientException {
+    public EthClientWrapper(android.content.Context androidContext, ServiceProvider serviceProvider)
+        throws EthereumClientException {
         this.serviceProvider = serviceProvider;
         this.gethContext = new Context();
         initEthereumClient();
@@ -89,12 +89,12 @@ public class EthClientWrapper {
     private void initKeyStore(android.content.Context context) {
         String networkId = String.valueOf(serviceProvider.getNetworkId());
         String keyStorePath = new StringBuilder(context.getFilesDir().getAbsolutePath())
-                .append(File.separator)
-                .append("kin")
-                .append(File.separator)
-                .append("keystore")
-                .append(File.separator)
-                .append(networkId).toString();
+            .append(File.separator)
+            .append("kin")
+            .append(File.separator)
+            .append("keystore")
+            .append(File.separator)
+            .append(networkId).toString();
 
         // Make directories if necessary, the keystore will be saved there.
         File keystoreDir = new File(keyStorePath);
@@ -115,17 +115,17 @@ public class EthClientWrapper {
     /**
      * Transfer amount of KIN from account to the specified public address.
      *
-     * @param from          the sender {@link Account}
-     * @param passphrase    the passphrase used to create the account
+     * @param from the sender {@link Account}
+     * @param passphrase the passphrase used to create the account
      * @param publicAddress the address to send the KIN to
-     * @param amount        the amount of KIN to send
+     * @param amount the amount of KIN to send
      * @return {@link TransactionId} of the transaction
      * @throws InsufficientBalanceException if the account has not enough KIN
-     * @throws PassphraseException          if the transaction could not be signed with the passphrase specified
-     * @throws OperationFailedException     another error occurred
+     * @throws PassphraseException if the transaction could not be signed with the passphrase specified
+     * @throws OperationFailedException another error occurred
      */
     public TransactionId sendTransaction(Account from, String passphrase, String publicAddress, BigDecimal amount)
-            throws InsufficientBalanceException, OperationFailedException, PassphraseException {
+        throws InsufficientBalanceException, OperationFailedException, PassphraseException {
         Transaction transaction;
         Address toAddress;
         BigInt amountBigInt;

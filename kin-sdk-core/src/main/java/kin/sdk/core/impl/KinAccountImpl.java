@@ -13,11 +13,6 @@ import kin.sdk.core.exception.InsufficientBalanceException;
 import kin.sdk.core.exception.OperationFailedException;
 import kin.sdk.core.exception.PassphraseException;
 
-
-/**
- * Project - Kin SDK
- * Created by Oren Zakay on 02/11/2017.
- */
 public class KinAccountImpl extends AbstractKinAccount {
 
     private KeyStore keyStore;
@@ -28,9 +23,9 @@ public class KinAccountImpl extends AbstractKinAccount {
      * Creates a new {@link Account}.
      *
      * @param ethClientWrapper that will be use to call to Kin smart-contract.
-     * @param passphrase       that will be used to store the account private key securely.
-     * @throws Exception if go-ethereum was unable to generate the account
-     *                   (unable to generate new key or store the key).
+     * @param passphrase that will be used to store the account private key securely.
+     * @throws Exception if go-ethereum was unable to generate the account (unable to generate new key or store the
+     * key).
      */
     public KinAccountImpl(EthClientWrapper ethClientWrapper, String passphrase) throws Exception {
         this.keyStore = ethClientWrapper.getKeyStore();
@@ -42,7 +37,7 @@ public class KinAccountImpl extends AbstractKinAccount {
      * Creates a {@link KinAccount} from existing {@link Account}
      *
      * @param ethClientWrapper that will be use to call to Kin smart-contract.
-     * @param account          the existing Account.
+     * @param account the existing Account.
      */
     public KinAccountImpl(EthClientWrapper ethClientWrapper, Account account) {
         this.keyStore = ethClientWrapper.getKeyStore();
@@ -63,7 +58,7 @@ public class KinAccountImpl extends AbstractKinAccount {
 
     @Override
     public TransactionId sendTransactionSync(String publicAddress, String passphrase, BigDecimal amount)
-            throws InsufficientBalanceException, OperationFailedException, PassphraseException {
+        throws InsufficientBalanceException, OperationFailedException, PassphraseException {
         return ethClient.sendTransaction(account, publicAddress, passphrase, amount);
     }
 
