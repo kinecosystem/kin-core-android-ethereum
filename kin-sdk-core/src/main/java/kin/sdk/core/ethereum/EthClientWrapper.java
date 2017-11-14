@@ -230,7 +230,7 @@ public class EthClientWrapper {
 
     private boolean hasEnoughBalance(Account account, BigDecimal amount) throws OperationFailedException {
         Balance balance = getBalance(account);
-        // (> -1) means bigger then or equals to the amount.
+        // (> -1) means bigger than or equals to the amount.
         return balance.value().subtract(amount).compareTo(BigDecimal.ZERO) > -1;
     }
 
