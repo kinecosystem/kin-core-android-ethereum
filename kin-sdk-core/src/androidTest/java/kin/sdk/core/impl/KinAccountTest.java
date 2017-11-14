@@ -97,6 +97,12 @@ public class KinAccountTest extends BaseTest {
         }
 
         try {
+            kinAccount.sendTransactionSync("0xShortAddress", PASSPHRASE, new BigDecimal(0));
+        } catch (Exception e) {
+            assertEquals("invalid address hex length: 12 != 40", e.getCause().getMessage());
+        }
+
+        try {
             kinAccount.sendTransactionSync("", PASSPHRASE, new BigDecimal(0));
         } catch (Exception e) {
             assertTrue(e instanceof OperationFailedException);
