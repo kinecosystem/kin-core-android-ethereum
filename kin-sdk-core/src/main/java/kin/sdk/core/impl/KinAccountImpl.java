@@ -59,7 +59,7 @@ public class KinAccountImpl extends AbstractKinAccount {
     @Override
     public TransactionId sendTransactionSync(String publicAddress, String passphrase, BigDecimal amount)
         throws InsufficientBalanceException, OperationFailedException, PassphraseException {
-        return ethClient.sendTransaction(account, publicAddress, passphrase, amount);
+        return ethClient.sendTransaction(account, passphrase, publicAddress, amount);
     }
 
     @Override

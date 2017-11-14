@@ -129,48 +129,56 @@ public class EthClientWrapper {
         Transaction transaction;
         Address toAddress;
         BigInt amountBigInt;
+
+        // Verify public address is valid.
+        if (publicAddress == null || publicAddress.isEmpty()) {
+            throw new OperationFailedException("Addressee not valid - public address can't be null or empty");
+        }
+        // Create the public Address.
         try {
-            // Verify public address is valid.
-            if (publicAddress == null || publicAddress.isEmpty()) {
-                throw new OperationFailedException("Addressee not valid - public address can't be null or empty");
-            }
-            // Create the public Address.
             toAddress = Geth.newAddressFromHex(publicAddress);
+        } catch (Exception e) {
+            throw new OperationFailedException(e);
+        }
 
-            // Make sure the amount is positive and the sender account has enough KIN to send.
-            if (amount.signum() != -1) {
-                amount = KinConverter.fromKin(amount);
-                if (hasEnoughBalance(from, amount)) {
-                    amountBigInt = KinConverter.toBigInt(amount);
-                } else {
-                    throw new InsufficientBalanceException();
-                }
+        // Make sure the amount is positive and the sender account has enough KIN to send.
+        if (amount.signum() != -1) {
+            amount = KinConverter.fromKin(amount);
+            if (hasEnoughBalance(from, amount)) {
+                amountBigInt = KinConverter.toBigInt(amount);
             } else {
-                throw new OperationFailedException("Amount can't be negative");
+                throw new InsufficientBalanceException();
             }
+        } else {
+            throw new OperationFailedException("Amount can't be negative");
+        }
 
+        try {
             nonce = ethereumClient.getPendingNonceAt(gethContext, from.getAddress());
             gasPrice = ethereumClient.suggestGasPrice(gethContext);
+        } catch (Exception e) {
+            throw new OperationFailedException(e);
+        }
 
-            // Create TransactionOps and send to Kin smart-contract with the required params.
-            TransactOpts transactOpts = new TransactOpts();
-            transactOpts.setContext(gethContext);
-            transactOpts.setGasLimit(KinConsts.DEFAULT_GAS_LIMIT);
-            transactOpts.setGasPrice(gasPrice);
-            transactOpts.setNonce(nonce);
-            transactOpts.setFrom(from.getAddress());
-            transactOpts.setSigner(new KinSigner(from, getKeyStore(), passphrase, serviceProvider.getNetworkId()));
+        // Create TransactionOps and send to Kin smart-contract with the required params.
+        TransactOpts transactOpts = new TransactOpts();
+        transactOpts.setContext(gethContext);
+        transactOpts.setGasLimit(KinConsts.DEFAULT_GAS_LIMIT);
+        transactOpts.setGasPrice(gasPrice);
+        transactOpts.setNonce(nonce);
+        transactOpts.setFrom(from.getAddress());
+        transactOpts.setSigner(new KinSigner(from, getKeyStore(), passphrase, serviceProvider.getNetworkId()));
 
-            Interface paramToAddress = Geth.newInterface();
-            paramToAddress.setAddress(toAddress);
+        Interface paramToAddress = Geth.newInterface();
+        paramToAddress.setAddress(toAddress);
 
-            Interface paramAmount = Geth.newInterface();
-            paramAmount.setBigInt(amountBigInt);
+        Interface paramAmount = Geth.newInterface();
+        paramAmount.setBigInt(amountBigInt);
 
-            Interfaces params = Geth.newInterfaces(2);
+        Interfaces params = Geth.newInterfaces(2);
+        try {
             params.set(0, paramToAddress);
             params.set(1, paramAmount);
-
             // Send transfer call to Kin smart-contract.
             transaction = boundContract.transact(transactOpts, "transfer", params);
         } catch (Exception e) {
@@ -222,8 +230,8 @@ public class EthClientWrapper {
 
     private boolean hasEnoughBalance(Account account, BigDecimal amount) throws OperationFailedException {
         Balance balance = getBalance(account);
-        // (== -1) means bigger than the amount.
-        return balance.value().subtract(amount).compareTo(BigDecimal.ZERO) == -1;
+        // (> -1) means bigger then or equals to the amount.
+        return balance.value().subtract(amount).compareTo(BigDecimal.ZERO) > -1;
     }
 
     public Balance getPendingBalance(Account account) throws OperationFailedException {
