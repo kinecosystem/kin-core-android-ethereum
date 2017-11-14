@@ -24,19 +24,11 @@ public class ChooseNetworkActivity extends BaseActivity {
         setContentView(R.layout.choose_network_activity);
         getSupportActionBar().setTitle(R.string.app_name);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        findViewById(R.id.btn_main_net).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                createKinClient(KinClientSampleApplication.NetWorkType.MAIN);
-            }
-        });
+        findViewById(R.id.btn_main_net).setOnClickListener(
+            view -> createKinClient(KinClientSampleApplication.NetWorkType.MAIN));
 
-        findViewById(R.id.btn_test_net).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                createKinClient(KinClientSampleApplication.NetWorkType.ROPSTEN);
-            }
-        });
+        findViewById(R.id.btn_test_net).setOnClickListener(
+            view -> createKinClient(KinClientSampleApplication.NetWorkType.ROPSTEN));
     }
 
     private void createKinClient(KinClientSampleApplication.NetWorkType netWorkType) {

@@ -30,22 +30,17 @@ public class CreateAccountActivity extends BaseActivity {
     }
 
     private void initButtons() {
-        View view = findViewById(R.id.btn_create_account);
-        if (getKinClient().isMainNet()) {
-            view.setBackgroundResource(R.drawable.button_main_network_bg);
+        View createAccountView = findViewById(R.id.btn_create_account);
+        if (getKinClient().getServiceProvider().isMainNet()) {
+            createAccountView.setBackgroundResource(R.drawable.button_main_network_bg);
         }
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                createAccount();
-            }
-        });
+        createAccountView.setOnClickListener(view -> createAccount());
     }
 
     private void createAccount() {
         try {
             final KinClient kinClient = getKinClient();
-            kinClient.createAccount(PASSPHRASE);
+            kinClient.createAccount(getPassphrase());
             startActivity(WalletActivity.getIntent(this));
         } catch (CreateAccountException e) {
             ViewUtils.alert(this, e.getMessage());

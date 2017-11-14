@@ -25,7 +25,8 @@
             android:parentActivityName=".ChooseNetworkActivity"/>
         <activity
             android:name=".TransactionActivity"
-            android:parentActivityName=".WalletActivity"/>
+            android:parentActivityName=".WalletActivity"
+            android:windowSoftInputMode="stateHidden"/>
 
     </application>
 

@@ -56,32 +56,19 @@ public class WalletActivity extends BaseActivity {
         final View refresh = findViewById(R.id.refresh_btn);
         final View getKin = findViewById(R.id.get_kin_btn);
 
-        if (getKinClient().isMainNet()) {
+        if (getKinClient().getServiceProvider().isMainNet()) {
             transaction.setBackgroundResource(R.drawable.button_main_network_bg);
             refresh.setBackgroundResource(R.drawable.button_main_network_bg);
             getKin.setVisibility(View.GONE);
         }
         else {
-            getKin.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    ViewUtils.alert(view.getContext(), "This is not implemented yet");
-                }
-            });
+            getKin.setOnClickListener(view -> ViewUtils.alert(view.getContext(), "This is not implemented yet"));
         }
 
-        transaction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(TransactionActivity.getIntent(WalletActivity.this));
-            }
-        });
-        refresh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                updateBalance();
-                updatePendingBalance();
-            }
+        transaction.setOnClickListener(view -> startActivity(TransactionActivity.getIntent(WalletActivity.this)));
+        refresh.setOnClickListener(view -> {
+            updateBalance();
+            updatePendingBalance();
         });
     }
 
@@ -120,10 +107,10 @@ public class WalletActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         if (pendingBalanceCallback != null) {
-            pendingBalanceCallback.cancel();
+            pendingBalanceCallback.onDetach();
         }
         if (balanceCallback != null) {
-            balanceCallback.cancel();
+            balanceCallback.onDetach();
         }
         pendingBalance = null;
         balance = null;

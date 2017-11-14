@@ -1,8 +1,11 @@
 package kin.sdk.core.sample;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import kin.sdk.core.KinClient;
 
 public abstract class BaseActivity extends AppCompatActivity {
@@ -12,7 +15,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     // should be used when sending transactions
     // To make the UI simpler for the sample application
     // we are using a hardcoded passphrase.
-    static final String PASSPHRASE = "12345";
+    final static String PASSPHRASE1 = "12345";
+
     abstract Intent getBackIntent();
 
     @Override
@@ -43,4 +47,12 @@ public abstract class BaseActivity extends AppCompatActivity {
         finish();
     }
 
+    public String getPassphrase() {
+        return PASSPHRASE1;
+    }
+
+    protected void hideKeyboard(View view) {
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
 }

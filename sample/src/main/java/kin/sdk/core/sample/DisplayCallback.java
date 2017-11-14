@@ -48,7 +48,7 @@ public abstract class DisplayCallback<T> implements ResultCallback<T> {
         }
     }
 
-    public void cancel() {
+    public void onDetach() {
         if (progressBarReference != null) {
             progressBarReference.clear();
         }

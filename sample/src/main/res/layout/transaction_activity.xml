@@ -5,7 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context="kin.sdk.core.sample.TransactionActivity">
+    tools:context="kin.sdk.core.sample.TransactionActivity"
+    android:clickable="true"
+    android:focusableInTouchMode="true" >
 
 
     <LinearLayout
@@ -27,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="20dp"
-            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+            android:digits="0123456789ABCDEFabcdefx"
             tools:text="public key"/>
 
 

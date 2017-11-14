@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
@@ -41,7 +42,7 @@ public class TransactionActivity extends BaseActivity {
         toAddressInput = (EditText) findViewById(R.id.to_address_input);
         amountInput = (EditText) findViewById(R.id.amount_input);
 
-        if (getKinClient().isMainNet()) {
+        if (getKinClient().getServiceProvider().isMainNet()) {
             sendTransaction.setBackgroundResource(R.drawable.button_main_network_bg);
         }
         toAddressInput.addTextChangedListener(new TextWatcher() {
@@ -52,8 +53,10 @@ public class TransactionActivity extends BaseActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (!sendTransaction.isEnabled() && charSequence.length() != 0 && amountInput.getText().length() != 0) {
-                    sendTransaction.setEnabled(true);
+                if (!TextUtils.isEmpty(charSequence) && !TextUtils.isEmpty(amountInput.getText())) {
+                    if (!sendTransaction.isEnabled()) {
+                        sendTransaction.setEnabled(true);
+                    }
                 } else if (sendTransaction.isEnabled()) {
                     sendTransaction.setEnabled(false);
                 }
@@ -73,9 +76,10 @@ public class TransactionActivity extends BaseActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (!sendTransaction.isEnabled() && charSequence.length() != 0
-                    && toAddressInput.getText().length() != 0) {
-                    sendTransaction.setEnabled(true);
+                if (!TextUtils.isEmpty(charSequence) && !TextUtils.isEmpty(toAddressInput.getText())) {
+                    if (!sendTransaction.isEnabled()) {
+                        sendTransaction.setEnabled(true);
+                    }
                 } else if (sendTransaction.isEnabled()) {
                     sendTransaction.setEnabled(false);
                 }
@@ -86,12 +90,22 @@ public class TransactionActivity extends BaseActivity {
 
             }
         });
-        sendTransaction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                BigDecimal amount = new BigDecimal(amountInput.getText().toString());
-                sendTransaction(toAddressInput.getText().toString(), amount);
+
+        toAddressInput.setOnFocusChangeListener((view, hasFocus) -> {
+            if (!hasFocus && !toAddressInput.hasFocus()) {
+                hideKeyboard(view);
             }
+        });
+
+        amountInput.setOnFocusChangeListener((view, hasFocus) -> {
+            if (!hasFocus && !amountInput.hasFocus()) {
+                hideKeyboard(view);
+            }
+        });
+
+        sendTransaction.setOnClickListener(view -> {
+            BigDecimal amount = new BigDecimal(amountInput.getText().toString());
+            sendTransaction(toAddressInput.getText().toString(), amount);
         });
     }
 
@@ -109,14 +123,14 @@ public class TransactionActivity extends BaseActivity {
                 ViewUtils.alert(context, "Transaction id " + transactionId.id());
             }
         };
-        getKinClient().getAccount().sendTransaction(toAddress, PASSPHRASE, amount, transactionCallback);
+        getKinClient().getAccount().sendTransaction(toAddress, getPassphrase(), amount, transactionCallback);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         if (transactionCallback != null) {
-            transactionCallback.cancel();
+            transactionCallback.onDetach();
         }
         progressBar = null;
     }

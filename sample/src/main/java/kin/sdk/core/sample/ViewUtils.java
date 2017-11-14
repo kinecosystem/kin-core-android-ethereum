@@ -11,11 +11,7 @@ public class ViewUtils {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage(message)
             .setCancelable(false)
-            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    dialog.dismiss();
-                }
-            });
+            .setPositiveButton(R.string.ok, (dialog, id) -> dialog.dismiss());
         AlertDialog alert = builder.create();
         alert.show();
     }

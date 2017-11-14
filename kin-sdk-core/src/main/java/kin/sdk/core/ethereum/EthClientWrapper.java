@@ -231,7 +231,7 @@ public class EthClientWrapper {
         return pendingBalance.calculate(account, balance);
     }
 
-    public int getNetworkId(){
-        return serviceProvider.getNetworkId();
+    public ServiceProvider getServiceProvider() {
+        return serviceProvider;
     }
 }

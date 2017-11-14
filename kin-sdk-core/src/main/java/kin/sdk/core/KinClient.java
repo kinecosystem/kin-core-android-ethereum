@@ -87,7 +87,7 @@ public class KinClient {
         }
     }
 
-    public boolean isMainNet() {
-        return ethClient.getNetworkId() == ServiceProvider.NETWORK_ID_MAIN;
+    public ServiceProvider getServiceProvider(){
+        return ethClient.getServiceProvider();
     }
 }
