@@ -130,10 +130,9 @@ account.sendTransaction(toAddress, passphrase, amountInKin, new ResultCallback<T
 ```
 
 ### Retrieving Pending Balance
-**`getPendingBalance` IS NOT IMPLEMENTED YET.**
-**At the moment `account.getPendingBalance()` always returns the same value as `account.getBalance()`**
 
-In the meantime, you are welcome to read here how it is intended to work:
+**At the moment it is not supported when working with `ServiceProvider` that uses Geth nodes, due to [known issue](https://github.com/ethereum/go-ethereum/issues/15359),
+in this case, `getPendingBalance` will return the same `Balance` as `getBalance`.**
 
 It takes some time for transactions to be confirmed.  In the meantime you can call `getPendingBalance` 
 to get the amount of KIN that you will have once all your pending transactions are confirmed.
