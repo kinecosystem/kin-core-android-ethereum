@@ -60,8 +60,7 @@ public class WalletActivity extends BaseActivity {
             transaction.setBackgroundResource(R.drawable.button_main_network_bg);
             refresh.setBackgroundResource(R.drawable.button_main_network_bg);
             getKin.setVisibility(View.GONE);
-        }
-        else {
+        } else {
             getKin.setOnClickListener(view -> ViewUtils.alert(view.getContext(), "This is not implemented yet"));
         }
 
@@ -81,7 +80,7 @@ public class WalletActivity extends BaseActivity {
         balanceCallback = new DisplayCallback<Balance>(balanceProgress, balance) {
             @Override
             public void displayResult(Context context, View view, Balance result) {
-                balance.setText(result.value(3));
+                ((TextView) view).setText(result.value(3));
             }
         };
         getKinClient().getAccount().getBalance(balanceCallback);
@@ -92,7 +91,7 @@ public class WalletActivity extends BaseActivity {
         pendingBalanceCallback = new DisplayCallback<Balance>(pendingBalanceProgress, pendingBalance) {
             @Override
             public void displayResult(Context context, View view, Balance result) {
-                pendingBalance.setText(result.value(3));
+                ((TextView) view).setText(result.value(3));
             }
         };
         getKinClient().getAccount().getPendingBalance(pendingBalanceCallback);
