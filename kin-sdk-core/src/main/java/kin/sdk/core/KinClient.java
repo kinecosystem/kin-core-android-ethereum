@@ -86,4 +86,8 @@ public class KinClient {
             return accounts != null && accounts.size() > 0;
         }
     }
+
+    public ServiceProvider getServiceProvider(){
+        return ethClient.getServiceProvider();
+    }
 }

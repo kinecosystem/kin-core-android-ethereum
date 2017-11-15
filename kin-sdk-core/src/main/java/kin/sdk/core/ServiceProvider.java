@@ -43,4 +43,8 @@ public class ServiceProvider {
     public int getNetworkId() {
         return networkId;
     }
+
+    public boolean isMainNet(){
+        return networkId == NETWORK_ID_MAIN;
+    }
 }

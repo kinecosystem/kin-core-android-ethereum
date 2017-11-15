@@ -1,10 +1,6 @@
 package kin.sdk.core.impl;
 
-import org.ethereum.geth.Account;
-import org.ethereum.geth.KeyStore;
-
 import java.math.BigDecimal;
-
 import kin.sdk.core.Balance;
 import kin.sdk.core.KinAccount;
 import kin.sdk.core.TransactionId;
@@ -12,6 +8,8 @@ import kin.sdk.core.ethereum.EthClientWrapper;
 import kin.sdk.core.exception.InsufficientBalanceException;
 import kin.sdk.core.exception.OperationFailedException;
 import kin.sdk.core.exception.PassphraseException;
+import org.ethereum.geth.Account;
+import org.ethereum.geth.KeyStore;
 
 public class KinAccountImpl extends AbstractKinAccount {
 
@@ -59,7 +57,7 @@ public class KinAccountImpl extends AbstractKinAccount {
     @Override
     public TransactionId sendTransactionSync(String publicAddress, String passphrase, BigDecimal amount)
         throws InsufficientBalanceException, OperationFailedException, PassphraseException {
-        return ethClient.sendTransaction(account, publicAddress, passphrase, amount);
+        return ethClient.sendTransaction(account, passphrase, publicAddress, amount);
     }
 
     @Override

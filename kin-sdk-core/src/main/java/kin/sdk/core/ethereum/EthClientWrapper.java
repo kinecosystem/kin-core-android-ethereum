@@ -230,4 +230,8 @@ public class EthClientWrapper {
         Balance balance = getBalance(account);
         return pendingBalance.calculate(account, balance);
     }
+
+    public ServiceProvider getServiceProvider() {
+        return serviceProvider;
+    }
 }
