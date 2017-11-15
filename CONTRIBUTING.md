@@ -45,7 +45,7 @@ from wherever they are stored.
 Do not include your name in the branch name. There is no need for each branch to have a single owner.
 - Do not use `// created by` header comments from code files. This creates the wrong impression
 that there is a single owner for every file.
-- Do not use a license section in code files. We mostly use global `LICENSE`
+- Do not use a license section in code files. We mostly use global [`LICENSE`](LICENSE)
 files for entire repositories. **Note** There might be some exceptions to this
 when dealing with 3rd-party libraries.
 
