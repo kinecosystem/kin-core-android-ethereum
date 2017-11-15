@@ -71,7 +71,7 @@ public class EthClientWrapper {
      */
     private void initKinContract() throws EthereumClientException {
         try {
-            Address kinContractAddress = Geth.newAddressFromHex(KinConsts.CONTRACT_ADDRESS_HEX);
+            Address kinContractAddress = Geth.newAddressFromHex(getContractAddress());
             this.boundContract = Geth.bindContract(kinContractAddress, KinConsts.ABI, ethereumClient);
         } catch (Exception e) {
             throw new EthereumClientException("contract - could not establish connection to Kin smart-contract");
@@ -244,5 +244,24 @@ public class EthClientWrapper {
 
     public ServiceProvider getServiceProvider() {
         return serviceProvider;
+    }
+
+    /**
+     * @return the contract address to interact with, depends on network.
+     */
+    private String getContractAddress() {
+        String address;
+        switch (serviceProvider.getNetworkId()) {
+            case ServiceProvider.NETWORK_ID_MAIN:
+                address = KinConsts.CONTRACT_ADDRESS_HEX_MAIN_NET;
+                break;
+            case ServiceProvider.NETWORK_ID_ROPSTEN:
+                address = KinConsts.CONTRACT_ADDRESS_HEX_ROPSTEN;
+                break;
+            default:
+                address = KinConsts.CONTRACT_ADDRESS_HEX_ROPSTEN;
+                break;
+        }
+        return address;
     }
 }
