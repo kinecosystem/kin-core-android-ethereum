@@ -45,10 +45,10 @@ final class KinAccountImpl extends AbstractKinAccount {
     }
 
     @Override
-    public String exportKeyStore(String oldPassphrase, String newPassphrase) throws PassphraseException {
+    public String exportKeyStore(String passphrase, String newPassphrase) throws PassphraseException {
         String jsonKeyStore;
         try {
-            byte[] keyInBytes = keyStore.exportKey(account, oldPassphrase, newPassphrase);
+            byte[] keyInBytes = keyStore.exportKey(account, passphrase, newPassphrase);
             jsonKeyStore = new String(keyInBytes, "UTF-8");
         } catch (Exception e) {
             throw new PassphraseException();

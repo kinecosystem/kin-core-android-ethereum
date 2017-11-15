@@ -2,6 +2,7 @@ package kin.sdk.core.sample;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,8 +17,28 @@ public abstract class BaseActivity extends AppCompatActivity {
     // To make the UI simpler for the sample application
     // we are using a hardcoded passphrase.
     final static String PASSPHRASE1 = "12345";
+    final static int NO_ACTION_BAR_TITLE = -1;
 
     abstract Intent getBackIntent();
+
+    abstract int getActionBarTitleRes();
+
+    protected boolean hasBack() {
+        return true;
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        initActionBar();
+    }
+
+    private void initActionBar() {
+        if (getActionBarTitleRes() != NO_ACTION_BAR_TITLE) {
+            getSupportActionBar().setTitle(getActionBarTitleRes());
+        }
+        getSupportActionBar().setDisplayHomeAsUpEnabled(hasBack());
+    }
 
     @Override
     public void onBackPressed() {
