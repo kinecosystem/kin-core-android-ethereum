@@ -85,8 +85,9 @@ public class EthClientWrapper {
      * for example Ropsten network will be: ../data/kin/keystore/3/
      *
      * @param context provide the path to internal data directories.
+     * @throws EthereumClientException if could not create directory to save the keystore.
      */
-    private void initKeyStore(android.content.Context context) {
+    private void initKeyStore(android.content.Context context) throws EthereumClientException {
         String networkId = String.valueOf(serviceProvider.getNetworkId());
         String keyStorePath = new StringBuilder(context.getFilesDir().getAbsolutePath())
             .append(File.separator)
@@ -99,7 +100,9 @@ public class EthClientWrapper {
         // Make directories if necessary, the keystore will be saved there.
         File keystoreDir = new File(keyStorePath);
         if (!keystoreDir.exists()) {
-            keystoreDir.mkdir();
+            if (!keystoreDir.mkdirs()) {
+                throw new EthereumClientException("keystore - could not create directory");
+            }
         }
         // Create a keyStore instance according to go-ethereum encryption protocol.
         keyStore = Geth.newKeyStore(keystoreDir.getAbsolutePath(), Geth.LightScryptN, Geth.LightScryptP);
