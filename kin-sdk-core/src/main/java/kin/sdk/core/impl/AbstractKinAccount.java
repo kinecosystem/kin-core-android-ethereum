@@ -43,4 +43,10 @@ public abstract class AbstractKinAccount implements KinAccount {
             }
         }, callback);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        KinAccount account = (KinAccount)obj;
+        return getPublicAddress().equals(account.getPublicAddress());
+    }
 }

@@ -3,17 +3,20 @@ ext {
     //Version
     supportVersion = '26.+'
     junitVersion = '4.12'
+    mockitoVersion = '2.10.0'
 
     //Packages
     supportPackage = 'com.android.support'
+    mockito = 'org.mockito'
     junitPackage = 'junit'
 
     supportDependencies = [
-            appCompat       : buildDependency(supportPackage, 'appcompat-v7', supportVersion),
+            appCompat: buildDependency(supportPackage, 'appcompat-v7', supportVersion),
     ]
 
     testingDependencies = [
-            junit      : buildDependency(junitPackage, 'junit', junitVersion),
+            junit  : buildDependency(junitPackage, 'junit', junitVersion),
+            mockitoAndroid: buildDependency(mockito, "mockito-android", mockitoVersion),
     ]
 }
 
