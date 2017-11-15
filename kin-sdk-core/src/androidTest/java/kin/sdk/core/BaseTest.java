@@ -13,14 +13,14 @@ public class BaseTest {
     private final String PARITY_PROVIDER_URL = "http://207.154.247.11:8545";
 
     private Context context;
-    private ServiceProvider infuraProvider;
+    private ServiceProvider serviceProvider;
     protected KinClient kinClient;
 
     @Before
     public void setUp() throws Exception {
         context = InstrumentationRegistry.getContext();
-        infuraProvider = new ServiceProvider(PARITY_PROVIDER_URL, ServiceProvider.NETWORK_ID_ROPSTEN);
-        kinClient = new KinClient(context, infuraProvider);
+        serviceProvider = new ServiceProvider(PARITY_PROVIDER_URL, ServiceProvider.NETWORK_ID_ROPSTEN);
+        kinClient = new KinClient(context, serviceProvider);
     }
 
     @After
@@ -30,7 +30,7 @@ public class BaseTest {
 
     private void clearKeyStore() {
         // Removes the previews KeyStore if exists
-        String networkId = String.valueOf(infuraProvider.getNetworkId());
+        String networkId = String.valueOf(serviceProvider.getNetworkId());
         String keyStorePath = new StringBuilder(context.getFilesDir().getAbsolutePath())
             .append(File.separator)
             .append("kin")
