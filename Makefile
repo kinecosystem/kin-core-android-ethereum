@@ -2,6 +2,7 @@
 .DEFAULT_GOAL: default
 default: ;
 
+# add truffle and testrpc to $PATH
 export PATH := ./node_modules/.bin:$(PATH)
 
 prepare-tests: truffle
