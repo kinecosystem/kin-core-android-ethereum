@@ -10,6 +10,8 @@ cache:
     - $HOME/.gradle/wrapper/
     - $HOME/.android/build-cache
 
+    - node_modules
+
 env:
   global:
     - ANDROID_API_LEVEL=26
@@ -28,6 +30,15 @@ android:
     - extra-android-support
     - sys-img-armeabi-v7a-android-$ANDROID_API_LEVEL
     - sys-img-armeabi-v7a-android-$EMULATOR_API_LEVEL
+
+before_install:
+  # install node (npm), truffle, testrpc
+  - rm -rf ~/.nvm
+  - git clone https://github.com/creationix/nvm.git ~/.nvm
+  - source ~/.nvm/nvm.sh
+  - nvm install 8.9.1
+  - node --version
+  - npm install
 
 before_script:
   # setup android emulator
