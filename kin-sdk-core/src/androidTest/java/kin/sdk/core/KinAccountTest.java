@@ -1,4 +1,4 @@
-package kin.sdk.core.impl;
+package kin.sdk.core;
 
 import android.support.test.runner.AndroidJUnit4;
 
@@ -10,9 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import kin.sdk.core.Balance;
-import kin.sdk.core.BaseTest;
-import kin.sdk.core.KinAccount;
 import kin.sdk.core.exception.OperationFailedException;
 import kin.sdk.core.exception.PassphraseException;
 

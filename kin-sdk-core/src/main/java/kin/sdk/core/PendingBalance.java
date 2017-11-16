@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.math.BigDecimal;
 import kin.sdk.core.exception.OperationFailedException;
+import kin.sdk.core.util.KinConverter;
 import org.ethereum.geth.Account;
 import org.ethereum.geth.Address;
 import org.ethereum.geth.Addresses;

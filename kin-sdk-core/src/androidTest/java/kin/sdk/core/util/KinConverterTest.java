@@ -1,4 +1,4 @@
-package kin.sdk.core.ethereum;
+package kin.sdk.core.util;
 
 import static org.junit.Assert.assertEquals;
 

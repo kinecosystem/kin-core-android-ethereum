@@ -6,6 +6,7 @@ import kin.sdk.core.exception.EthereumClientException;
 import kin.sdk.core.exception.InsufficientBalanceException;
 import kin.sdk.core.exception.OperationFailedException;
 import kin.sdk.core.exception.PassphraseException;
+import kin.sdk.core.util.KinConverter;
 import org.ethereum.geth.Account;
 import org.ethereum.geth.Address;
 import org.ethereum.geth.BigInt;
