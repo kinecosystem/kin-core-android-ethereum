@@ -1,14 +1,12 @@
-package kin.sdk.core.impl;
+package kin.sdk.core;
 
 import java.math.BigDecimal;
 
-import kin.sdk.core.Balance;
-
-public class BalanceImpl implements Balance {
+final class BalanceImpl implements Balance {
 
     private BigDecimal valueInKin;
 
-    public BalanceImpl(BigDecimal valueInKin) {
+    BalanceImpl(BigDecimal valueInKin) {
         this.valueInKin = valueInKin;
     }
 

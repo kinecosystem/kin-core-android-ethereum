@@ -1,4 +1,4 @@
-package kin.sdk.core.ethereum;
+package kin.sdk.core.util;
 
 import java.math.BigDecimal;
 import org.ethereum.geth.BigInt;
@@ -7,14 +7,9 @@ import org.ethereum.geth.Geth;
 /**
  * A Utility class used to convert currency values to/from Kin.
  */
-class KinConverter {
+public class KinConverter {
 
     private static final BigDecimal KIN = BigDecimal.TEN.pow(18);
-
-    static BigInt fromKin(BigDecimal value) {
-        BigDecimal bigDecimal = value.multiply(KIN);
-        return toBigInt(bigDecimal);
-    }
 
     private static BigInt toBigInt(BigDecimal bigDecimal) {
         BigInt bigInt = Geth.newBigInt(0L);
@@ -25,11 +20,16 @@ class KinConverter {
         return bigInt;
     }
 
-    static BigDecimal toKin(BigInt value) {
+    public static BigInt fromKin(BigDecimal value) {
+        BigDecimal bigDecimal = value.multiply(KIN);
+        return toBigInt(bigDecimal);
+    }
+
+    public static BigDecimal toKin(BigInt value) {
         return toKin(new BigDecimal(value.string()));
     }
 
-    static BigDecimal toKin(BigDecimal value) {
+    public static BigDecimal toKin(BigDecimal value) {
         return value.divide(KIN, 18, BigDecimal.ROUND_FLOOR);
     }
 }

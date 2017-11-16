@@ -6,10 +6,8 @@ import android.content.Context;
 import org.ethereum.geth.Account;
 import org.ethereum.geth.Accounts;
 
-import kin.sdk.core.ethereum.EthClientWrapper;
 import kin.sdk.core.exception.CreateAccountException;
 import kin.sdk.core.exception.EthereumClientException;
-import kin.sdk.core.impl.KinAccountImpl;
 
 public class KinClient {
 
