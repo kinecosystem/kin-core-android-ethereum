@@ -1,15 +1,11 @@
-package kin.sdk.core.impl;
+package kin.sdk.core;
 
 import java.math.BigDecimal;
 import java.util.concurrent.Callable;
 
-import kin.sdk.core.Balance;
-import kin.sdk.core.KinAccount;
-import kin.sdk.core.ResultCallback;
-import kin.sdk.core.TransactionId;
 import kin.sdk.core.concurrent.Concurrency;
 
-public abstract class AbstractKinAccount implements KinAccount {
+abstract class AbstractKinAccount implements KinAccount {
 
     private final Concurrency concurrency = Concurrency.getInstance();
 

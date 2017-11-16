@@ -1,16 +1,11 @@
-package kin.sdk.core.ethereum;
+package kin.sdk.core;
 
 import java.io.File;
 import java.math.BigDecimal;
-import kin.sdk.core.Balance;
-import kin.sdk.core.ServiceProvider;
-import kin.sdk.core.TransactionId;
 import kin.sdk.core.exception.EthereumClientException;
 import kin.sdk.core.exception.InsufficientBalanceException;
 import kin.sdk.core.exception.OperationFailedException;
 import kin.sdk.core.exception.PassphraseException;
-import kin.sdk.core.impl.BalanceImpl;
-import kin.sdk.core.impl.TransactionIdImpl;
 import org.ethereum.geth.Account;
 import org.ethereum.geth.Address;
 import org.ethereum.geth.BigInt;
@@ -30,7 +25,7 @@ import org.ethereum.geth.Transaction;
  * Responsible for account creation/storage/retrieval, connection to Kin contract
  * retrieving balance and sending transactions
  */
-public class EthClientWrapper {
+final class EthClientWrapper {
 
     private Context gethContext;
     private EthereumClient ethereumClient;
@@ -42,7 +37,7 @@ public class EthClientWrapper {
     private BigInt gasPrice = null;
     private final PendingBalance pendingBalance;
 
-    public EthClientWrapper(android.content.Context androidContext, ServiceProvider serviceProvider)
+    EthClientWrapper(android.content.Context androidContext, ServiceProvider serviceProvider)
         throws EthereumClientException {
         this.serviceProvider = serviceProvider;
         this.gethContext = new Context();
@@ -113,7 +108,7 @@ public class EthClientWrapper {
     /**
      * @return {@link KeyStore} that will handle all operations related to accounts.
      */
-    public KeyStore getKeyStore() {
+    KeyStore getKeyStore() {
         return keyStore;
     }
 
@@ -129,7 +124,7 @@ public class EthClientWrapper {
      * @throws PassphraseException if the transaction could not be signed with the passphrase specified
      * @throws OperationFailedException another error occurred
      */
-    public TransactionId sendTransaction(Account from, String passphrase, String publicAddress, BigDecimal amount)
+    TransactionId sendTransaction(Account from, String passphrase, String publicAddress, BigDecimal amount)
         throws InsufficientBalanceException, OperationFailedException, PassphraseException {
         Transaction transaction;
         Address toAddress;
@@ -198,7 +193,7 @@ public class EthClientWrapper {
      * @return the account {@link Balance}
      * @throws OperationFailedException if could not retrieve balance
      */
-    public Balance getBalance(Account account) throws OperationFailedException {
+    Balance getBalance(Account account) throws OperationFailedException {
         Interface balanceResult;
         try {
             Interface paramAddress = Geth.newInterface();
@@ -231,19 +226,19 @@ public class EthClientWrapper {
         }
     }
 
-    private boolean hasEnoughBalance(Account account, BigDecimal amount) throws OperationFailedException {
-        Balance balance = getBalance(account);
-        // (> -1) means bigger than or equals to the amount.
-        return balance.value().subtract(amount).compareTo(BigDecimal.ZERO) > -1;
-    }
-
-    public Balance getPendingBalance(Account account) throws OperationFailedException {
+    Balance getPendingBalance(Account account) throws OperationFailedException {
         Balance balance = getBalance(account);
         return pendingBalance.calculate(account, balance);
     }
 
-    public ServiceProvider getServiceProvider() {
+    ServiceProvider getServiceProvider() {
         return serviceProvider;
+    }
+
+    private boolean hasEnoughBalance(Account account, BigDecimal amount) throws OperationFailedException {
+        Balance balance = getBalance(account);
+        // (> -1) means bigger than or equals to the amount.
+        return balance.value().subtract(amount).compareTo(BigDecimal.ZERO) > -1;
     }
 
     /**

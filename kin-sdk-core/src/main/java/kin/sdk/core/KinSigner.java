@@ -1,4 +1,4 @@
-package kin.sdk.core.ethereum;
+package kin.sdk.core;
 
 import org.ethereum.geth.Account;
 import org.ethereum.geth.Address;

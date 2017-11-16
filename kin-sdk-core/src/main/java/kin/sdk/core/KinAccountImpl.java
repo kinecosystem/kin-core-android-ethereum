@@ -1,17 +1,13 @@
-package kin.sdk.core.impl;
+package kin.sdk.core;
 
 import java.math.BigDecimal;
-import kin.sdk.core.Balance;
-import kin.sdk.core.KinAccount;
-import kin.sdk.core.TransactionId;
-import kin.sdk.core.ethereum.EthClientWrapper;
 import kin.sdk.core.exception.InsufficientBalanceException;
 import kin.sdk.core.exception.OperationFailedException;
 import kin.sdk.core.exception.PassphraseException;
 import org.ethereum.geth.Account;
 import org.ethereum.geth.KeyStore;
 
-public class KinAccountImpl extends AbstractKinAccount {
+final class KinAccountImpl extends AbstractKinAccount {
 
     private KeyStore keyStore;
     private EthClientWrapper ethClient;
@@ -25,7 +21,7 @@ public class KinAccountImpl extends AbstractKinAccount {
      * @throws Exception if go-ethereum was unable to generate the account (unable to generate new key or store the
      * key).
      */
-    public KinAccountImpl(EthClientWrapper ethClientWrapper, String passphrase) throws Exception {
+    KinAccountImpl(EthClientWrapper ethClientWrapper, String passphrase) throws Exception {
         this.keyStore = ethClientWrapper.getKeyStore();
         this.account = keyStore.newAccount(passphrase);
         this.ethClient = ethClientWrapper;
@@ -37,7 +33,7 @@ public class KinAccountImpl extends AbstractKinAccount {
      * @param ethClientWrapper that will be use to call to Kin smart-contract.
      * @param account the existing Account.
      */
-    public KinAccountImpl(EthClientWrapper ethClientWrapper, Account account) {
+    KinAccountImpl(EthClientWrapper ethClientWrapper, Account account) {
         this.keyStore = ethClientWrapper.getKeyStore();
         this.account = account;
         this.ethClient = ethClientWrapper;

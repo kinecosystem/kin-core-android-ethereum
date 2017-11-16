@@ -1,4 +1,4 @@
-package kin.sdk.core.ethereum;
+package kin.sdk.core;
 
 import java.math.BigDecimal;
 import org.ethereum.geth.BigInt;
@@ -7,7 +7,7 @@ import org.ethereum.geth.Geth;
 /**
  * A Utility class used to convert currency values to/from Kin.
  */
-class KinConverter {
+final class KinConverter {
 
     private static final BigDecimal KIN = BigDecimal.TEN.pow(18);
 
