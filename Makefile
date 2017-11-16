@@ -5,6 +5,10 @@ default: ;
 # add truffle and testrpc to $PATH
 export PATH := ./node_modules/.bin:$(PATH)
 
+test:
+	./gradlew build -PisRelease=true -Pandroid.buildOnlyTargetAbi=false -Ptravis
+.PHONY: test
+
 prepare-tests: truffle
 	./scripts/prepare-tests.sh
 .PHONY: test
