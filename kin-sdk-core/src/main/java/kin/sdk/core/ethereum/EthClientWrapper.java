@@ -143,8 +143,8 @@ public class EthClientWrapper {
 
         // Make sure the amount is positive and the sender account has enough KIN to send.
         if (amount.signum() != -1) {
-            amount = KinConverter.fromKin(amount);
             if (hasEnoughBalance(from, amount)) {
+                amount = KinConverter.fromKin(amount);
                 amountBigInt = KinConverter.toBigInt(amount);
             } else {
                 throw new InsufficientBalanceException();
@@ -174,7 +174,6 @@ public class EthClientWrapper {
 
         Interface paramAmount = Geth.newInterface();
         paramAmount.setBigInt(amountBigInt);
-
         Interfaces params = Geth.newInterfaces(2);
         try {
             params.set(0, paramToAddress);

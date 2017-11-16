@@ -4,13 +4,13 @@ package kin.sdk.core.ethereum;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import kin.sdk.core.Balance;
 import kin.sdk.core.exception.OperationFailedException;
 import kin.sdk.core.impl.BalanceImpl;
 import org.ethereum.geth.Account;
 import org.ethereum.geth.Address;
 import org.ethereum.geth.Addresses;
+import org.ethereum.geth.BigInt;
 import org.ethereum.geth.Context;
 import org.ethereum.geth.EthereumClient;
 import org.ethereum.geth.FilterQuery;
@@ -39,22 +39,22 @@ final class PendingBalance {
         try {
             String accountAddressHex = account.getAddress().getHex();
 
-            BigInteger pendingSpentAmount = getPendingSpentAmount(accountAddressHex);
-            BigInteger pendingEarnAmount = getPendingEarnAmount(accountAddressHex);
+            BigDecimal pendingSpentAmount = getPendingSpentAmount(accountAddressHex);
+            BigDecimal pendingEarnAmount = getPendingEarnAmount(accountAddressHex);
 
-            BigDecimal totalPendingAmount = KinConverter.toKin(pendingEarnAmount.subtract(pendingSpentAmount));
-            return new BalanceImpl(balance.value().add(totalPendingAmount));
+            BigDecimal totalPendingAmountInKin = KinConverter.toKin(pendingEarnAmount.subtract(pendingSpentAmount));
+            return new BalanceImpl(balance.value().add(totalPendingAmountInKin));
         } catch (Exception e) {
             throw new OperationFailedException(e);
         }
     }
 
-    private BigInteger getPendingSpentAmount(String accountAddressHex) throws Exception {
+    private BigDecimal getPendingSpentAmount(String accountAddressHex) throws Exception {
         Logs pendingSpentLogs = getPendingTransactionsLogs(accountAddressHex, null);
         return sumTransactionsAmount(pendingSpentLogs);
     }
 
-    private BigInteger getPendingEarnAmount(String accountAddressHex) throws Exception {
+    private BigDecimal getPendingEarnAmount(String accountAddressHex) throws Exception {
         Logs pendingEarnLogs = getPendingTransactionsLogs(null, accountAddressHex);
         return sumTransactionsAmount(pendingEarnLogs);
     }
@@ -115,14 +115,15 @@ final class PendingBalance {
         return Geth.newHashFromHex("0x000000000000000000000000" + hexAddress.substring(2));
     }
 
-    private BigInteger sumTransactionsAmount(Logs logs) throws Exception {
-        BigInteger totalAmount = BigInteger.ZERO;
+    private BigDecimal sumTransactionsAmount(Logs logs) throws Exception {
+        BigDecimal totalAmount = BigDecimal.ZERO;
         for (int i = 0; i < logs.size(); i++) {
             Log log = logs.get(i);
             String txHash = log.getTxHash().getHex();
             if (txHash != null) {
-                //use big integer to construct
-                totalAmount = totalAmount.add(new BigInteger(log.getData()));
+                BigInt txAmount = Geth.newBigInt(0L);
+                txAmount.setBytes(log.getData());
+                totalAmount = totalAmount.add(new BigDecimal(txAmount.string()));
             }
         }
         return totalAmount;
