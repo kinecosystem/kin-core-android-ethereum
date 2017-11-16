@@ -37,6 +37,7 @@ public class EthClientWrapper {
     private BoundContract boundContract;
     private KeyStore keyStore;
     private ServiceProvider serviceProvider;
+    private final String kinContractAddress;
     private long nonce = -1;
     private BigInt gasPrice = null;
     private final PendingBalance pendingBalance;
@@ -45,10 +46,11 @@ public class EthClientWrapper {
         throws EthereumClientException {
         this.serviceProvider = serviceProvider;
         this.gethContext = new Context();
+        this.kinContractAddress = getContractAddress();
         initEthereumClient();
         initKinContract();
         initKeyStore(androidContext);
-        pendingBalance = new PendingBalance(ethereumClient, gethContext);
+        this.pendingBalance = new PendingBalance(ethereumClient, gethContext, kinContractAddress);
     }
 
     /**
@@ -71,8 +73,8 @@ public class EthClientWrapper {
      */
     private void initKinContract() throws EthereumClientException {
         try {
-            Address kinContractAddress = Geth.newAddressFromHex(getContractAddress());
-            this.boundContract = Geth.bindContract(kinContractAddress, KinConsts.ABI, ethereumClient);
+            Address contractAddress = Geth.newAddressFromHex(kinContractAddress);
+            this.boundContract = Geth.bindContract(contractAddress, KinConsts.ABI, ethereumClient);
         } catch (Exception e) {
             throw new EthereumClientException("contract - could not establish connection to Kin smart-contract");
         }
