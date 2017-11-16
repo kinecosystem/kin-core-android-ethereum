@@ -29,10 +29,12 @@ final class PendingBalance {
 
     private final EthereumClient ethereumClient;
     private final Context gethContext;
+    private final String kinContractAddress;
 
-    PendingBalance(EthereumClient ethereumClient, Context gethContext) {
+    PendingBalance(EthereumClient ethereumClient, Context gethContext, String kinContractAddress) {
         this.ethereumClient = ethereumClient;
         this.gethContext = gethContext;
+        this.kinContractAddress = kinContractAddress;
     }
 
     Balance calculate(Account account, Balance balance) throws OperationFailedException {
@@ -62,9 +64,9 @@ final class PendingBalance {
     private Logs getPendingTransactionsLogs(@Nullable String fromHexAddress, @Nullable String toHexAddress)
         throws OperationFailedException {
         try {
-            Address kinContractAddress = Geth.newAddressFromHex(KinConsts.CONTRACT_ADDRESS_HEX);
+            Address contractAddress = Geth.newAddressFromHex(kinContractAddress);
             Addresses addresses = Geth.newAddressesEmpty();
-            addresses.append(kinContractAddress);
+            addresses.append(contractAddress);
 
             Topics topics = createFilterLogTopicsArray(fromHexAddress, toHexAddress);
 
