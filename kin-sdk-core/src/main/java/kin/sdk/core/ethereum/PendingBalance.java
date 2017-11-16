@@ -121,6 +121,9 @@ final class PendingBalance {
             Log log = logs.get(i);
             String txHash = log.getTxHash().getHex();
             if (txHash != null) {
+                //getData returns raw data of non-indexed params of event
+                //in our case it's the amount param of 'Transfer' event, the format is unsigned int of 32bytes,
+                //so it can be converted safely to bigInt
                 BigInt txAmount = Geth.newBigInt(0L);
                 txAmount.setBytes(log.getData());
                 totalAmount = totalAmount.add(new BigDecimal(txAmount.string()));
