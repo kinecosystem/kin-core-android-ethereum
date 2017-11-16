@@ -1,8 +1,8 @@
 {
-  "name": "kin-sdk-core-ios",
+  "name": "kin-sdk-core-android",
   "version": "0.0.1",
-  "description": "Kin SDK Core iOS",
-  "repository": "git@github.com:kinfoundation/kin-sdk-core-ios.git",
+  "description": "Kin SDK Core Android",
+  "repository": "git@github.com:kinfoundation/kin-sdk-core-android.git",
   "author": "Kik",
   "license": "",
   "main": "truffle.js",
@@ -10,9 +10,9 @@
     "testrpc": "scripts/testrpc.sh"
   },
   "bugs": {
-    "url": "https://github.com/kinfoundation/kin-sdk-core-ios/issues"
+    "url": "https://github.com/kinfoundation/kin-sdk-core-android/issues"
   },
-  "homepage": "https://github.com/kinfoundation/kin-sdk-core-ios",
+  "homepage": "https://github.com/kinfoundation/kin-sdk-core-android",
   "dependencies": {
     "babel-polyfill": "^6.26.0",
     "babel-preset-es2015": "^6.24.1",
