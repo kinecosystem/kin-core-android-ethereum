@@ -144,8 +144,7 @@ public class EthClientWrapper {
         // Make sure the amount is positive and the sender account has enough KIN to send.
         if (amount.signum() != -1) {
             if (hasEnoughBalance(from, amount)) {
-                amount = KinConverter.fromKin(amount);
-                amountBigInt = KinConverter.toBigInt(amount);
+                amountBigInt = KinConverter.fromKin(amount);
             } else {
                 throw new InsufficientBalanceException();
             }

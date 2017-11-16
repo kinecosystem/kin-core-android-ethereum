@@ -11,24 +11,18 @@ class KinConverter {
 
     private static final BigDecimal KIN = BigDecimal.TEN.pow(18);
 
-    /**
-     * Convert the radix part (integer) of input BigDecimal to Geth BigInt
-     * NOTE: any fractional part will be discarded!
-     *
-     * @param value expected
-     * @return Integer part of input BigDecimal as BigInt
-     */
-    static BigInt toBigInt(BigDecimal value) {
+    static BigInt fromKin(BigDecimal value) {
+        BigDecimal bigDecimal = value.multiply(KIN);
+        return toBigInt(bigDecimal);
+    }
+
+    private static BigInt toBigInt(BigDecimal bigDecimal) {
         BigInt bigInt = Geth.newBigInt(0L);
         //to get ByteArray representation, convert to Java BigInteger (will discard the fractional part)
         //then extract ByteArray from the BigInteger, BigInteger representation is in two's complement,
         // but as we're not dealing with negative numbers, it's safe to init the Unsigned BigInt with it
-        bigInt.setBytes(value.toBigInteger().toByteArray());
+        bigInt.setBytes(bigDecimal.toBigInteger().toByteArray());
         return bigInt;
-    }
-
-    static BigDecimal fromKin(BigDecimal value) {
-        return value.multiply(KIN);
     }
 
     static BigDecimal toKin(BigInt value) {
