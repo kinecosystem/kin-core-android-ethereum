@@ -3,6 +3,7 @@ language: android
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
 cache:
   directories:
     - $HOME/.gradle/caches/
@@ -10,9 +11,9 @@ cache:
     - $HOME/.android/build-cache
 
 env:
- global:
- - ANDROID_API_LEVEL=26
- - EMULATOR_API_LEVEL=21
+  global:
+    - ANDROID_API_LEVEL=26
+    - EMULATOR_API_LEVEL=21
 
 android:
   components:
@@ -29,6 +30,7 @@ android:
     - sys-img-armeabi-v7a-android-$EMULATOR_API_LEVEL
 
 before_script:
+  # setup android emulator
   - echo no | android create avd --force -n test -t android-$EMULATOR_API_LEVEL --abi armeabi-v7a
   - emulator -avd test -no-skin -no-audio -no-window &
   - android-wait-for-emulator
