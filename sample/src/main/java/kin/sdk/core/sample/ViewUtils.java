@@ -4,15 +4,56 @@ package kin.sdk.core.sample;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.view.Gravity;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class ViewUtils {
 
     public static void alert(Context context, String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setMessage(message)
-            .setCancelable(false)
-            .setPositiveButton(R.string.ok, (dialog, id) -> dialog.dismiss());
-        AlertDialog alert = builder.create();
-        alert.show();
+        AlertDialog dialog;
+        AlertDialog.Builder builder;
+
+        builder = new AlertDialog.Builder(context);
+        builder.setView(buildAlertView(context, message));
+        dialog = builder.create();
+        dialog.setCancelable(true);
+        dialog.setButton(DialogInterface.BUTTON_POSITIVE, context.getResources().getString(R.string.ok),
+            (dialogInterface, i) -> dialogInterface.dismiss());
+        dialog.show();
+    }
+
+    private static View buildAlertView(Context context, String message) {
+        TextView textView = new TextView(context);
+        textView.setTextColor(R.drawable.text_color);
+        textView.setTextIsSelectable(true);
+        textView.setTextSize(18f);
+        textView.setText(message);
+        textView.setGravity(Gravity.LEFT);
+        textView.setPadding(35, 35, 35, 0);
+        textView.setOnLongClickListener(v -> {
+            copyToClipboard(v.getContext(), message);
+            Toast.makeText(v.getContext(), R.string.copied_to_clipboard,
+                Toast.LENGTH_SHORT)
+                .show();
+            return true;
+        });
+        return textView;
+    }
+
+    public static void copyToClipboard(Context context, CharSequence textToCopy) {
+        int sdk = android.os.Build.VERSION.SDK_INT;
+        if (sdk < android.os.Build.VERSION_CODES.HONEYCOMB) {
+            android.text.ClipboardManager clipboard = (android.text.ClipboardManager) context.getSystemService(
+                Context.CLIPBOARD_SERVICE);
+            clipboard.setText(textToCopy);
+        } else {
+            android.content.ClipboardManager clipboard = (android.content.ClipboardManager) context.getSystemService(
+                Context.CLIPBOARD_SERVICE);
+            android.content.ClipData clip = android.content.ClipData
+                .newPlainText("copied text", textToCopy);
+            clipboard.setPrimaryClip(clip);
+        }
     }
 }

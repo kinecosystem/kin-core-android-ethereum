@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="35dp"
+    android:padding="@dimen/activity_padding"
     android:background="@color/white"
     android:clickable="true"
     android:focusableInTouchMode="true"
     android:orientation="vertical"
-    tools:context="kin.sdk.core.sample.TransactionActivity">
+    tools:context="kin.sdk.core.sample.ExportKeystoreActivity">
 
 
     <EditText
@@ -29,7 +29,7 @@
         android:layout_marginTop="20dp"
         android:clickable="false"
         android:enabled="false"
-        android:text="@string/generate_private_key"/>
+        android:text="@string/export_key_store"/>
 
 
     <TextView

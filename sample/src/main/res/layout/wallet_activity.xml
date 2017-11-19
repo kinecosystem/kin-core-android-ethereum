@@ -5,12 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
+    android:padding="@dimen/activity_padding"
     tools:context="kin.sdk.core.sample.WalletActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="35dp"
         android:orientation="vertical">
 
         <TextView
@@ -30,12 +30,12 @@
             tools:text="public key"/>
 
         <Button
-            android:id="@+id/private_key"
+            android:id="@+id/export_key_store_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             style="@style/KinButtonStyle.TestNet"
-            android:text="@string/private_key"/>
+            android:text="@string/export_key_store"/>
 
         <View
             android:layout_width="match_parent"

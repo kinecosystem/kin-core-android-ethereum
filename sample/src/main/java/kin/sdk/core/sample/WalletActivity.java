@@ -51,12 +51,12 @@ public class WalletActivity extends BaseActivity {
         final View transaction = findViewById(R.id.send_transaction_btn);
         final View refresh = findViewById(R.id.refresh_btn);
         final View getKin = findViewById(R.id.get_kin_btn);
-        final View privateKey = findViewById(R.id.private_key);
+        final View exportKeyStore = findViewById(R.id.export_key_store_btn);
 
         if (getKinClient().getServiceProvider().isMainNet()) {
             transaction.setBackgroundResource(R.drawable.button_main_network_bg);
             refresh.setBackgroundResource(R.drawable.button_main_network_bg);
-            privateKey.setBackgroundResource(R.drawable.button_main_network_bg);
+            exportKeyStore.setBackgroundResource(R.drawable.button_main_network_bg);
             getKin.setVisibility(View.GONE);
         } else {
             getKin.setOnClickListener(view -> ViewUtils.alert(view.getContext(), "This is not implemented yet"));
@@ -68,8 +68,8 @@ public class WalletActivity extends BaseActivity {
             updatePendingBalance();
         });
 
-        privateKey.setOnClickListener(view -> {
-            startActivity(GeneratePrivateKeyActivity.getIntent(this));
+        exportKeyStore.setOnClickListener(view -> {
+            startActivity(ExportKeystoreActivity.getIntent(this));
         });
     }
 

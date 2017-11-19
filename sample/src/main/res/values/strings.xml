@@ -7,9 +7,9 @@
     <string name="refresh">Refresh</string>
     <string name="public_address">Public Address:</string>
     <string name="amount">Amount:</string>
-    <string name="private_key">Private Key</string>
     <string name="copy_to_clipboard">Copy to clipboard</string>
-    <string name="generate_private_key">Generate Private Key</string>
+    <string name="copied_to_clipboard">Copied to clipboard</string>
+    <string name="export_key_store">Export Key Store</string>
     <string name="enter_passphrase">Enter Your Passphrase</string>
     <string name="balance">Balance</string>
     <string name="transaction">Transaction</string>

@@ -9,7 +9,6 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import kin.sdk.core.TransactionId;
 import kin.sdk.core.exception.PassphraseException;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,39 +16,39 @@ import org.json.JSONObject;
 /**
  * Enter passphrase to generate Json content that can be used to access the current account
  */
-public class GeneratePrivateKeyActivity extends BaseActivity {
+public class ExportKeystoreActivity extends BaseActivity {
 
-    public static final String TAG = GeneratePrivateKeyActivity.class.getSimpleName();
+    public static final String TAG = ExportKeystoreActivity.class.getSimpleName();
 
     public static Intent getIntent(Context context) {
-        return new Intent(context, GeneratePrivateKeyActivity.class);
+        return new Intent(context, ExportKeystoreActivity.class);
     }
 
-    private View generateBtn, copyBtn;
+    private View exportBtn, copyBtn;
     private EditText passphraseInput;
     private TextView outputTextView;
-    private DisplayCallback<TransactionId> transactionCallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.generate_private_key_activity);
+        setContentView(R.layout.export_key_store_activity);
         initWidgets();
     }
 
     private void initWidgets() {
         copyBtn = findViewById(R.id.copy_btn);
-        generateBtn = findViewById(R.id.generate_btn);
+        exportBtn = findViewById(R.id.generate_btn);
         passphraseInput = (EditText) findViewById(R.id.passphrase_input);
         outputTextView = (TextView) findViewById(R.id.output);
 
         findViewById(R.id.copy_btn).setOnClickListener(view -> {
             selectAll();
-            copyToClipboard();
+            ViewUtils.copyToClipboard(this, outputTextView.getText());
         });
 
         if (getKinClient().getServiceProvider().isMainNet()) {
-            generateBtn.setBackgroundResource(R.drawable.button_main_network_bg);
+            exportBtn.setBackgroundResource(R.drawable.button_main_network_bg);
+            copyBtn.setBackgroundResource(R.drawable.button_main_network_bg);
         }
         passphraseInput.addTextChangedListener(new TextWatcher() {
             @Override
@@ -61,11 +60,11 @@ public class GeneratePrivateKeyActivity extends BaseActivity {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if (!TextUtils.isEmpty(charSequence)) {
                     clearOutput();
-                    if (!generateBtn.isEnabled()) {
-                        generateBtn.setEnabled(true);
+                    if (!exportBtn.isEnabled()) {
+                        exportBtn.setEnabled(true);
                     }
-                } else if (generateBtn.isEnabled()) {
-                    generateBtn.setEnabled(false);
+                } else if (exportBtn.isEnabled()) {
+                    exportBtn.setEnabled(false);
                 }
             }
 
@@ -81,9 +80,9 @@ public class GeneratePrivateKeyActivity extends BaseActivity {
             }
         });
 
-        generateBtn.setOnClickListener(view -> {
-            generateBtn.setEnabled(false);
-            hideKeyboard(generateBtn);
+        exportBtn.setOnClickListener(view -> {
+            exportBtn.setEnabled(false);
+            hideKeyboard(exportBtn);
             try {
                 String jsonFormatString = generatePrivateKeyStoreJsonFormat();
                 updateOutput(jsonFormatString);
@@ -108,21 +107,6 @@ public class GeneratePrivateKeyActivity extends BaseActivity {
         outputTextView.clearFocus();
         outputTextView.requestFocus();
         outputTextView.setSelectAllOnFocus(false);
-    }
-
-    private void copyToClipboard() {
-        int sdk = android.os.Build.VERSION.SDK_INT;
-        if (sdk < android.os.Build.VERSION_CODES.HONEYCOMB) {
-            android.text.ClipboardManager clipboard = (android.text.ClipboardManager) getSystemService(
-                Context.CLIPBOARD_SERVICE);
-            clipboard.setText(outputTextView.getText());
-        } else {
-            android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getSystemService(
-                Context.CLIPBOARD_SERVICE);
-            android.content.ClipData clip = android.content.ClipData
-                .newPlainText("Private Key file", outputTextView.getText());
-            clipboard.setPrimaryClip(clip);
-        }
     }
 
     private String generatePrivateKeyStoreJsonFormat() throws PassphraseException, JSONException {
@@ -155,15 +139,6 @@ public class GeneratePrivateKeyActivity extends BaseActivity {
 
     @Override
     int getActionBarTitleRes() {
-        return R.string.generate_private_key;
-    }
-
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (transactionCallback != null) {
-            transactionCallback.onDetach();
-        }
+        return R.string.export_key_store;
     }
 }

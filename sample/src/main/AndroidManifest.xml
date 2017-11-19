@@ -10,7 +10,8 @@
         android:roundIcon="@mipmap/ic_launcher_rounded"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ChooseNetworkActivity"
+        <activity
+            android:name=".ChooseNetworkActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -19,25 +20,25 @@
         </activity>
         <activity
             android:name=".CreateAccountActivity"
-            android:screenOrientation="portrait"
             android:parentActivityName=".ChooseNetworkActivity"
+            android:screenOrientation="portrait"
             />
         <activity
             android:name=".WebWrapperActivity"
-            android:screenOrientation="portrait"
             android:parentActivityName=".ChooseNetworkActivity"
+            android:screenOrientation="portrait"
             />
         <activity
             android:name=".WalletActivity"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".ChooseNetworkActivity"/>
+            android:parentActivityName=".ChooseNetworkActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".TransactionActivity"
             android:parentActivityName=".WalletActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
-            android:name=".GeneratePrivateKeyActivity"
+            android:name=".ExportKeystoreActivity"
             android:parentActivityName=".WalletActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustNothing"/>
