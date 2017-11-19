@@ -28,7 +28,9 @@ android {
 
 dependencies {
 
-    implementation ('kinfoundation.ethereum:geth:1.0.0@aar')
+    implementation ('kinfoundation.ethereum:geth:1.0.0@aar') {
+        transitive = true
+    }
 
     implementation supportDependencies.appCompat
 

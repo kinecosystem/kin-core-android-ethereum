@@ -1,0 +1,40 @@
+
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.github.kinfoundation</groupId>
+    <artifactId>kin-sdk-core-android</artifactId>
+    <version>8ef200760b</version>
+    <packaging>aar</packaging>
+    <name>kinfoundation/kin-sdk-core-android</name>
+    <description>Android library responsible for creating a new Ethereum account and managing KIN balance and transactions.</description>
+    <url>https://github.com/kinfoundation/kin-sdk-core-android</url>
+    <inceptionYear>2017</inceptionYear>
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://api.github.com/licenses/mit</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <id>kinfoundation</id>
+            <name>Kin Foundation</name>
+            <email></email>
+        </developer>
+    </developers>
+    <scm>
+        <connection>scm:git://github.com/kinfoundation/kin-sdk-core-android.git</connection>
+        <developerConnection>scm:git://github.com/kinfoundation/kin-sdk-core-android.git</developerConnection>
+        <url>git://github.com/kinfoundation/kin-sdk-core-android.git</url>
+    </scm>
+    <dependency>
+        <groupId>kinfoundation.ethereum</groupId>
+        <artifactId>geth</artifactId>
+        <version>1.0.0</version>
+        <type>aar</type>
+        <scope>runtime</scope>
+    </dependency>
+</project>
