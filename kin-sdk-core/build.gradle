@@ -28,7 +28,7 @@ android {
 
 dependencies {
 
-    implementation ('go-ethereum:geth:1.0.0@aar')
+    implementation ('kinfoundation.ethereum:geth:1.0.0@aar')
 
     implementation supportDependencies.appCompat
 
