@@ -4,15 +4,12 @@ Android library responsible for creating a new Ethereum account and managing KIN
 
 ## Build
 
-* Copy [kin-sdk-core/libs/geth.aar](kin-sdk-core/libs/geth.aar) to a library folder in your project module.  
-_Note: In the near future we will upload the aar to jcenter so that you can pull it too by dependency_
-
 * Add this to your module's `build.gradle` file. Where:
 ```gradle
 repositories {
     ...
-    flatDir {
-       dirs 'YOUR-LIB-FOLDER-NAME'
+    maven {
+        url "https://dl.bintray.com/kinfoundation/go-ethereum"
     }
     maven {
         url 'https://jitpack.io'
@@ -22,7 +19,7 @@ repositories {
 ...
 dependencies {
     ...
-    compile(name:'geth', ext:'aar')
+    compile "kinfoundation.ethereum:geth:1.0.0@aar"
     compile "com.github.kinfoundation:kin-sdk-core-android:LATEST-COMMIT-ON-DEV-BRANCH"
 }
 ```
