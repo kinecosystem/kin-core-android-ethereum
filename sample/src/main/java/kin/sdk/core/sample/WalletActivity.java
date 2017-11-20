@@ -80,7 +80,7 @@ public class WalletActivity extends BaseActivity {
         balanceCallback = new DisplayCallback<Balance>(balanceProgress, balance) {
             @Override
             public void displayResult(Context context, View view, Balance result) {
-                ((TextView) view).setText(result.value(3));
+                ((TextView) view).setText(result.value(0));
             }
         };
         getKinClient().getAccount().getBalance(balanceCallback);
@@ -91,7 +91,7 @@ public class WalletActivity extends BaseActivity {
         pendingBalanceCallback = new DisplayCallback<Balance>(pendingBalanceProgress, pendingBalance) {
             @Override
             public void displayResult(Context context, View view, Balance result) {
-                ((TextView) view).setText(result.value(3));
+                ((TextView) view).setText(result.value(0));
             }
         };
         getKinClient().getAccount().getPendingBalance(pendingBalanceCallback);
