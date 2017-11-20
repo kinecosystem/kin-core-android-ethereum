@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-
 import kin.sdk.core.KinClient;
 import kin.sdk.core.exception.CreateAccountException;
 
@@ -24,12 +23,10 @@ public class CreateAccountActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_account_activity);
-        getSupportActionBar().setTitle(R.string.create_account);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        initButtons();
+        initWidgets();
     }
 
-    private void initButtons() {
+    private void initWidgets() {
         View createAccountView = findViewById(R.id.btn_create_account);
         if (getKinClient().getServiceProvider().isMainNet()) {
             createAccountView.setBackgroundResource(R.drawable.button_main_network_bg);
@@ -50,6 +47,11 @@ public class CreateAccountActivity extends BaseActivity {
     @Override
     Intent getBackIntent() {
         return ChooseNetworkActivity.getIntent(this);
+    }
+
+    @Override
+    int getActionBarTitleRes() {
+        return R.string.create_account;
     }
 
 }

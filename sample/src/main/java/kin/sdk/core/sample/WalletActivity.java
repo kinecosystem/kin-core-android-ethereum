@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.TextView;
 import kin.sdk.core.Balance;
 
@@ -30,9 +29,6 @@ public class WalletActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.wallet_activity);
-
-        getSupportActionBar().setTitle(R.string.balance);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         initWidgets();
     }
 
@@ -55,10 +51,12 @@ public class WalletActivity extends BaseActivity {
         final View transaction = findViewById(R.id.send_transaction_btn);
         final View refresh = findViewById(R.id.refresh_btn);
         final View getKin = findViewById(R.id.get_kin_btn);
+        final View exportKeyStore = findViewById(R.id.export_key_store_btn);
 
         if (getKinClient().getServiceProvider().isMainNet()) {
             transaction.setBackgroundResource(R.drawable.button_main_network_bg);
             refresh.setBackgroundResource(R.drawable.button_main_network_bg);
+            exportKeyStore.setBackgroundResource(R.drawable.button_main_network_bg);
             getKin.setVisibility(View.GONE);
         } else {
             getKin.setOnClickListener(view -> ViewUtils.alert(view.getContext(), "This is not implemented yet"));
@@ -68,6 +66,10 @@ public class WalletActivity extends BaseActivity {
         refresh.setOnClickListener(view -> {
             updateBalance();
             updatePendingBalance();
+        });
+
+        exportKeyStore.setOnClickListener(view -> {
+            startActivity(ExportKeystoreActivity.getIntent(this));
         });
     }
 
@@ -100,6 +102,11 @@ public class WalletActivity extends BaseActivity {
     @Override
     Intent getBackIntent() {
         return ChooseNetworkActivity.getIntent(this);
+    }
+
+    @Override
+    int getActionBarTitleRes() {
+        return R.string.balance;
     }
 
     @Override

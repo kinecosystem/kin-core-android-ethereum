@@ -30,9 +30,6 @@ public class TransactionActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.transaction_activity);
-
-        getSupportActionBar().setTitle(R.string.transaction);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         initWidgets();
     }
 
@@ -112,6 +109,11 @@ public class TransactionActivity extends BaseActivity {
     @Override
     Intent getBackIntent() {
         return WalletActivity.getIntent(this);
+    }
+
+    @Override
+    int getActionBarTitleRes() {
+        return R.string.transaction;
     }
 
     private void sendTransaction(String toAddress, BigDecimal amount) {

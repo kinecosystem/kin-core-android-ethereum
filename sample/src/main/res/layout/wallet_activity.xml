@@ -5,23 +5,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
+    android:padding="@dimen/activity_padding"
     tools:context="kin.sdk.core.sample.WalletActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="35dp"
         android:orientation="vertical">
 
         <TextView
-            style="@style/kinText.Bold"
+            style="@style/kinText.Title.Bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="getPublicAddress:"/>
 
         <TextView
             android:id="@+id/public_key"
-            style="@style/kinText"
+            style="@style/kinText.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -29,17 +29,25 @@
             android:textIsSelectable="true"
             tools:text="public key"/>
 
+        <Button
+            android:id="@+id/export_key_store_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            style="@style/KinButtonStyle.TestNet"
+            android:text="@string/export_key_store"/>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
             android:background="@color/grey"/>
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center">
+            >
 
             <Button
                 android:id="@+id/refresh_btn"
@@ -52,14 +60,13 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
 
                 <TextView
-                    style="@style/kinText.Bold"
+                    style="@style/kinText.Title.Bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:gravity="center|left"
                     android:text="getBalance:"/>
 
                 <ProgressBar
@@ -75,7 +82,7 @@
 
         <TextView
             android:id="@+id/balance"
-            style="@style/kinText"
+            style="@style/kinText.Title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
@@ -89,7 +96,7 @@
             android:orientation="horizontal">
 
             <TextView
-                style="@style/kinText.Bold"
+                style="@style/kinText.Title.Bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -108,7 +115,7 @@
 
         <TextView
             android:id="@+id/pending_balance"
-            style="@style/kinText"
+            style="@style/kinText.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
