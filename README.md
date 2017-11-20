@@ -2,6 +2,11 @@
 Android library responsible for creating a new Ethereum account and managing KIN balance and transactions.
 ![Kin Token](kin_android.png)
 
+## Disclosure
+
+The SDK is not yet ready for third-party use by digital services in the Kin ecosystem.
+It is still tested internally by Kik as part of [initial product launch, version 2](https://medium.com/kinfoundation/context-around-iplv2-4b4ec3734417).
+
 ## Build
 
 * Add this to your module's `build.gradle` file.
@@ -199,4 +204,4 @@ For a more detailed example on how to use the library please take a look at our 
 Please review our [CONTRIBUTING.md](CONTRIBUTING.md) guide before opening issues and pull requests.
 
 ## License
-The kin-sdk-core-android library is licensed under [MIT license](LICENSE).
+The kin-sdk-core-android library is licensed under [MIT license](LICENSE.md).
