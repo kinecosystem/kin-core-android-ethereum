@@ -42,7 +42,7 @@ final class EthClientWrapper {
         throws EthereumClientException {
         this.serviceProvider = serviceProvider;
         this.gethContext = new Context();
-        this.kinContractAddress = getContractAddress();
+        this.kinContractAddress = KinConsts.getContractAddress(serviceProvider);
         initEthereumClient();
         initKinContract();
         initKeyStore(androidContext);
@@ -242,22 +242,4 @@ final class EthClientWrapper {
         return balance.value().subtract(amount).compareTo(BigDecimal.ZERO) > -1;
     }
 
-    /**
-     * @return the contract address to interact with, depends on network.
-     */
-    private String getContractAddress() {
-        String address;
-        switch (serviceProvider.getNetworkId()) {
-            case ServiceProvider.NETWORK_ID_MAIN:
-                address = KinConsts.CONTRACT_ADDRESS_HEX_MAIN_NET;
-                break;
-            case ServiceProvider.NETWORK_ID_ROPSTEN:
-                address = KinConsts.CONTRACT_ADDRESS_HEX_ROPSTEN;
-                break;
-            default:
-                address = KinConsts.CONTRACT_ADDRESS_HEX_ROPSTEN;
-                break;
-        }
-        return address;
-    }
 }
