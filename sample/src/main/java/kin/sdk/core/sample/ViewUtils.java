@@ -4,6 +4,7 @@ package kin.sdk.core.sample;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
@@ -16,6 +17,9 @@ public class ViewUtils {
         AlertDialog.Builder builder;
 
         builder = new AlertDialog.Builder(context);
+        if(TextUtils.isEmpty(message)){
+            message = context.getResources().getString(R.string.error_no_message);
+        }
         builder.setView(buildAlertView(context, message));
         dialog = builder.create();
         dialog.setCancelable(true);
