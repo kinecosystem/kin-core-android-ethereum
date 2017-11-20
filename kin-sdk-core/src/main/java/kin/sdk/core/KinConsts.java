@@ -22,6 +22,7 @@ final class KinConsts {
         return NetworkConstants.fromProvider(provider).contractAddress;
     }
 
+    /* #enumsmatter */
     enum NetworkConstants {
         NETWORK_MAIN(ServiceProvider.NETWORK_ID_MAIN, "0x818fc6c2ec5986bc6e2cbf00939d90556ab12ce5"),
         NETWORK_ROPSTEN(ServiceProvider.NETWORK_ID_ROPSTEN,  "0xEF2Fcc998847DB203DEa15fC49d0872C7614910C"),
