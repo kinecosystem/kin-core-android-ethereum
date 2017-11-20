@@ -4,15 +4,12 @@ Android library responsible for creating a new Ethereum account and managing KIN
 
 ## Build
 
-* Copy [kin-sdk-core/libs/geth.aar](kin-sdk-core/libs/geth.aar) to a library folder in your project module.  
-_Note: In the near future we will upload the aar to jcenter so that you can pull it too by dependency_
-
-* Add this to your module's `build.gradle` file. Where:
+* Add this to your module's `build.gradle` file.
 ```gradle
 repositories {
     ...
-    flatDir {
-       dirs 'YOUR-LIB-FOLDER-NAME'
+    maven {
+        url "https://dl.bintray.com/kinfoundation/go-ethereum"
     }
     maven {
         url 'https://jitpack.io'
@@ -22,12 +19,11 @@ repositories {
 ...
 dependencies {
     ...
-    compile(name:'geth', ext:'aar')
+    compile "kinfoundation.ethereum:geth:1.0.0@aar"
     compile "com.github.kinfoundation:kin-sdk-core-android:LATEST-COMMIT-ON-DEV-BRANCH"
 }
 ```
 In the above `build.gradle`:
-* YOUR-LIB-FOLDER-NAME is the folder you copied geth.aar to
 * YOUR-JITPACK-AUTHTOKEN won't be needed once repository is changed to public.
 For the time being to get a token, go to https://jitpack.io and sign in with your github account. 
 Authorize jitpack, then navigate to https://jitpack.io/w/user to get your AccessToken. Ensure that jitpack is authorized 
@@ -161,11 +157,11 @@ account.getPendingBalance(new ResultCallback<Balance>() {
 As you have seen above we have provided a very simple solution for accessing the ethereum network on a background thread.
 In this solution `getBalance`, `getPendingBalance` and `sendTransaction` methods, run on a background thread 
 and accesses the Ethereum network. The `onResult` and `onError` callback methods are executed on the android UI thread.
-This solution suffers from inability to cancel the tasks and it need to be used very carefully to avoid leaking Activity context.
-We will be providing with a better solution shortly.
+This solution suffers from inability to cancel the tasks and you need to use it very carefully to avoid leaking Activity context.
+An example of how this can be used without leaking context can be found in our [Sample App](sample/).
 
-In the meantime it is **recommended** that you use the synchronous version of `getBalance`, 
-`sendTransaction` and `getPendingBalance` methods making sure you call them in a background thread in any way you are accustomed.
+We will be providing with a better solution shortly. In the meantime you are welcome to use the synchronous version of `getBalance`, 
+`sendTransaction` and `getPendingBalance` methods making sure you call them in a background thread in any way that you are accustomed.
 ```java
 try {
     account.getBalanceSync();
@@ -197,7 +193,7 @@ catch (OperationFailedException e){
 ```
 
 ### Sample Application 
-For a more detailed example on how to use the library we will soon be providing a sample app.
+For a more detailed example on how to use the library please take a look at our [Sample App](sample/).
 
 ## Contributing
 Please review our [CONTRIBUTING.md](CONTRIBUTING.md) guide before opening issues and pull requests.
