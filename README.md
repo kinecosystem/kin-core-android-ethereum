@@ -36,17 +36,35 @@ for private repositories
 * LATEST-COMMIT-ON-DEV-BRANCH is a short commit hash for example 1st 10 characters of a commit: f367f300f5
 
 ## Usage
-### Creating and retrieving an account
-Create a new `KinClient` with two arguments: an android `Context` and a `ServiceProvider`. 
+### Connecting to a service provider
+To start using our SDK, create a new `KinClient` with two arguments: an android `Context` and a `ServiceProvider`. 
 
-The example below creates a `ServiceProvider` that will be used to connect to the main Ethereum 
+A `ServiceProvider` is a service that provides access to the Ethereum network.
+The example below creates a `ServiceProvider` that will be used to connect to the main (production) Ethereum 
 network, via Infura.  To obtain an Infura token you can register [here](https://infura.io/register.html)
 ```java
 ServiceProvider infuraProvider =  
     new ServiceProvider("https://main.infura.io/INFURA_TOKEN", ServiceProvider.NETWORK_ID_MAIN));
 KinClient kinClient = new KinClient(context, infuraProvider);
 ```
- 
+
+To connect to a test ethereum network use the following ServiceProvider:
+```java
+new ServiceProvider("https://ropsten.infura.io/INFURA_TOKEN", ServiceProvider.NETWORK_ID_ROPSTEN)
+``` 
+
+### <a name="parity">Parity service provider</a>
+Unfortunately there is no guarantee that [`getPendingBalance`](#pendingBalance) will work when working with an Infura provider
+because of an existing known [issue](https://github.com/ethereum/go-ethereum/issues/15359) with the geth implementation of the ethereum protocol.
+To overcome this we are currently hosting our own node, that runs a parity implementation of the ethereum protocol which 
+does not have that issue. (A blogpost is soon coming up to explain more about that).
+To test how `getPendingBalance` works on a *test* ethereum network, you can use our node with the following `ServiceProvider`:
+```java
+new ServiceProvider("http://207.154.247.11:8545", ServiceProvider.NETWORK_ID_ROPSTEN)
+```
+We will soon provide with a similar service for the main (production) ethereum network.
+
+### Creating and retrieving a KIN account
 The first time you use `KinClient` you need to create a new account, using a passphrase. 
 The details of the account created will be securely stored on the device.
 ```java
@@ -75,8 +93,6 @@ account.getPublicAddress();
 ```
 
 You can export the account keystore file as JSON using the `exportKeyStore` method
-**`exportKeyStore` is NOT IMPLEMENTED YET.**
-**At the moment this will always return a mock JSON String**
 ```java
  try {
     String oldPassphrase = "yourPassphrase";
@@ -130,10 +146,9 @@ account.sendTransaction(toAddress, passphrase, amountInKin, new ResultCallback<T
 });
 ```
 
-### Retrieving Pending Balance
+### <a name="pendingBalance"></a>Retrieving Pending Balance
 
-**At the moment it is not supported when working with `ServiceProvider` that uses Geth nodes, due to [known issue](https://github.com/ethereum/go-ethereum/issues/15359).
-In this case, `getPendingBalance` will return the same `Balance` as `getBalance`.**
+**This may not work with an infura ServiceProvider, as discussed [here](#parity) **
 
 It takes some time for transactions to be confirmed.  In the meantime you can call `getPendingBalance` 
 to get the amount of KIN that you will have once all your pending transactions are confirmed.
