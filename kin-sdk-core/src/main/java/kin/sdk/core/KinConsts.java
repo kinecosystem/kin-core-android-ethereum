@@ -14,9 +14,6 @@ final class KinConsts {
      */
     static final String TOPIC_EVENT_NAME_SHA3_TRANSFER = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef";
 
-    // gas limit for 'kin transfer'
-    private static final long DEFAULT_TRANSFER_KIN_GAS_LIMIT = 60000;
-
     static long getTransferKinGasLimit(ServiceProvider provider) {
         return NetworkConstants.fromProvider(provider).transferKinGasLimit;
     }
@@ -34,14 +31,13 @@ final class KinConsts {
         String contractAddress;
         long transferKinGasLimit;
 
-        NetworkConstants(int id, String address, long gasLimit){
-            networkId = id;
-            contractAddress = address;
-            transferKinGasLimit = gasLimit;
-        }
+        // gas limit for 'kin transfer'
+        private static final long DEFAULT_TRANSFER_KIN_GAS_LIMIT = 60000;
 
         NetworkConstants(int id, String address){
-            this(id, address, DEFAULT_TRANSFER_KIN_GAS_LIMIT);
+            networkId = id;
+            contractAddress = address;
+            transferKinGasLimit = DEFAULT_TRANSFER_KIN_GAS_LIMIT;
         }
 
         static NetworkConstants fromProvider(ServiceProvider provider){
