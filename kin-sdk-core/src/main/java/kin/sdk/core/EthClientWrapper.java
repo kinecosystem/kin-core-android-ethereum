@@ -163,7 +163,7 @@ final class EthClientWrapper {
         // Create TransactionOps and send to Kin smart-contract with the required params.
         TransactOpts transactOpts = new TransactOpts();
         transactOpts.setContext(gethContext);
-        transactOpts.setGasLimit(KinConsts.DEFAULT_GAS_LIMIT);
+        transactOpts.setGasLimit(KinConsts.getTransferKinGasLimit(serviceProvider));
         transactOpts.setGasPrice(gasPrice);
         transactOpts.setNonce(nonce);
         transactOpts.setFrom(from.getAddress());
