@@ -204,4 +204,4 @@ For a more detailed example on how to use the library please take a look at our 
 Please review our [CONTRIBUTING.md](CONTRIBUTING.md) guide before opening issues and pull requests.
 
 ## License
-The kin-sdk-core-android library is licensed under [MIT license](LICENSE).
+The kin-sdk-core-android library is licensed under [MIT license](LICENSE.md).
