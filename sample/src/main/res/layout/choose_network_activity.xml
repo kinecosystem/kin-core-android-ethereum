@@ -28,13 +28,13 @@
         style="@style/KinButtonStyle.MainNet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="@dimen/button_margin"
         android:text="@string/main_net"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="@dimen/button_margin"
         android:orientation="horizontal"
         >
 
@@ -53,7 +53,7 @@
             android:clickable="true"
             android:lines="1"
             android:textColor="@drawable/text_color"
-            android:textSize="16sp"/>
+            android:textSize="@dimen/font_small"/>
 
     </LinearLayout>
 
