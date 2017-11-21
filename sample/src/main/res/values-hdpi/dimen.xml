@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="activity_padding">10dp</dimen>
+    <dimen name="button_padding">0dp</dimen>
+    <dimen name="button_font_size">13sp</dimen>
+    <dimen name="title_font_size">13sp</dimen>
+</resources>
