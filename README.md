@@ -55,14 +55,9 @@ new ServiceProvider("https://ropsten.infura.io/INFURA_TOKEN", ServiceProvider.NE
 
 ### <a name="parity">Parity service provider</a>
 Unfortunately there is no guarantee that [`getPendingBalance`](#pendingBalance) will work when working with an Infura provider
-because of an existing known [issue](https://github.com/ethereum/go-ethereum/issues/15359) with the geth implementation of the ethereum protocol.
-To overcome this we are currently hosting our own node, that runs a parity implementation of the ethereum protocol which 
-does not have that issue. (A blogpost is soon coming up to explain more about that).
-To test how `getPendingBalance` works on a *test* ethereum network, you can use our node with the following `ServiceProvider`:
-```java
-new ServiceProvider("http://207.154.247.11:8545", ServiceProvider.NETWORK_ID_ROPSTEN)
-```
-We will soon provide with a similar service for the main (production) ethereum network.
+because of an existing known [issue](https://github.com/ethereum/go-ethereum/issues/15359) with the geth implementation of the ethereum protocol.\
+In order for `getPendingBalance` to work as expected you will need to connect to a node running a parity implementation of the protocol.
+Let us know if you need help with that.
 
 ### Creating and retrieving a KIN account
 The first time you use `KinClient` you need to create a new account, using a passphrase. 
