@@ -26,7 +26,7 @@
         style="@style/KinButtonStyle.TestNet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="@dimen/button_margin"
         android:clickable="false"
         android:enabled="false"
         android:text="@string/export_key_store"/>
@@ -34,11 +34,11 @@
 
     <TextView
         android:id="@+id/output"
-        style="@style/kinText.Title"
+        style="@style/KinText.Title"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="@dimen/button_margin"
         android:background="@drawable/output_rectangle_bg"
         android:focusable="true"
         android:scrollbarFadeDuration="0"
@@ -51,7 +51,7 @@
         style="@style/KinButtonStyle.TestNet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="@dimen/button_margin"
         android:enabled="false"
         android:text="@string/copy_to_clipboard"/>
 

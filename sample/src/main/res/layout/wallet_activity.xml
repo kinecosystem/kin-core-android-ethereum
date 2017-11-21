@@ -11,18 +11,17 @@
 
 
     <TextView
-        style="@style/kinText.Title.Bold"
+        style="@style/KinText.Title.Bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="getPublicAddress:"/>
 
     <TextView
         android:id="@+id/public_key"
-        style="@style/kinText.Title"
+        style="@style/KinText.Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginTop="@dimen/sub_text_margin"
         android:textIsSelectable="true"
         tools:text="public key"/>
 
@@ -31,14 +30,15 @@
         style="@style/KinButtonStyle.TestNet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/button_margin"
         android:layout_gravity="right"
         android:text="@string/export_key_store"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="15dp"
+        android:layout_marginTop="@dimen/delim_margin"
+        android:layout_marginBottom="@dimen/delim_margin"
         android:background="@color/grey"/>
 
     <FrameLayout
@@ -56,36 +56,40 @@
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <TextView
-                style="@style/kinText.Title.Bold"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="getBalance:"/>
+                android:orientation="horizontal">
 
-            <ProgressBar
-                android:id="@+id/balance_progress"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginLeft="10dp"
-                android:layout_gravity="bottom"
-                android:visibility="gone"/>
+                <TextView
+                    style="@style/KinText.Title.Bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="getBalance:"/>
+
+                <ProgressBar
+                    android:id="@+id/balance_progress"
+                    android:layout_width="@dimen/progress_size"
+                    android:layout_height="@dimen/progress_size"
+                    android:layout_marginLeft="@dimen/progress_margin"
+                    android:layout_gravity="bottom"
+                    android:visibility="gone"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/balance"
+                style="@style/KinText.Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sub_text_margin"
+                android:gravity="left"
+                tools:text="123.0"/>
+
         </LinearLayout>
-
     </FrameLayout>
-
-    <TextView
-        android:id="@+id/balance"
-        style="@style/kinText.Title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:gravity="left"
-        tools:text="123.0"/>
-
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -93,18 +97,18 @@
         android:orientation="horizontal">
 
         <TextView
-            style="@style/kinText.Title.Bold"
+            style="@style/KinText.Title.Bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="@dimen/button_margin"
             android:gravity="center|left"
             android:text="getPendingBalance:"/>
 
         <ProgressBar
             android:id="@+id/pending_balance_progress"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginLeft="10dp"
+            android:layout_width="@dimen/progress_size"
+            android:layout_height="@dimen/progress_size"
+            android:layout_marginLeft="@dimen/progress_margin"
             android:layout_gravity="bottom"
             android:visibility="gone"/>
     </LinearLayout>
@@ -112,10 +116,10 @@
 
     <TextView
         android:id="@+id/pending_balance"
-        style="@style/kinText.Title"
+        style="@style/KinText.Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="@dimen/sub_text_margin"
         tools:text="555.5"/>
 
 
@@ -137,7 +141,7 @@
         style="@style/KinButtonStyle.TestNet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="@dimen/button_margin"
         android:enabled="false"
         android:text="@string/get_kin"/>
 

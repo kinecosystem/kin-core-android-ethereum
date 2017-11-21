@@ -12,7 +12,7 @@
     tools:context="kin.sdk.core.sample.TransactionActivity">
 
     <TextView
-        style="@style/kinText.Title.Bold"
+        style="@style/KinText.Title.Bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/public_address"/>
@@ -28,7 +28,7 @@
         tools:text="public key"/>
 
     <TextView
-        style="@style/kinText.Title.Bold"
+        style="@style/KinText.Title.Bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/amount"/>

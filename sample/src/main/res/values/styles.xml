@@ -27,17 +27,17 @@
         <item name="android:background">@drawable/button_main_network_bg</item>
     </style>
 
-    <style name="kinText">
+    <style name="KinText">
         <item name="android:textColor">@color/grey</item>
         <item name="android:textSize">@dimen/title_font_size</item>
         <item name="android:textAllCaps">false</item>
     </style>
 
-    <style name="kinText.Title" >
+    <style name="KinText.Title" >
         <item name="android:selectable">false</item>
     </style>
 
-    <style name="kinText.Title.Bold">
+    <style name="KinText.Title.Bold">
         <item name="android:textStyle">bold</item>
     </style>
 
