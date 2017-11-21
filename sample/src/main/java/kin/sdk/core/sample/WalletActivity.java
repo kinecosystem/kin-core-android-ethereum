@@ -53,7 +53,7 @@ public class WalletActivity extends BaseActivity {
         final View getKin = findViewById(R.id.get_kin_btn);
         final View exportKeyStore = findViewById(R.id.export_key_store_btn);
 
-        if (getKinClient().getServiceProvider().isMainNet()) {
+        if (isMainNet()) {
             transaction.setBackgroundResource(R.drawable.button_main_network_bg);
             refresh.setBackgroundResource(R.drawable.button_main_network_bg);
             exportKeyStore.setBackgroundResource(R.drawable.button_main_network_bg);

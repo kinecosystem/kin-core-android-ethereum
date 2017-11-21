@@ -7,10 +7,9 @@ import kin.sdk.core.exception.EthereumClientException;
 
 public class KinClientSampleApplication extends Application {
 
-    private final String ROPSTEN_URL = "http://207.154.247.11:8545";
-    //replace with your infura token
-    private final String infuraToken = "";
-    private final String INFURA_MAIN_URL = "https://mainnet.infura.io/" + infuraToken;
+    //based on parity
+    private final String ROPSTEN_URL = "http://159.89.240.122:8545";
+    private final String INFURA_MAIN_URL = "http://159.89.240.147:8545";
 
 
     public enum NetWorkType {
@@ -48,5 +47,4 @@ public class KinClientSampleApplication extends Application {
     public KinClient getKinClient() {
         return kinClient;
     }
-
 }

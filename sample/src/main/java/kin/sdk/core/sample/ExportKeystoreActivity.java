@@ -46,7 +46,7 @@ public class ExportKeystoreActivity extends BaseActivity {
             ViewUtils.copyToClipboard(this, outputTextView.getText());
         });
 
-        if (getKinClient().getServiceProvider().isMainNet()) {
+        if (isMainNet()) {
             exportBtn.setBackgroundResource(R.drawable.button_main_network_bg);
             copyBtn.setBackgroundResource(R.drawable.button_main_network_bg);
         }
