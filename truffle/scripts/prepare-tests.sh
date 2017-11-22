@@ -2,13 +2,15 @@
 
 # export account address environment variables
 # see this file for available variables
-source ./truffle/scripts/testrpc-accounts.sh
+cd truffle
+
+source ./scripts/testrpc-accounts.sh
 
 # create variables
-configFile="./kin-sdk-core/src/androidTest/assets/testConfig.json"
+configFile="../kin-sdk-core/src/androidTest/assets/testConfig.json"
 
 # export token contract address environment variable
-export TOKEN_CONTRACT_ADDRESS=$(cat ./truffle/token-contract-address)
+export TOKEN_CONTRACT_ADDRESS=$(cat ./token-contract-address)
 test -n "${TOKEN_CONTRACT_ADDRESS}"
 echo "Set Contract Address ${TOKEN_CONTRACT_ADDRESS}"
 echo ""

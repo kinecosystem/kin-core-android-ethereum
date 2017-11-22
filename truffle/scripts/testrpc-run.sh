@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 
+cd truffle
 # prepare testrpc accounts parameter string e.g. --account="0x11c..,1000" --account="0xc5d...,1000" ....
-source ./truffle/scripts/testrpc-accounts.sh
+source ./scripts/testrpc-accounts.sh
 
 # create variables
-configFile="./kin-sdk-core/src/androidTest/assets/testConfig.json"
+configFile="../kin-sdk-core/src/androidTest/assets/testConfig.json"
 accounts=""
 
 # clear config file
@@ -35,6 +36,6 @@ if (nc -z localhost 8545); then
     echo "Using existing testrpc instance on port $(ps -fade | grep -e 'node.*testrpc' | head -n 1 | awk '{print $2}')"
 else
     echo -n "Starting testrpc instance on port ${port} "
-    testrpc ${accounts} -u 0 -u 1 -p "${port}" > ./truffle/testrpc.log 2>&1 & echo $! > ./truffle/testrpc.pid
-    echo $(cat ./truffle/testrpc.pid)
+    testrpc ${accounts} -u 0 -u 1 -p "${port}" > ./testrpc.log 2>&1 & echo $! > ./testrpc.pid
+    echo $(cat ./testrpc.pid)
 fi
