@@ -28,7 +28,7 @@ public class CreateAccountActivity extends BaseActivity {
 
     private void initWidgets() {
         View createAccountView = findViewById(R.id.btn_create_account);
-        if (getKinClient().getServiceProvider().isMainNet()) {
+        if (isMainNet()) {
             createAccountView.setBackgroundResource(R.drawable.button_main_network_bg);
         }
         createAccountView.setOnClickListener(view -> createAccount());

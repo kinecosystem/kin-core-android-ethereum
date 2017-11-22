@@ -23,6 +23,13 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     abstract int getActionBarTitleRes();
 
+    public boolean isMainNet() {
+        if (getKinClient() != null && getKinClient().getServiceProvider() != null) {
+            return getKinClient().getServiceProvider().isMainNet();
+        }
+        return false;
+    }
+
     protected boolean hasBack() {
         return true;
     }
@@ -30,6 +37,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        int theme = isMainNet() ? R.style.AppTheme_Main : R.style.AppTheme_Test;
+        setTheme(theme);
         initActionBar();
     }
 

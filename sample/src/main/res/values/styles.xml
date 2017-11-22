@@ -2,15 +2,24 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/grey</item>
-        <item name="colorPrimaryDark">@color/kinBlue</item>
-        <item name="colorAccent">@color/kinOrange</item>
-
-
+        <item name="colorPrimaryDark">@color/disable</item>
+        <item name="colorAccent">@color/kinBlue</item>
     </style>
 
-    <style name="KinButtonStyle">
+    <style name="AppTheme.Test" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/kinBlue</item>
+        <item name="colorPrimaryDark">@color/kinBlueSelected</item>
+        <item name="colorAccent">@color/kinOrange</item>
+    </style>
+
+    <style name="AppTheme.Main" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/kinOrange</item>
+        <item name="colorPrimaryDark">@color/kinOrangeSelected</item>
+        <item name="colorAccent">@color/kinBlue</item>
+    </style>
+
+    <style name="KinButtonStyle" parent="Widget.AppCompat.Button">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/white</item>
