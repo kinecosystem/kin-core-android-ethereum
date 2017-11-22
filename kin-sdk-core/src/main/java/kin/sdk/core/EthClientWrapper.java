@@ -241,5 +241,4 @@ final class EthClientWrapper {
         // (> -1) means bigger than or equals to the amount.
         return balance.value().subtract(amount).compareTo(BigDecimal.ZERO) > -1;
     }
-
 }

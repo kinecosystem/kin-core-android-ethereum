@@ -58,11 +58,11 @@ freeline_project_description.json
 
 # test related files (ethereum testrpc):
 
-/node_modules
-/build
+truffle/node_modules
+truffle/build
 
-/testrpc.log
-/testrpc.pid
+truffle/testrpc.log
+truffle/testrpc.pid
 
-/truffle.log
-/token-contract-address
+truffle/truffle.log
+truffle/token-contract-address
