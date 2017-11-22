@@ -13,7 +13,7 @@ cache:
     - $HOME/.gradle/daemon
     - $HOME/.android/build-cache
 
-    - node_modules
+    - ./truffle/node_modules
 
 env:
   global:
@@ -41,9 +41,7 @@ before_install:
   - source ~/.nvm/nvm.sh
   - nvm install 8.9.1
   - node --version
-  - cd truffle
-  - npm install
-  - cd ../
+  - npm install --prefix ./truffle
 
 before_script:
   # setup android emulator
