@@ -41,9 +41,7 @@ before_install:
   - source ~/.nvm/nvm.sh
   - nvm install 8.9.1
   - node --version
-  - cd truffle
-  - npm install
-  - cd ../
+  - cd truffle && npm install && cd ../
 
 before_script:
   # setup android emulator
