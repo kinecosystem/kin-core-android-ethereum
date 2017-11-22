@@ -16,5 +16,6 @@
     <string name="send_transaction">Send Transaction</string>
     <string name="get_kin">Get KIN</string>
     <string name="create_account">Create Account</string>
+    <string name="error_no_message">Some error occurred - no message</string>
     <string name="ok">Ok</string>
 </resources>

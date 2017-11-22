@@ -31,4 +31,5 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:26.+'
     testImplementation 'junit:junit:4.12'
     api project(':kin-sdk-core')
+    compile 'com.android.volley:volley:1.0.0'
 }
