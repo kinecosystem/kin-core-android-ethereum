@@ -40,9 +40,10 @@ before_install:
   - git clone https://github.com/creationix/nvm.git ~/.nvm
   - source ~/.nvm/nvm.sh
   - nvm install 8.9.1
-  - echo $(node --version)
-  - echo $(which node)
+  - node --version
+  - cd truffle
   - npm install
+  - cd ../
 
 before_script:
   # setup android emulator
@@ -56,5 +57,5 @@ script:
 
 after_script:
   # print truffle and testrpc logs
-  - cat truffle.log
-  - cat testrpc.log
+  - cat truffle/truffle.log
+  - cat truffle/testrpc.log
