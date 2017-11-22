@@ -1,3 +1,4 @@
+
 [submodule "kin-token"]
-	path = kin-token
+	path = truffle/kin-token
 	url = git@github.com:kinfoundation/kin-token.git

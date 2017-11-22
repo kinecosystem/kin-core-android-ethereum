@@ -13,7 +13,7 @@ cache:
     - $HOME/.gradle/daemon
     - $HOME/.android/build-cache
 
-    - ./truffle/node_modules
+    - $TRAVIS_BUILD_DIR/truffle/node_modules
 
 env:
   global:
