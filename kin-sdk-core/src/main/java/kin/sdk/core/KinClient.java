@@ -3,6 +3,7 @@ package kin.sdk.core;
 
 import android.content.Context;
 
+import kin.sdk.core.exception.OperationFailedException;
 import org.ethereum.geth.Account;
 import org.ethereum.geth.Accounts;
 
@@ -85,7 +86,16 @@ public class KinClient {
         }
     }
 
-    public ServiceProvider getServiceProvider(){
+    public ServiceProvider getServiceProvider() {
         return ethClient.getServiceProvider();
+    }
+
+    KinAccount importAccount(String privateECDSAKey, String passphrase) throws OperationFailedException {
+        Account account = ethClient.importAccount(privateECDSAKey, passphrase);
+        KinAccount kinAccount = null;
+        if (account != null) {
+            kinAccount = new KinAccountImpl(ethClient, account);
+        }
+        return kinAccount;
     }
 }

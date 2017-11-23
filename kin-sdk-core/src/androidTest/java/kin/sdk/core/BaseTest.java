@@ -21,16 +21,18 @@ public class BaseTest {
 
     private Context context;
     private ServiceProvider serviceProvider;
-    protected KinClient kinClient;
-    protected Config config;
+    KinClient kinClient;
+    Config config;
 
     @Before
     public void setUp() throws Exception {
         context = InstrumentationRegistry.getContext();
-        getConfigFile();
         serviceProvider = new ServiceProvider(TESTRPC_PROVIDER_URL, ServiceProvider.NETWORK_ID_TRUFFLE);
+        getConfigFile();
+        clearKeyStore();
         kinClient = new KinClient(context, serviceProvider);
     }
+
 
     private void getConfigFile() {
         String json = null;
