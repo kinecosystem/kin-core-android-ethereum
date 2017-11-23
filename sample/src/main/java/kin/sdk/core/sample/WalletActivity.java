@@ -20,7 +20,7 @@ import kin.sdk.core.Balance;
 public class WalletActivity extends BaseActivity {
 
     public static final String TAG = WalletActivity.class.getSimpleName();
-    public static final String URL_GET_KIN = "http://kin-faucet.rkik.prod/send?public_address=";
+    public static final String URL_GET_KIN = "http://kin-faucet.rounds.video/send?public_address=";
     private View getKinBtn;
 
     public static Intent getIntent(Context context) {
