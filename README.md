@@ -60,7 +60,7 @@ The details of the account created will be securely stored on the device.
 ```java
 KinAccount account;
 try {
-    if (!kinClient.hasAccounts()) {
+    if (!kinClient.hasAccount()) {
         account = kinClient.createAccount("yourPassphrase");
     }
 } catch (CreateAccountException e) {
@@ -71,9 +71,15 @@ try {
 Once an account has been created there is no need to call `createAccount` again on the same device. 
 From then on calling `getAccount` will retrieve the account stored on the device.
 ```java
-if (kinClient.hasAccounts()) {
+if (kinClient.hasAccount()) {
     account = kinClient.getAccount();
 }
+``` 
+
+You can delete your account from the device using `deleteAccount` with the passphrase you used to create it as a parameter, 
+but beware! Unless you export it first using `exportKeyStore` you will lose all your existing KIN if you do this.
+```java
+kinClient.deleteAccount(String passphrase);
 ``` 
 
 ### Public Address and JSON keystore 

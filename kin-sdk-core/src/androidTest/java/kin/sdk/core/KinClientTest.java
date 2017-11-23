@@ -1,19 +1,22 @@
 package kin.sdk.core;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
-
+import kin.sdk.core.exception.EthereumClientException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import kin.sdk.core.exception.EthereumClientException;
-
-import static org.junit.Assert.*;
 
 
 @RunWith(AndroidJUnit4.class)
 public class KinClientTest extends BaseTest {
+    private static final String PASSPHRASE = "testPassphrase";
 
     @Test
     public void testWrongServiceProvider() {
@@ -55,6 +58,21 @@ public class KinClientTest extends BaseTest {
     }
 
     @Test
+    public void testDeleteAccount() {
+        try {
+            createAccount();
+            assertTrue(kinClient.hasAccount());
+
+            kinClient.deleteAccount(PASSPHRASE);
+            assertFalse(kinClient.hasAccount());
+            assertNull(kinClient.getAccount());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
     public void testGetAccount_isNull() throws Exception {
         // No account were created, thus the account is null
         KinAccount kinAccount = kinClient.getAccount();
@@ -75,7 +93,7 @@ public class KinClientTest extends BaseTest {
     public void testHasAccounts_noAccount() throws Exception {
         // No account created
         // Check if has account
-        assertFalse(kinClient.hasAccounts());
+        assertFalse(kinClient.hasAccount());
     }
 
     @Test
@@ -83,10 +101,10 @@ public class KinClientTest extends BaseTest {
         // Create first account
         createAccount();
         // Check if has account
-        assertTrue(kinClient.hasAccounts());
+        assertTrue(kinClient.hasAccount());
     }
 
     private KinAccount createAccount() throws Exception {
-        return kinClient.createAccount("testPassphrase");
+        return kinClient.createAccount(PASSPHRASE);
     }
 }

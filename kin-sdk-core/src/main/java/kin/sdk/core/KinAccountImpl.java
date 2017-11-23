@@ -1,6 +1,7 @@
 package kin.sdk.core;
 
 import java.math.BigDecimal;
+import kin.sdk.core.exception.DeleteAccountException;
 import kin.sdk.core.exception.InsufficientBalanceException;
 import kin.sdk.core.exception.OperationFailedException;
 import kin.sdk.core.exception.PassphraseException;
@@ -70,5 +71,9 @@ final class KinAccountImpl extends AbstractKinAccount {
     @Override
     public Balance getPendingBalanceSync() throws OperationFailedException {
         return ethClient.getPendingBalance(account);
+    }
+
+    void delete(String passphrase) throws DeleteAccountException {
+        ethClient.deleteAccount(account, passphrase);
     }
 }
