@@ -18,7 +18,6 @@ repositories {
     }
     maven {
         url 'https://jitpack.io'
-        credentials { username YOUR-JITPACK-AUTHTOKEN }
     }
 }
 ...
@@ -29,11 +28,7 @@ dependencies {
 }
 ```
 In the above `build.gradle`:
-* YOUR-JITPACK-AUTHTOKEN won't be needed once repository is changed to public.
-For the time being to get a token, go to https://jitpack.io and sign in with your github account. 
-Authorize jitpack, then navigate to https://jitpack.io/w/user to get your AccessToken. Ensure that jitpack is authorized 
-for private repositories
-* LATEST-COMMIT-ON-DEV-BRANCH is a short commit hash for example 1st 10 characters of a commit: f367f300f5
+* LATEST-COMMIT-ON-DEV-BRANCH stands for the first 10 characters of our latest commit on dev branch. For example: d9bb37a7e2
 
 ## Usage
 ### Connecting to a service provider
