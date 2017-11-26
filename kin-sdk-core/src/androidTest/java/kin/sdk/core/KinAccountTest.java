@@ -1,19 +1,19 @@
 package kin.sdk.core;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
 import android.support.test.runner.AndroidJUnit4;
-
-
 import java.math.BigDecimal;
 import kin.sdk.core.exception.InsufficientBalanceException;
+import kin.sdk.core.exception.OperationFailedException;
+import kin.sdk.core.exception.PassphraseException;
 import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import kin.sdk.core.exception.OperationFailedException;
-import kin.sdk.core.exception.PassphraseException;
-
-import static org.junit.Assert.*;
 
 @RunWith(AndroidJUnit4.class)
 public class KinAccountTest extends BaseTest {

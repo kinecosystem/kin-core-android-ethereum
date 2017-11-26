@@ -2,6 +2,7 @@ package kin.sdk.core;
 
 import java.io.File;
 import java.math.BigDecimal;
+import kin.sdk.core.exception.DeleteAccountException;
 import kin.sdk.core.exception.EthereumClientException;
 import kin.sdk.core.exception.InsufficientBalanceException;
 import kin.sdk.core.exception.OperationFailedException;
@@ -104,6 +105,15 @@ final class EthClientWrapper {
         }
         // Create a keyStore instance according to go-ethereum encryption protocol.
         keyStore = Geth.newKeyStore(keystoreDir.getAbsolutePath(), Geth.LightScryptN, Geth.LightScryptP);
+    }
+
+    public void deleteAccount(Account account, String passphrase) throws DeleteAccountException {
+        try {
+            keyStore.deleteAccount(account, passphrase);
+        }
+        catch (Exception e) {
+            throw new DeleteAccountException(e);
+        }
     }
 
     /**
@@ -241,5 +251,4 @@ final class EthClientWrapper {
         // (> -1) means bigger than or equals to the amount.
         return balance.value().subtract(amount).compareTo(BigDecimal.ZERO) > -1;
     }
-
 }
