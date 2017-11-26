@@ -8,10 +8,10 @@ TESTFAIRY_API_KEY=$TESTFAIRY_KEY
 
 # Tester Groups that will be notified when the app is ready. Setup groups in your TestFairy account testers page.
 # This parameter is optional, leave empty if not required
-TESTER_GROUPS=
+TESTER_GROUPS="QA"
 
 # Should email testers about new version. Set to "off" to disable email notifications.
-NOTIFY="off"
+NOTIFY="on"
 
 # If AUTO_UPDATE is "on" all users will be prompt to update to this build next time they run the app
 AUTO_UPDATE="off"
