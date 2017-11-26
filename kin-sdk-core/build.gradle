@@ -64,7 +64,6 @@ task cleanRPC {
             standardOutput = cleanRpcOutput
         }
         cleanRpcOutput = cleanRpcOutput.toString().trim()
-
         printf("\n****** Clean RPC ******\n" + cleanRpcOutput)
     }
 }

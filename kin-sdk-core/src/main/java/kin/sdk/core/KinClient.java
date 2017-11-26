@@ -104,8 +104,8 @@ public class KinClient {
         return ethClient.getServiceProvider();
     }
 
-    KinAccount importAccount(String privateECDSAKey, String passphrase) throws OperationFailedException {
-        Account account = ethClient.importAccount(privateECDSAKey, passphrase);
+    KinAccount importAccount(String privateEcdsaKey, String passphrase) throws OperationFailedException {
+        Account account = ethClient.importAccount(privateEcdsaKey, passphrase);
         KinAccount kinAccount = null;
         if (account != null) {
             kinAccount = new KinAccountImpl(ethClient, account);

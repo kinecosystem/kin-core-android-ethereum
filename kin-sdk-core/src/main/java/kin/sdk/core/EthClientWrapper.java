@@ -247,17 +247,17 @@ final class EthClientWrapper {
         return serviceProvider;
     }
 
-    Account importAccount(String privateECDSAKey, String passphrase) throws OperationFailedException {
-        if (privateECDSAKey == null || privateECDSAKey.isEmpty()) {
+    Account importAccount(String privateEcdsaKey, String passphrase) throws OperationFailedException {
+        if (privateEcdsaKey == null || privateEcdsaKey.isEmpty()) {
             throw new OperationFailedException("private key not valid - can't be null or empty");
         }
         else {
-            if (privateECDSAKey.startsWith("0x")) {
-                privateECDSAKey = privateECDSAKey.substring(2, privateECDSAKey.length());
+            if (privateEcdsaKey.startsWith("0x")) {
+                privateEcdsaKey = privateEcdsaKey.substring(2, privateEcdsaKey.length());
             }
         }
         try {
-            byte[] hexBytes = HexUtils.hexStringToByteArray(privateECDSAKey);
+            byte[] hexBytes = HexUtils.hexStringToByteArray(privateEcdsaKey);
             return keyStore.importECDSAKey(hexBytes, passphrase);
         } catch (Exception e) {
             throw new OperationFailedException(e);

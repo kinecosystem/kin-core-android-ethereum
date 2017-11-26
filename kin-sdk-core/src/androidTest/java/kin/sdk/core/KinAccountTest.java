@@ -9,7 +9,7 @@ import android.support.test.runner.AndroidJUnit4;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import kin.sdk.core.Config.PrivateKey;
+import kin.sdk.core.Config.EcdsaAccount;
 import kin.sdk.core.exception.InsufficientBalanceException;
 import kin.sdk.core.exception.OperationFailedException;
 import kin.sdk.core.exception.PassphraseException;
@@ -48,10 +48,10 @@ public class KinAccountTest extends BaseTest {
      * Import all accounts from {@link Config}.
      */
     private void importAccounts() {
-        List<PrivateKey> accounts = config.getAccounts();
-        for (int i = 0; i < accounts.size(); i++) {
+        List<EcdsaAccount> accounts = config.getAccounts();
+        for (EcdsaAccount account : accounts) {
             try {
-                KinAccount importedAccount = kinClient.importAccount(accounts.get(i).getKey(), PASSPHRASE);
+                KinAccount importedAccount = kinClient.importAccount(account.getKey(), PASSPHRASE);
                 importedAccounts.add(importedAccount);
             } catch (OperationFailedException e) {
                 e.printStackTrace();
@@ -167,17 +167,6 @@ public class KinAccountTest extends BaseTest {
         assertNotNull(balance);
         assertEquals("0", balance.value(0));
         assertEquals("0.0", balance.value(1));
-
-        KinAccount senderAccount = importedAccounts.get(0);
-        try {
-            senderAccount.sendTransactionSync(kinAccount.getPublicAddress(), PASSPHRASE, new BigDecimal(10));
-        } catch (InsufficientBalanceException e) {
-            e.printStackTrace();
-        } catch (PassphraseException e) {
-            e.printStackTrace();
-        }
-
-        assertEquals("10",kinAccount.getBalanceSync().value(0));
     }
 
     @Test

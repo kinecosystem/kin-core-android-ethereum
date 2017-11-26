@@ -6,12 +6,12 @@ import java.util.List;
 public class Config {
 
     @SerializedName("accounts")
-    private List<PrivateKey> accounts;
+    private List<EcdsaAccount> accounts;
 
     @SerializedName("token_contract_address")
     private String contractAddress;
 
-    public List<PrivateKey> getAccounts() {
+    public List<EcdsaAccount> getAccounts() {
         return accounts;
     }
 
@@ -19,7 +19,7 @@ public class Config {
         return contractAddress;
     }
 
-    public class PrivateKey {
+    public class EcdsaAccount {
 
         @SerializedName("private_key")
         private String key;
