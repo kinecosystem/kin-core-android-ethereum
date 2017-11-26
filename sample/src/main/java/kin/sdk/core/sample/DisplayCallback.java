@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.View;
 import java.lang.ref.WeakReference;
 import kin.sdk.core.ResultCallback;
+import kin.sdk.core.sample.kin.sdk.core.sample.dialog.KinAlertDialog;
 
 /**
  * Will hide a progressBar and display result on a displayView passed at constructor
@@ -44,7 +45,7 @@ public abstract class DisplayCallback<T> implements ResultCallback<T> {
         View progressBar = progressBarReference.get();
         if (progressBar != null) {
             progressBar.setVisibility(View.GONE);
-            ViewUtils.alert(progressBar.getContext(), e.getMessage());
+            KinAlertDialog.createErrorDialog(progressBar.getContext(), e.getMessage()).show();
         }
     }
 

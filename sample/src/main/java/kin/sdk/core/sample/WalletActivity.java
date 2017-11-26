@@ -11,6 +11,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import kin.sdk.core.Balance;
 import kin.sdk.core.exception.DeleteAccountException;
+import kin.sdk.core.sample.kin.sdk.core.sample.dialog.KinAlertDialog;
 
 /**
  * Responsible for presenting details about the account
@@ -88,8 +89,8 @@ public class WalletActivity extends BaseActivity {
     }
 
     private void showDeleteAlert() {
-        ViewUtils.confirmAlert(this, getResources().getString(R.string.delete_wallet_warning),
-            getResources().getString(R.string.delete), () -> deleteAccount());
+        KinAlertDialog.createConfirmationDialog(this, getResources().getString(R.string.delete_wallet_warning),
+            getResources().getString(R.string.delete), () -> deleteAccount()).show();
     }
 
     private void deleteAccount() {
@@ -97,7 +98,7 @@ public class WalletActivity extends BaseActivity {
             getKinClient().deleteAccount(getPassphrase());
             onBackPressed();
         } catch (DeleteAccountException e) {
-            ViewUtils.alert(WalletActivity.this, e.getMessage());
+            KinAlertDialog.createErrorDialog(this, e.getMessage()).show();
         }
     }
 
@@ -110,8 +111,8 @@ public class WalletActivity extends BaseActivity {
                 updatePendingBalance();
                 getKinBtn.setClickable(true);
             },
-            error -> {
-                ViewUtils.alert(WalletActivity.this, error.getMessage());
+            e -> {
+                KinAlertDialog.createErrorDialog(this, e.getMessage()).show();
                 getKinBtn.setClickable(true);
             });
         stringRequest.setShouldCache(false);

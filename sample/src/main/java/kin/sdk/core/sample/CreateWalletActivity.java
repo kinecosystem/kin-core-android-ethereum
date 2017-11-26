@@ -6,32 +6,33 @@ import android.os.Bundle;
 import android.view.View;
 import kin.sdk.core.KinClient;
 import kin.sdk.core.exception.CreateAccountException;
+import kin.sdk.core.sample.kin.sdk.core.sample.dialog.KinAlertDialog;
 
 /**
  * This activity is displayed only if there is no existing account stored on device for the given network
  * The activity will just display a button to create an account
  */
-public class CreateAccountActivity extends BaseActivity {
+public class CreateWalletActivity extends BaseActivity {
 
-    public static final String TAG = CreateAccountActivity.class.getSimpleName();
+    public static final String TAG = CreateWalletActivity.class.getSimpleName();
 
     public static Intent getIntent(Context context) {
-        return new Intent(context, CreateAccountActivity.class);
+        return new Intent(context, CreateWalletActivity.class);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.create_account_activity);
+        setContentView(R.layout.create_wallet_activity);
         initWidgets();
     }
 
     private void initWidgets() {
-        View createAccountView = findViewById(R.id.btn_create_account);
+        View createWallet = findViewById(R.id.btn_create_wallet);
         if (isMainNet()) {
-            createAccountView.setBackgroundResource(R.drawable.button_main_network_bg);
+            createWallet.setBackgroundResource(R.drawable.button_main_network_bg);
         }
-        createAccountView.setOnClickListener(view -> createAccount());
+        createWallet.setOnClickListener(view -> createAccount());
     }
 
     private void createAccount() {
@@ -40,7 +41,7 @@ public class CreateAccountActivity extends BaseActivity {
             kinClient.createAccount(getPassphrase());
             startActivity(WalletActivity.getIntent(this));
         } catch (CreateAccountException e) {
-            ViewUtils.alert(this, e.getMessage());
+            KinAlertDialog.createErrorDialog(this, e.getMessage()).show();
         }
     }
 

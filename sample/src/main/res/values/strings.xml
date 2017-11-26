@@ -16,7 +16,7 @@
     <string name="send_transaction">Send Transaction</string>
     <string name="get_kin">Get KIN</string>
     <string name="delete_wallet">Delete Wallet</string>
-    <string name="delete_wallet_warning">Are you sure you want to delete your wallet?\n\nDelete without backed up will cause permanent funds lost</string>
+    <string name="delete_wallet_warning">Are you sure you want to delete your wallet?\n\nDeleting without backed up will cause permanent funds lost!</string>
     <string name="delete">Delete</string>
     <string name="create_wallet">Create Wallet</string>
     <string name="error_no_message">Some error occurred - no message</string>

@@ -51,7 +51,7 @@ public class ChooseNetworkActivity extends BaseActivity {
         if (kinClient.hasAccount()) {
             startActivity(WalletActivity.getIntent(this));
         } else {
-            startActivity(CreateAccountActivity.getIntent(this));
+            startActivity(CreateWalletActivity.getIntent(this));
         }
     }
 

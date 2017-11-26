@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 import java.math.BigDecimal;
 import kin.sdk.core.TransactionId;
+import kin.sdk.core.sample.kin.sdk.core.sample.dialog.KinAlertDialog;
 
 /**
  * Displays form to enter public address and amount and a button to send a transaction
@@ -122,7 +123,7 @@ public class TransactionActivity extends BaseActivity {
         transactionCallback = new DisplayCallback<TransactionId>(progressBar) {
             @Override
             public void displayResult(Context context, View view, TransactionId transactionId) {
-                ViewUtils.alert(context, "Transaction id " + transactionId.id());
+                KinAlertDialog.createErrorDialog(context, "Transaction id " + transactionId.id()).show();
             }
         };
         getKinClient().getAccount().sendTransaction(toAddress, getPassphrase(), amount, transactionCallback);

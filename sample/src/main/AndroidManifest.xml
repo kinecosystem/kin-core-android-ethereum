@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CreateAccountActivity"
+            android:name=".CreateWalletActivity"
             android:parentActivityName=".ChooseNetworkActivity"
             android:screenOrientation="portrait"
             />
