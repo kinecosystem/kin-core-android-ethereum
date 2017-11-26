@@ -12,18 +12,49 @@ import android.widget.Toast;
 
 public class ViewUtils {
 
+    public interface onAlertClicked {
+
+        void onConfirm();
+    }
+
     public static void alert(Context context, String message) {
         AlertDialog dialog;
         AlertDialog.Builder builder;
 
         builder = new AlertDialog.Builder(context);
-        if(TextUtils.isEmpty(message)){
+        if (TextUtils.isEmpty(message)) {
             message = context.getResources().getString(R.string.error_no_message);
         }
         builder.setView(buildAlertView(context, message));
         dialog = builder.create();
         dialog.setCancelable(true);
         dialog.setButton(DialogInterface.BUTTON_POSITIVE, context.getResources().getString(R.string.ok),
+            (dialogInterface, i) -> dialogInterface.dismiss());
+        dialog.show();
+    }
+
+    public static void confirmAlert(Context context, String message, String button, onAlertClicked onAlertClicked) {
+        AlertDialog dialog;
+        AlertDialog.Builder builder;
+
+        builder = new AlertDialog.Builder(context);
+        if (TextUtils.isEmpty(message)) {
+            message = context.getResources().getString(R.string.error_no_message);
+        }
+        builder.setView(buildAlertView(context, message));
+        dialog = builder.create();
+        dialog.setCancelable(true);
+        if (TextUtils.isEmpty(button)) {
+            button = context.getResources().getString(R.string.ok);
+        }
+        dialog.setButton(DialogInterface.BUTTON_POSITIVE, button,
+            (dialogInterface, i) -> {
+                dialogInterface.dismiss();
+                if (onAlertClicked != null) {
+                    onAlertClicked.onConfirm();
+                }
+            });
+        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, context.getResources().getString(R.string.cancel),
             (dialogInterface, i) -> dialogInterface.dismiss());
         dialog.show();
     }

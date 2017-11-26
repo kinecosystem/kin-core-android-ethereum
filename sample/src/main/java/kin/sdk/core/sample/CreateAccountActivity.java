@@ -51,7 +51,7 @@ public class CreateAccountActivity extends BaseActivity {
 
     @Override
     int getActionBarTitleRes() {
-        return R.string.create_account;
+        return R.string.create_wallet;
     }
 
 }

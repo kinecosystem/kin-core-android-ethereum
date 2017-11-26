@@ -10,6 +10,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import kin.sdk.core.Balance;
+import kin.sdk.core.exception.DeleteAccountException;
 
 /**
  * Responsible for presenting details about the account
@@ -58,6 +59,7 @@ public class WalletActivity extends BaseActivity {
         final View refresh = findViewById(R.id.refresh_btn);
         getKinBtn = findViewById(R.id.get_kin_btn);
         final View exportKeyStore = findViewById(R.id.export_key_store_btn);
+        final View deleteAccount = findViewById(R.id.delete_account_btn);
 
         if (isMainNet()) {
             transaction.setBackgroundResource(R.drawable.button_main_network_bg);
@@ -72,6 +74,8 @@ public class WalletActivity extends BaseActivity {
             });
         }
 
+        deleteAccount.setOnClickListener(view -> showDeleteAlert());
+
         transaction.setOnClickListener(view -> startActivity(TransactionActivity.getIntent(WalletActivity.this)));
         refresh.setOnClickListener(view -> {
             updateBalance();
@@ -81,6 +85,20 @@ public class WalletActivity extends BaseActivity {
         exportKeyStore.setOnClickListener(view -> {
             startActivity(ExportKeystoreActivity.getIntent(this));
         });
+    }
+
+    private void showDeleteAlert() {
+        ViewUtils.confirmAlert(this, getResources().getString(R.string.delete_wallet_warning),
+            getResources().getString(R.string.delete), () -> deleteAccount());
+    }
+
+    private void deleteAccount() {
+        try {
+            getKinClient().deleteAccount(getPassphrase());
+            onBackPressed();
+        } catch (DeleteAccountException e) {
+            ViewUtils.alert(WalletActivity.this, e.getMessage());
+        }
     }
 
     private void getKin() {

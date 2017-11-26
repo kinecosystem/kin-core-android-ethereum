@@ -19,7 +19,7 @@
         style="@style/KinButtonStyle.TestNet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/create_account"
+        android:text="@string/create_wallet"
         />
 
 </LinearLayout>

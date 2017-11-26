@@ -38,10 +38,10 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="@dimen/delim_margin"
-        android:layout_marginBottom="@dimen/delim_margin"
         android:background="@color/grey"/>
 
     <FrameLayout
+        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
@@ -143,5 +143,14 @@
         android:layout_marginTop="@dimen/button_margin"
         android:text="@string/get_kin"
         android:visibility="gone"/>
+
+    <Button
+        android:id="@+id/delete_account_btn"
+        style="@style/KinButtonStyle.Red"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/button_margin"
+        android:text="@string/delete_wallet"
+        />
 
 </LinearLayout>

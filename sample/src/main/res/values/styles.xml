@@ -32,6 +32,10 @@
         <item name="android:background">@drawable/button_test_network_bg</item>
     </style>
 
+    <style name="KinButtonStyle.Red">
+        <item name="android:background">@drawable/button_red_bg</item>
+    </style>
+
     <style name="KinButtonStyle.MainNet">
         <item name="android:background">@drawable/button_main_network_bg</item>
     </style>
