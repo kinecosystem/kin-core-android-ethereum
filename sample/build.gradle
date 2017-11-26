@@ -7,7 +7,7 @@ android {
         applicationId "kin.sdk.core.sample"
         minSdkVersion 16
         targetSdkVersion 26
-        versionCode
+        versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -31,4 +31,5 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:26.+'
     testImplementation 'junit:junit:4.12'
     api project(':kin-sdk-core')
+    compile 'com.android.volley:volley:1.0.0'
 }

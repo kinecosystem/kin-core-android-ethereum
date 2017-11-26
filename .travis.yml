@@ -22,17 +22,17 @@ env:
 
 android:
   components:
-    - tools
-    - platform-tools
-    - tools
-    - build-tools-26.0.2
-    - android-26
-    - android-21
-    - extra-google-m2repository
-    - extra-android-m2repository
-    - extra-android-support
-    - sys-img-armeabi-v7a-android-$ANDROID_API_LEVEL
-    - sys-img-armeabi-v7a-android-$EMULATOR_API_LEVEL
+  - tools
+  - platform-tools
+  - tools
+  - build-tools-26.0.2
+  - android-26
+  - android-21
+  - extra-google-m2repository
+  - extra-android-m2repository
+  - extra-android-support
+  - sys-img-armeabi-v7a-android-$ANDROID_API_LEVEL
+  - sys-img-armeabi-v7a-android-$EMULATOR_API_LEVEL
 
 before_install:
   # install node (npm), truffle, testrpc
@@ -57,3 +57,12 @@ after_script:
   # print truffle and testrpc logs
   - cat truffle/truffle.log
   - cat truffle/testrpc.log
+
+deploy:
+  skip_cleanup: true
+  provider: script
+  script:
+    secure: ./testfairy-uploader.sh ./sample/build/outputs/apk/debug/sample-debug.apk
+  on:
+    branch: dev
+

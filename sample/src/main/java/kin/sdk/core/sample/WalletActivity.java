@@ -5,6 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import kin.sdk.core.Balance;
 
 /**
@@ -16,6 +20,8 @@ import kin.sdk.core.Balance;
 public class WalletActivity extends BaseActivity {
 
     public static final String TAG = WalletActivity.class.getSimpleName();
+    public static final String URL_GET_KIN = "http://kin-faucet.rounds.video/send?public_address=";
+    private View getKinBtn;
 
     public static Intent getIntent(Context context) {
         return new Intent(context, WalletActivity.class);
@@ -50,16 +56,20 @@ public class WalletActivity extends BaseActivity {
 
         final View transaction = findViewById(R.id.send_transaction_btn);
         final View refresh = findViewById(R.id.refresh_btn);
-        final View getKin = findViewById(R.id.get_kin_btn);
+        getKinBtn = findViewById(R.id.get_kin_btn);
         final View exportKeyStore = findViewById(R.id.export_key_store_btn);
 
         if (isMainNet()) {
             transaction.setBackgroundResource(R.drawable.button_main_network_bg);
             refresh.setBackgroundResource(R.drawable.button_main_network_bg);
             exportKeyStore.setBackgroundResource(R.drawable.button_main_network_bg);
-            getKin.setVisibility(View.GONE);
+            getKinBtn.setVisibility(View.GONE);
         } else {
-            getKin.setOnClickListener(view -> ViewUtils.alert(view.getContext(), "This is not implemented yet"));
+            getKinBtn.setVisibility(View.VISIBLE);
+            getKinBtn.setOnClickListener(view -> {
+                getKinBtn.setClickable(false);
+                getKin();
+            });
         }
 
         transaction.setOnClickListener(view -> startActivity(TransactionActivity.getIntent(WalletActivity.this)));
@@ -71,6 +81,23 @@ public class WalletActivity extends BaseActivity {
         exportKeyStore.setOnClickListener(view -> {
             startActivity(ExportKeystoreActivity.getIntent(this));
         });
+    }
+
+    private void getKin() {
+        final String publicAddress = getKinClient().getAccount().getPublicAddress();
+        final String url = URL_GET_KIN + publicAddress;
+        final RequestQueue queue = Volley.newRequestQueue(this);
+        final StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+            response -> {
+                updatePendingBalance();
+                getKinBtn.setClickable(true);
+            },
+            error -> {
+                ViewUtils.alert(WalletActivity.this, error.getMessage());
+                getKinBtn.setClickable(true);
+            });
+        stringRequest.setShouldCache(false);
+        queue.add(stringRequest);
     }
 
     private void updatePublicKey() {
