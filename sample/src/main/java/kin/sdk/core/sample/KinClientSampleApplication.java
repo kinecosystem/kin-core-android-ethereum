@@ -8,8 +8,8 @@ import kin.sdk.core.exception.EthereumClientException;
 public class KinClientSampleApplication extends Application {
 
     //based on parity
-    private final String ROPSTEN_TEST_NET_URL = "http://159.89.240.122:8545";
-    private final String MAIN_NET_URL = "http://159.89.240.147:8545";
+    private final String ROPSTEN_TEST_NET_URL = "http://parity.rounds.video:8545";
+    private final String MAIN_NET_URL = "http://mainnet.rounds.video:8545";
 
 
     public enum NetWorkType {
