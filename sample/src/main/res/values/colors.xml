@@ -3,6 +3,8 @@
     <color name="colorPrimary">@color/grey</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="kinRed">#FF3636</color>
+    <color name="kinRedSelected">#B03535</color>
     <color name="kinBlue">#26BEFF</color>
     <color name="kinBlueSelected">#1392C9</color>
     <color name="kinOrange">#FF8A00</color>

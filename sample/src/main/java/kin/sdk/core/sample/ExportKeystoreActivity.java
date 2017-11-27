@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import kin.sdk.core.exception.PassphraseException;
+import kin.sdk.core.sample.kin.sdk.core.sample.dialog.KinAlertDialog;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -43,7 +44,7 @@ public class ExportKeystoreActivity extends BaseActivity {
 
         findViewById(R.id.copy_btn).setOnClickListener(view -> {
             selectAll();
-            ViewUtils.copyToClipboard(this, outputTextView.getText());
+            Utils.copyToClipboard(this, outputTextView.getText());
         });
 
         if (isMainNet()) {
@@ -89,10 +90,10 @@ public class ExportKeystoreActivity extends BaseActivity {
                 copyBtn.setEnabled(true);
             } catch (PassphraseException e) {
                 clearAll();
-                ViewUtils.alert(this, e.getMessage());
+                KinAlertDialog.createErrorDialog(this, e.getMessage()).show();
             } catch (JSONException e) {
                 clearAll();
-                ViewUtils.alert(this, e.getMessage());
+                KinAlertDialog.createErrorDialog(this, e.getMessage()).show();
             }
         });
     }

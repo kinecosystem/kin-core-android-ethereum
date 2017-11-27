@@ -10,6 +10,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import kin.sdk.core.Balance;
+import kin.sdk.core.exception.DeleteAccountException;
+import kin.sdk.core.sample.kin.sdk.core.sample.dialog.KinAlertDialog;
 
 /**
  * Responsible for presenting details about the account
@@ -58,6 +60,7 @@ public class WalletActivity extends BaseActivity {
         final View refresh = findViewById(R.id.refresh_btn);
         getKinBtn = findViewById(R.id.get_kin_btn);
         final View exportKeyStore = findViewById(R.id.export_key_store_btn);
+        final View deleteAccount = findViewById(R.id.delete_account_btn);
 
         if (isMainNet()) {
             transaction.setBackgroundResource(R.drawable.button_main_network_bg);
@@ -72,6 +75,8 @@ public class WalletActivity extends BaseActivity {
             });
         }
 
+        deleteAccount.setOnClickListener(view -> showDeleteAlert());
+
         transaction.setOnClickListener(view -> startActivity(TransactionActivity.getIntent(WalletActivity.this)));
         refresh.setOnClickListener(view -> {
             updateBalance();
@@ -83,6 +88,20 @@ public class WalletActivity extends BaseActivity {
         });
     }
 
+    private void showDeleteAlert() {
+        KinAlertDialog.createConfirmationDialog(this, getResources().getString(R.string.delete_wallet_warning),
+            getResources().getString(R.string.delete), () -> deleteAccount()).show();
+    }
+
+    private void deleteAccount() {
+        try {
+            getKinClient().deleteAccount(getPassphrase());
+            onBackPressed();
+        } catch (DeleteAccountException e) {
+            KinAlertDialog.createErrorDialog(this, e.getMessage()).show();
+        }
+    }
+
     private void getKin() {
         final String publicAddress = getKinClient().getAccount().getPublicAddress();
         final String url = URL_GET_KIN + publicAddress;
@@ -92,8 +111,8 @@ public class WalletActivity extends BaseActivity {
                 updatePendingBalance();
                 getKinBtn.setClickable(true);
             },
-            error -> {
-                ViewUtils.alert(WalletActivity.this, error.getMessage());
+            e -> {
+                KinAlertDialog.createErrorDialog(this, e.getMessage()).show();
                 getKinBtn.setClickable(true);
             });
         stringRequest.setShouldCache(false);

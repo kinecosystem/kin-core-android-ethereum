@@ -4,4 +4,5 @@
     <dimen name="button_padding">0dp</dimen>
     <dimen name="button_font_size">14sp</dimen>
     <dimen name="title_font_size">14sp</dimen>
+    <dimen name="button_margin">10dp</dimen>
 </resources>
