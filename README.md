@@ -248,6 +248,7 @@ It will run all the tests and also clean testrpc at the end.
 $ make test
 ```
 <br />
+
 * From Android Studio 
 Our test classes are [here](kin-sdk-core/src/androidTest/java/kin/sdk/core/).
 You can run the tests directly from Android Studio but will still have to run clean testrpc manually.
