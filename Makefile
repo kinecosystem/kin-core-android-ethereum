@@ -7,6 +7,7 @@ export PATH := ./truffle/node_modules/.bin:$(PATH)
 export PATH := /usr/local/bin:$(PATH)
 
 test:
+	./gradlew :sample:assembleDebug
 	./gradlew :kin-sdk-core:connectedAndroidTest
 .PHONY: test
 
