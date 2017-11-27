@@ -8,6 +8,7 @@ export PATH := /usr/local/bin:$(PATH)
 
 test:
 	./gradlew :kin-sdk-core:connectedAndroidTest
+	./gradlew :sample:assembleDebug
 .PHONY: test
 
 prepare-tests: truffle

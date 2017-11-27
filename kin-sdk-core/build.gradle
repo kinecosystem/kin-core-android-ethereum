@@ -69,7 +69,7 @@ task cleanRPC {
 }
 
 gradle.projectsEvaluated {
-    preBuild.dependsOn prepareRPC
+    connectedDebugAndroidTest.dependsOn prepareRPC
     connectedDebugAndroidTest.finalizedBy cleanRPC
 }
 
