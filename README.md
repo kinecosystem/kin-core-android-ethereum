@@ -219,7 +219,7 @@ For the SDK tests target, pre-actions and post-actions scripts in the KinTestHos
 
 ### Requirements
 
-Node.js and NPM. You can install these using homebrew:
+Node.js and npm. You can install these using homebrew:
 
 ```bash
 $ brew install node
@@ -238,12 +238,15 @@ $ git submodule init && git submodule update
 ```
 
 ### How to run the tests
+
 * From command line
-Run the below command from the root directory. It will run all the tests and also clean testrpc at the end.
+Run the below command from the root directory.
+It will run all the tests and also clean testrpc at the end.
 
 ```bash
 $ make test
 ```
+
 * From Android Studio 
 Our test classes are [here](kin-sdk-core/src/androidTest/java/kin/sdk/core/).
 You can run the tests directly from Android Studio but will still have to run clean testrpc manually.
