@@ -238,18 +238,17 @@ $ git submodule init && git submodule update
 ```
 
 ### How to run the tests
-<br />
 
-* From command line
+
+* From command line<br />
 Run the below command from the root directory.<br />
 It will run all the tests and also clean testrpc at the end.
 
 ```bash
 $ make test
 ```
-<br />
 
-* From Android Studio 
+* From Android Studio<br /> 
 Our test classes are [here](kin-sdk-core/src/androidTest/java/kin/sdk/core/).
 You can run the tests directly from Android Studio but will still have to run clean testrpc manually.
 
