@@ -211,6 +211,54 @@ catch (OperationFailedException e){
 ### Sample Application 
 For a more detailed example on how to use the library please take a look at our [Sample App](sample/).
 
+## Testing
+
+We use [ethereumjs/testrpc](https://github.com/trufflesuite/ganache-cli) and [Truffle framework](http://truffleframework.com/) unit tests.
+
+For the SDK tests target, pre-actions and post-actions scripts in the KinTestHost scheme will setup truffle and testrpc running for the duration of the test.
+
+### Requirements
+
+Node.js and npm. You can install these using homebrew:
+
+```bash
+$ brew install node
+```
+Next, install specific npm packages using:
+
+```bash
+$ cd truffle
+$ npm install
+```
+
+Next, initialize and update git submodules.  This will include `truffle/kin-token`.
+
+```bash
+$ git submodule init && git submodule update
+```
+
+### How to run the tests
+
+
+* From command line<br />
+Run the below command from the root directory.<br />
+It will run all the tests and also clean testrpc at the end.
+
+```bash
+$ make test
+```
+
+* From Android Studio<br /> 
+Our test classes are [here](kin-sdk-core/src/androidTest/java/kin/sdk/core/).
+You can run the tests directly from Android Studio but will still have to run clean testrpc manually.
+
+### Clean testrpc manually
+Run the below command from the root directory.
+```bash
+$ make clean
+```
+
+
 ## Contributing
 Please review our [CONTRIBUTING.md](CONTRIBUTING.md) guide before opening issues and pull requests.
 

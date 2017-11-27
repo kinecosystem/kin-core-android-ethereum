@@ -1,12 +1,12 @@
 package kin.sdk.core;
 
-
 import android.content.Context;
 
-import kin.sdk.core.exception.DeleteAccountException;
 import org.ethereum.geth.Account;
 import org.ethereum.geth.Accounts;
 
+import kin.sdk.core.exception.OperationFailedException;
+import kin.sdk.core.exception.DeleteAccountException;
 import kin.sdk.core.exception.CreateAccountException;
 import kin.sdk.core.exception.EthereumClientException;
 
@@ -89,18 +89,27 @@ public class KinClient {
     /**
      * Deletes the account (if it exists)
      * WARNING - if you don't export the account before deleting it, you will lose all your Kin.
+     *
      * @param passphrase the passphrase used when the account was created
-     * @throws DeleteAccountException
      */
     public void deleteAccount(String passphrase) throws DeleteAccountException {
         KinAccountImpl account = (KinAccountImpl) getAccount();
-        if (account != null ){
+        if (account != null) {
             account.delete(passphrase);
             kinAccount = null;
         }
     }
 
-    public ServiceProvider getServiceProvider(){
+    public ServiceProvider getServiceProvider() {
         return ethClient.getServiceProvider();
+    }
+
+    KinAccount importAccount(String privateEcdsaKey, String passphrase) throws OperationFailedException {
+        Account account = ethClient.importAccount(privateEcdsaKey, passphrase);
+        KinAccount kinAccount = null;
+        if (account != null) {
+            kinAccount = new KinAccountImpl(ethClient, account);
+        }
+        return kinAccount;
     }
 }

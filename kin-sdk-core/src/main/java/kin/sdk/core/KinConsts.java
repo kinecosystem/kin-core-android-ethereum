@@ -26,7 +26,8 @@ final class KinConsts {
     enum NetworkConstants {
         NETWORK_MAIN(ServiceProvider.NETWORK_ID_MAIN, "0x818fc6c2ec5986bc6e2cbf00939d90556ab12ce5"),
         NETWORK_ROPSTEN(ServiceProvider.NETWORK_ID_ROPSTEN,  "0xEF2Fcc998847DB203DEa15fC49d0872C7614910C"),
-        NETWORK_RINKEBY(ServiceProvider.NETWORK_ID_RINKEBY,  "0xEF2Fcc998847DB203DEa15fC49d0872C7614910C");
+        NETWORK_RINKEBY(ServiceProvider.NETWORK_ID_RINKEBY,  "0xEF2Fcc998847DB203DEa15fC49d0872C7614910C"),
+        NETWORK_TRUFFLE(ServiceProvider.NETWORK_ID_TRUFFLE);
 
         int networkId;
         String contractAddress;
@@ -41,12 +42,19 @@ final class KinConsts {
             transferKinGasLimit = DEFAULT_TRANSFER_KIN_GAS_LIMIT;
         }
 
+        // This is used only for testing
+        NetworkConstants(int id){
+            this(id, System.getProperty("TOKEN_CONTRACT_ADDRESS"));
+        }
+
         static NetworkConstants fromProvider(ServiceProvider provider){
             switch (provider.getNetworkId()) {
                 case (ServiceProvider.NETWORK_ID_MAIN) :
                     return NETWORK_MAIN;
                 case (ServiceProvider.NETWORK_ID_RINKEBY) :
                     return NETWORK_RINKEBY;
+                case (ServiceProvider.NETWORK_ID_TRUFFLE) :
+                    return NETWORK_TRUFFLE;
                 default: return NETWORK_ROPSTEN;
             }
         }

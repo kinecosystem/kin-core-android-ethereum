@@ -17,6 +17,11 @@ public class ServiceProvider {
      */
     public static final int NETWORK_ID_RINKEBY = 4;
 
+    /**
+     * truffle testrpc network
+     */
+    public static final int NETWORK_ID_TRUFFLE = 9;
+
 
     private String providerUrl;
     private int networkId;

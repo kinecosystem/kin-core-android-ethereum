@@ -1,19 +1,24 @@
+sudo: false
 language: android
 
 before_cache:
-- rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 
 cache:
   directories:
-  - "$HOME/.gradle/caches/"
-  - "$HOME/.gradle/wrapper/"
-  - "$HOME/.android/build-cache"
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+    - $HOME/.gradle/native
+    - $HOME/.gradle/daemon
+    - $HOME/.android/build-cache
+
+    - $TRAVIS_BUILD_DIR/truffle/node_modules
 
 env:
   global:
-  - ANDROID_API_LEVEL=26
-  - EMULATOR_API_LEVEL=21
+    - ANDROID_API_LEVEL=26
+    - EMULATOR_API_LEVEL=21
 
 android:
   components:
@@ -29,11 +34,29 @@ android:
   - sys-img-armeabi-v7a-android-$ANDROID_API_LEVEL
   - sys-img-armeabi-v7a-android-$EMULATOR_API_LEVEL
 
+before_install:
+  # install node (npm), truffle, testrpc
+  - rm -rf ~/.nvm
+  - git clone https://github.com/creationix/nvm.git ~/.nvm
+  - source ~/.nvm/nvm.sh
+  - nvm install 8.9.1
+  - node --version
+  - cd truffle && npm install && cd ../
+
 before_script:
+  # setup android emulator
   - echo no | android create avd --force -n test -t android-$EMULATOR_API_LEVEL --abi armeabi-v7a
-  - emulator -avd test -no-skin -no-audio -no-window &
+  - emulator -avd test -no-skin -no-audio -no-window -camera-back none -camera-front none -verbose -memory 2048 &
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
+
+script:
+  - make test
+
+after_script:
+  # print truffle and testrpc logs
+  - cat truffle/truffle.log
+  - cat truffle/testrpc.log
 
 deploy:
   skip_cleanup: true
@@ -42,3 +65,4 @@ deploy:
     secure: ./testfairy-uploader.sh ./sample/build/outputs/apk/debug/sample-debug.apk
   on:
     branch: dev
+

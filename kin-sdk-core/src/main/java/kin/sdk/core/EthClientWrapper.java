@@ -7,6 +7,7 @@ import kin.sdk.core.exception.EthereumClientException;
 import kin.sdk.core.exception.InsufficientBalanceException;
 import kin.sdk.core.exception.OperationFailedException;
 import kin.sdk.core.exception.PassphraseException;
+import kin.sdk.core.util.HexUtils;
 import kin.sdk.core.util.KinConverter;
 import org.ethereum.geth.Account;
 import org.ethereum.geth.Address;
@@ -244,6 +245,23 @@ final class EthClientWrapper {
 
     ServiceProvider getServiceProvider() {
         return serviceProvider;
+    }
+
+    Account importAccount(String privateEcdsaKey, String passphrase) throws OperationFailedException {
+        if (privateEcdsaKey == null || privateEcdsaKey.isEmpty()) {
+            throw new OperationFailedException("private key not valid - can't be null or empty");
+        }
+        else {
+            if (privateEcdsaKey.startsWith("0x")) {
+                privateEcdsaKey = privateEcdsaKey.substring(2, privateEcdsaKey.length());
+            }
+        }
+        try {
+            byte[] hexBytes = HexUtils.hexStringToByteArray(privateEcdsaKey);
+            return keyStore.importECDSAKey(hexBytes, passphrase);
+        } catch (Exception e) {
+            throw new OperationFailedException(e);
+        }
     }
 
     private boolean hasEnoughBalance(Account account, BigDecimal amount) throws OperationFailedException {

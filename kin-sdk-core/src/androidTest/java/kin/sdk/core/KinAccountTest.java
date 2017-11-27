@@ -7,6 +7,9 @@ import static org.junit.Assert.assertTrue;
 
 import android.support.test.runner.AndroidJUnit4;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import kin.sdk.core.Config.EcdsaAccount;
 import kin.sdk.core.exception.InsufficientBalanceException;
 import kin.sdk.core.exception.OperationFailedException;
 import kin.sdk.core.exception.PassphraseException;
@@ -21,13 +24,39 @@ public class KinAccountTest extends BaseTest {
     private final String PASSPHRASE = "testPassphrase";
     private final String TO_ADDRESS = "0x82CdC15705CE9f4565DDa07d78c92ff3d2717854";
 
+    /**
+     * First new account with 0 TOKEN and 0 ETH.
+     */
     private KinAccount kinAccount;
+
+    /**
+     * Imported account via private ECDSA Key, from testConfig.json
+     * The first account (importedAccounts.get(0)) will have 1000 TOKEN and 100 ETH, and can sendTransactions.
+     * All other accounts (1-9) will have only 100 ETH.
+     */
+    private List<KinAccount> importedAccounts = new ArrayList<>(10);
 
     @Override
     @Before
     public void setUp() throws Exception {
         super.setUp();
         kinAccount = kinClient.createAccount(PASSPHRASE);
+        importAccounts();
+    }
+
+    /**
+     * Import all accounts from {@link Config}.
+     */
+    private void importAccounts() {
+        List<EcdsaAccount> accounts = config.getAccounts();
+        for (EcdsaAccount account : accounts) {
+            try {
+                KinAccount importedAccount = kinClient.importAccount(account.getKey(), PASSPHRASE);
+                importedAccounts.add(importedAccount);
+            } catch (OperationFailedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Test
@@ -118,8 +147,17 @@ public class KinAccountTest extends BaseTest {
 
     @Test
     public void sendTransactionSync() throws Exception {
-        //TODO We need to have few accounts with KIN + ETHER balances,
-        //TODO so we can send transaction.
+        KinAccount senderAccount = importedAccounts.get(0);
+        Balance senderBalance = senderAccount.getBalanceSync();
+        BigDecimal amountToSend = new BigDecimal(10);
+
+        senderAccount.sendTransactionSync(kinAccount.getPublicAddress(), PASSPHRASE, amountToSend);
+
+        Balance kinAccountBalance = kinAccount.getBalanceSync();
+        assertTrue(kinAccountBalance.value(0).equals("10"));
+
+        Balance afterBalance = senderAccount.getBalanceSync();
+        assertTrue((senderBalance.value().subtract(amountToSend).compareTo(afterBalance.value())) == 0);
     }
 
     @Test
@@ -142,7 +180,10 @@ public class KinAccountTest extends BaseTest {
 
     @Test
     public void getPendingBalanceSync() throws Exception {
-        //TODO We need to have few accounts with KIN + ETHER balances,
-        //TODO so we can send transaction and check the pending balance.
+        KinAccount senderAccount = importedAccounts.get(0);
+        senderAccount.sendTransactionSync(kinAccount.getPublicAddress(), PASSPHRASE, new BigDecimal(10));
+        Balance kinAccountPendingBalance = kinAccount.getPendingBalanceSync();
+
+        assertNotNull(kinAccountPendingBalance);
     }
 }
