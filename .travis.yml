@@ -13,24 +13,20 @@ cache:
     - $HOME/.gradle/daemon
     - $HOME/.android/build-cache
 
-#    - $TRAVIS_BUILD_DIR/truffle/node_modules
+    node_modules
 
 env:
   global:
     - ANDROID_API_LEVEL=26
-    - EMULATOR_API_LEVEL=21
+    - EMULATOR_API_LEVEL=16
 
 android:
   components:
   - tools
   - platform-tools
-  - tools
   - build-tools-26.0.2
-  - android-26
-  - android-21
-  - extra-google-m2repository
-  - extra-android-m2repository
-  - extra-android-support
+  - android-$ANDROID_API_LEVEL
+  - android-$EMULATOR_API_LEVEL
   - sys-img-armeabi-v7a-android-$ANDROID_API_LEVEL
   - sys-img-armeabi-v7a-android-$EMULATOR_API_LEVEL
 
