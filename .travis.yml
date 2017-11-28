@@ -1,5 +1,4 @@
-sudo: required
-dist: precise
+sudo: false
 language: android
 
 before_cache:
