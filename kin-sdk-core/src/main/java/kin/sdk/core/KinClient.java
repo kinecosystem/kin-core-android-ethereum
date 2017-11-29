@@ -3,10 +3,11 @@ package kin.sdk.core;
 
 import android.content.Context;
 
-import kin.sdk.core.exception.DeleteAccountException;
 import org.ethereum.geth.Account;
 import org.ethereum.geth.Accounts;
 
+import kin.sdk.core.exception.OperationFailedException;
+import kin.sdk.core.exception.DeleteAccountException;
 import kin.sdk.core.exception.CreateAccountException;
 import kin.sdk.core.exception.EthereumClientException;
 
@@ -100,7 +101,16 @@ public class KinClient {
         }
     }
 
-    public ServiceProvider getServiceProvider(){
+    /**
+     * Delete all accounts. This will wipe out recursively the directory that holds all keystore files.
+     * WARNING - if you don't export your account before deleting it, you will lose all your Kin.
+     */
+    public void wipeoutAccount() throws EthereumClientException {
+        ethClient.wipeoutAccount();
+        kinAccount = null;
+    }
+
+    public ServiceProvider getServiceProvider() {
         return ethClient.getServiceProvider();
     }
 }
