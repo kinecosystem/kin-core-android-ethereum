@@ -202,7 +202,10 @@ final class EthClientWrapper {
             params.set(1, paramAmount);
             // Send transfer call to Kin smart-contract.
             transaction = boundContract.transact(transactOpts, "transfer", params);
+        } catch (PassphraseException e) {
+            throw e;
         } catch (Exception e) {
+            // All other exception from go-ethereum
             throw new OperationFailedException(e);
         }
 

@@ -141,8 +141,56 @@ public class KinAccountTest extends BaseTest {
         try {
             kinAccount.sendTransactionSync(TO_ADDRESS, "wongPassphrase", new BigDecimal(0));
         } catch (Exception e) {
-            assertEquals("Wrong passphrase - could not decrypt key with given passphrase", e.getCause().getMessage());
+            assertTrue(e instanceof PassphraseException);
         }
+    }
+
+    @Test
+    public void sendTransactionSync_SecondTimeEmptyPassphraseFails() throws Exception {
+        KinAccount senderAccount = importedAccounts.get(0);
+        Balance senderBalance = senderAccount.getBalanceSync();
+        BigDecimal amountToSend = new BigDecimal(10);
+
+        senderAccount.sendTransactionSync(kinAccount.getPublicAddress(), PASSPHRASE, amountToSend);
+
+        Balance kinAccountBalance = kinAccount.getBalanceSync();
+        assertTrue(kinAccountBalance.value(0).equals("10"));
+
+        Balance afterBalance = senderAccount.getBalanceSync();
+        assertTrue((senderBalance.value().subtract(amountToSend).compareTo(afterBalance.value())) == 0);
+
+        Exception exception = null;
+        try {
+            senderAccount.sendTransactionSync(kinAccount.getPublicAddress(), "", new BigDecimal(1));
+        } catch (Exception e) {
+            exception = e;
+        }
+        assertNotNull(exception);
+        assertTrue(exception instanceof PassphraseException);
+    }
+
+    @Test
+    public void sendTransactionSync_SecondTimeNullPassphraseFails() throws Exception {
+        KinAccount senderAccount = importedAccounts.get(0);
+        Balance senderBalance = senderAccount.getBalanceSync();
+        BigDecimal amountToSend = new BigDecimal(10);
+
+        senderAccount.sendTransactionSync(kinAccount.getPublicAddress(), PASSPHRASE, amountToSend);
+
+        Balance kinAccountBalance = kinAccount.getBalanceSync();
+        assertTrue(kinAccountBalance.value(0).equals("10"));
+
+        Balance afterBalance = senderAccount.getBalanceSync();
+        assertTrue((senderBalance.value().subtract(amountToSend).compareTo(afterBalance.value())) == 0);
+
+        Exception exception = null;
+        try {
+            senderAccount.sendTransactionSync(kinAccount.getPublicAddress(), null, new BigDecimal(1));
+        } catch (Exception e) {
+            exception = e;
+        }
+        assertNotNull(exception);
+        assertTrue(exception instanceof PassphraseException);
     }
 
     @Test
