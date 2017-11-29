@@ -111,8 +111,7 @@ final class EthClientWrapper {
     public void deleteAccount(Account account, String passphrase) throws DeleteAccountException {
         try {
             keyStore.deleteAccount(account, passphrase);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new DeleteAccountException(e);
         }
     }
@@ -192,7 +191,13 @@ final class EthClientWrapper {
             // Send transfer call to Kin smart-contract.
             transaction = boundContract.transact(transactOpts, "transfer", params);
         } catch (Exception e) {
-            throw new OperationFailedException(e);
+            if (e instanceof PassphraseException) {
+                // From KinSigner
+                throw new PassphraseException();
+            } else {
+                // All other exception from go-ethereum
+                throw new OperationFailedException(e);
+            }
         }
 
         return new TransactionIdImpl(transaction.getHash().getHex());
@@ -250,8 +255,7 @@ final class EthClientWrapper {
     Account importAccount(String privateEcdsaKey, String passphrase) throws OperationFailedException {
         if (privateEcdsaKey == null || privateEcdsaKey.isEmpty()) {
             throw new OperationFailedException("private key not valid - can't be null or empty");
-        }
-        else {
+        } else {
             if (privateEcdsaKey.startsWith("0x")) {
                 privateEcdsaKey = privateEcdsaKey.substring(2, privateEcdsaKey.length());
             }
