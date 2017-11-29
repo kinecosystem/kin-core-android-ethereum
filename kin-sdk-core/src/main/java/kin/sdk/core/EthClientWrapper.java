@@ -122,11 +122,12 @@ final class EthClientWrapper {
         }
     }
 
-    public void wipeoutAccount() {
+    public void wipeoutAccount() throws EthereumClientException {
         File keystoreDir = new File(getKeyStoreBasePath().toString());
         if (keystoreDir.exists()) {
             deleteRecursive(keystoreDir);
         }
+        initKeyStore();
     }
 
     /**
