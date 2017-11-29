@@ -16,6 +16,7 @@ import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
 public class KinClientTest extends BaseTest {
+
     private static final String PASSPHRASE = "testPassphrase";
 
     @Test
@@ -64,6 +65,21 @@ public class KinClientTest extends BaseTest {
             assertTrue(kinClient.hasAccount());
 
             kinClient.deleteAccount(PASSPHRASE);
+            assertFalse(kinClient.hasAccount());
+            assertNull(kinClient.getAccount());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testWipeAccount() {
+        try {
+            createAccount();
+            assertTrue(kinClient.hasAccount());
+
+            kinClient.wipeoutAccount();
             assertFalse(kinClient.hasAccount());
             assertNull(kinClient.getAccount());
 

@@ -100,6 +100,10 @@ public class KinClient {
         }
     }
 
+    public void wipeoutAccount() {
+        ethClient.wipeoutAccount();
+    }
+
     public ServiceProvider getServiceProvider() {
         return ethClient.getServiceProvider();
     }

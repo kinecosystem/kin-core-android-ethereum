@@ -31,6 +31,7 @@ import org.ethereum.geth.Transaction;
 final class EthClientWrapper {
 
     private Context gethContext;
+    private android.content.Context androidContext;
     private EthereumClient ethereumClient;
     private BoundContract boundContract;
     private KeyStore keyStore;
@@ -43,11 +44,12 @@ final class EthClientWrapper {
     EthClientWrapper(android.content.Context androidContext, ServiceProvider serviceProvider)
         throws EthereumClientException {
         this.serviceProvider = serviceProvider;
+        this.androidContext = androidContext.getApplicationContext();
         this.gethContext = new Context();
         this.kinContractAddress = KinConsts.getContractAddress(serviceProvider);
         initEthereumClient();
         initKinContract();
-        initKeyStore(androidContext);
+        initKeyStore();
         this.pendingBalance = new PendingBalance(ethereumClient, gethContext, kinContractAddress);
     }
 
@@ -84,21 +86,11 @@ final class EthClientWrapper {
      * The keystore path is unique to each network id,
      * for example Ropsten network will be: ../data/kin/keystore/3/
      *
-     * @param context provide the path to internal data directories.
      * @throws EthereumClientException if could not create directory to save the keystore.
      */
-    private void initKeyStore(android.content.Context context) throws EthereumClientException {
-        String networkId = String.valueOf(serviceProvider.getNetworkId());
-        String keyStorePath = new StringBuilder(context.getFilesDir().getAbsolutePath())
-            .append(File.separator)
-            .append("kin")
-            .append(File.separator)
-            .append("keystore")
-            .append(File.separator)
-            .append(networkId).toString();
-
+    private void initKeyStore() throws EthereumClientException {
         // Make directories if necessary, the keystore will be saved there.
-        File keystoreDir = new File(keyStorePath);
+        File keystoreDir = new File(getKeyStoreFullPath());
         if (!keystoreDir.exists()) {
             if (!keystoreDir.mkdirs()) {
                 throw new EthereumClientException("keystore - could not create directory");
@@ -108,12 +100,32 @@ final class EthClientWrapper {
         keyStore = Geth.newKeyStore(keystoreDir.getAbsolutePath(), Geth.LightScryptN, Geth.LightScryptP);
     }
 
+    private StringBuilder getKeyStoreBasePath() {
+        return new StringBuilder(androidContext.getFilesDir().getAbsolutePath())
+            .append(File.separator)
+            .append("kin")
+            .append(File.separator)
+            .append("keystore");
+    }
+
+    public String getKeyStoreFullPath() {
+        return getKeyStoreBasePath().append(File.separator)
+            .append(serviceProvider.getNetworkId())
+            .toString();
+    }
+
     public void deleteAccount(Account account, String passphrase) throws DeleteAccountException {
         try {
             keyStore.deleteAccount(account, passphrase);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new DeleteAccountException(e);
+        }
+    }
+
+    public void wipeoutAccount() {
+        File keystoreDir = new File(getKeyStoreBasePath().toString());
+        if (keystoreDir.exists()) {
+            deleteRecursive(keystoreDir);
         }
     }
 
@@ -250,8 +262,7 @@ final class EthClientWrapper {
     Account importAccount(String privateEcdsaKey, String passphrase) throws OperationFailedException {
         if (privateEcdsaKey == null || privateEcdsaKey.isEmpty()) {
             throw new OperationFailedException("private key not valid - can't be null or empty");
-        }
-        else {
+        } else {
             if (privateEcdsaKey.startsWith("0x")) {
                 privateEcdsaKey = privateEcdsaKey.substring(2, privateEcdsaKey.length());
             }
@@ -268,5 +279,14 @@ final class EthClientWrapper {
         Balance balance = getBalance(account);
         // (> -1) means bigger than or equals to the amount.
         return balance.value().subtract(amount).compareTo(BigDecimal.ZERO) > -1;
+    }
+
+    private void deleteRecursive(File fileOrDirectory) {
+        if (fileOrDirectory.isDirectory()) {
+            for (File child : fileOrDirectory.listFiles()) {
+                deleteRecursive(child);
+            }
+        }
+        fileOrDirectory.delete();
     }
 }
