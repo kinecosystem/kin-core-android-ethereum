@@ -90,7 +90,7 @@ final class EthClientWrapper {
      */
     private void initKeyStore() throws EthereumClientException {
         // Make directories if necessary, the keystore will be saved there.
-        File keystoreDir = new File(getKeyStoreFullPath());
+        File keystoreDir = new File(getKeyStorePath());
         if (!keystoreDir.exists()) {
             if (!keystoreDir.mkdirs()) {
                 throw new EthereumClientException("keystore - could not create directory");
@@ -100,16 +100,13 @@ final class EthClientWrapper {
         keyStore = Geth.newKeyStore(keystoreDir.getAbsolutePath(), Geth.LightScryptN, Geth.LightScryptP);
     }
 
-    private StringBuilder getKeyStoreBasePath() {
+    public String getKeyStorePath() {
         return new StringBuilder(androidContext.getFilesDir().getAbsolutePath())
             .append(File.separator)
             .append("kin")
             .append(File.separator)
-            .append("keystore");
-    }
-
-    public String getKeyStoreFullPath() {
-        return getKeyStoreBasePath().append(File.separator)
+            .append("keystore")
+            .append(File.separator)
             .append(serviceProvider.getNetworkId())
             .toString();
     }
@@ -123,10 +120,11 @@ final class EthClientWrapper {
     }
 
     public void wipeoutAccount() throws EthereumClientException {
-        File keystoreDir = new File(getKeyStoreBasePath().toString());
+        File keystoreDir = new File(getKeyStorePath());
         if (keystoreDir.exists()) {
             deleteRecursive(keystoreDir);
         }
+        // this will reset geth in-memory keystore
         initKeyStore();
     }
 
