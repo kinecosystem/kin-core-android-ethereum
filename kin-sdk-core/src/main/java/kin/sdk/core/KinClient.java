@@ -100,6 +100,11 @@ public class KinClient {
         }
     }
 
+    /**
+     * Deletes all accounts (if it exists)
+     * WARNING - if you don't export the account before deleting it, you will lose all your Kin.
+     *
+     */
     public void wipeoutAccount() {
         ethClient.wipeoutAccount();
     }
