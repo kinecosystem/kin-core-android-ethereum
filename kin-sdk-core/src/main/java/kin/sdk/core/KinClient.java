@@ -101,12 +101,12 @@ public class KinClient {
     }
 
     /**
-     * Deletes all accounts (if it exists)
-     * WARNING - if you don't export the account before deleting it, you will lose all your Kin.
-     *
+     * Delete all accounts. This will wipe out recursively the directory that holds all keystore files.
+     * WARNING - if you don't export your account before deleting it, you will lose all your Kin.
      */
     public void wipeoutAccount() {
         ethClient.wipeoutAccount();
+        kinAccount = null;
     }
 
     public ServiceProvider getServiceProvider() {
