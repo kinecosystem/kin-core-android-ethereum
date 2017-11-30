@@ -227,11 +227,11 @@ $ brew install node
 Next, install specific npm packages using:
 
 ```bash
-$ cd truffle
+$ cd kin-sdk-core/truffle
 $ npm install
 ```
 
-Next, initialize and update git submodules.  This will include `truffle/kin-token`.
+Next, initialize and update git submodules.  This will include `kin-sdk-core/truffle/kin-token`.
 
 ```bash
 $ git submodule init && git submodule update

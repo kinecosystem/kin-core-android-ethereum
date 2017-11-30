@@ -3,7 +3,7 @@
 default: ;
 
 # add truffle and testrpc to $PATH
-export PATH := ./truffle/node_modules/.bin:$(PATH)
+export PATH := ./kin-sdk-core/truffle/node_modules/.bin:$(PATH)
 export PATH := /usr/local/bin:$(PATH)
 
 test:
@@ -12,28 +12,28 @@ test:
 .PHONY: test
 
 prepare-tests: truffle
-	truffle/scripts/prepare-tests.sh
+	kin-sdk-core/truffle/scripts/prepare-tests.sh
 .PHONY: test
 
 truffle: testrpc truffle-clean
-	truffle/scripts/truffle.sh
+	kin-sdk-core/truffle/scripts/truffle.sh
 .PHONY: truffle
 
 truffle-clean:
-	rm -f truffle/token-contract-address
+	rm -f kin-sdk-core/truffle/token-contract-address
 .PHONY: truffle-clean
 
 testrpc: testrpc-run  # alias for testrpc-run
 .PHONY: testrpc
 
 testrpc-run: testrpc-kill
-	truffle/scripts/testrpc-run.sh
+	kin-sdk-core/truffle/scripts/testrpc-run.sh
 .PHONY: testrpc-run
 
 testrpc-kill:
-	truffle/scripts/testrpc-kill.sh
+	kin-sdk-core/truffle/scripts/testrpc-kill.sh
 .PHONY: testrpc-kill
 
 clean: truffle-clean testrpc-kill
-	rm -f truffle/truffle.log
-	rm -f truffle/testrpc.log
+	rm -f kin-sdk-core/truffle/truffle.log
+	rm -f kin-sdk-core/truffle/testrpc.log
