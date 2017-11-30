@@ -42,36 +42,36 @@ dependencies {
     })
 }
 
-task prepareRPC {
-    doFirst {
-        def testRpcOutput = new ByteArrayOutputStream()
-        exec {
-            workingDir '../'
-            commandLine 'make', 'prepare-tests'
-            standardOutput = testRpcOutput
-        }
-        testRpcOutput = testRpcOutput.toString().trim()
-        printf("\n****** Prepare RPC ******\n" + testRpcOutput)
-    }
-}
-
-task cleanRPC {
-    doLast {
-        def cleanRpcOutput = new ByteArrayOutputStream()
-        exec {
-            workingDir '../'
-            commandLine 'make', 'testrpc-kill'
-            standardOutput = cleanRpcOutput
-        }
-        cleanRpcOutput = cleanRpcOutput.toString().trim()
-        printf("\n****** Clean RPC ******\n" + cleanRpcOutput)
-    }
-}
-
-gradle.projectsEvaluated {
-    preBuild.dependsOn prepareRPC
-    connectedDebugAndroidTest.finalizedBy cleanRPC
-}
+//task prepareRPC {
+//    doFirst {
+//        def testRpcOutput = new ByteArrayOutputStream()
+//        exec {
+//            workingDir '../'
+//            commandLine 'make', 'prepare-tests'
+//            standardOutput = testRpcOutput
+//        }
+//        testRpcOutput = testRpcOutput.toString().trim()
+//        printf("\n****** Prepare RPC ******\n" + testRpcOutput)
+//    }
+//}
+//
+//task cleanRPC {
+//    doLast {
+//        def cleanRpcOutput = new ByteArrayOutputStream()
+//        exec {
+//            workingDir '../'
+//            commandLine 'make', 'testrpc-kill'
+//            standardOutput = cleanRpcOutput
+//        }
+//        cleanRpcOutput = cleanRpcOutput.toString().trim()
+//        printf("\n****** Clean RPC ******\n" + cleanRpcOutput)
+//    }
+//}
+//
+//gradle.projectsEvaluated {
+//    preBuild.dependsOn prepareRPC
+//    connectedDebugAndroidTest.finalizedBy cleanRPC
+//}
 
 
 
