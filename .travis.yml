@@ -37,7 +37,7 @@ before_install:
   - source ~/.nvm/nvm.sh
   - nvm install 8.9.1
   - node --version
-  - cd truffle && npm install && cd ../
+  - cd kin-sdk-core/truffle && npm install && cd ../../
 
 before_script:
   # setup android emulator
@@ -51,8 +51,8 @@ script:
 
 after_script:
   # print truffle and testrpc logs
-  - cat truffle/truffle.log
-  - cat truffle/testrpc.log
+  - cat kin-sdk-core/truffle/truffle.log
+  - cat kin-sdk-core/truffle/testrpc.log
 
 deploy:
   skip_cleanup: true
