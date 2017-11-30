@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="wallet_min_layout_height">1920dp</dimen>
+</resources>

@@ -1,6 +1,9 @@
 package kin.sdk.core.sample;
 
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.Point;
+import android.view.Display;
 
 public class Utils {
 
@@ -17,5 +20,13 @@ public class Utils {
                 .newPlainText("copied text", textToCopy);
             clipboard.setPrimaryClip(clip);
         }
+    }
+
+    public static int getScreenHeight(Activity activity) {
+        Display display = activity.getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int height = size.y;
+        return height;
     }
 }
