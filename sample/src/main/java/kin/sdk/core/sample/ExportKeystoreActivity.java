@@ -9,6 +9,9 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import kin.sdk.core.KinAccount;
+import kin.sdk.core.exception.AccountDeletedOpreationFailedException;
+import kin.sdk.core.exception.OperationFailedException;
 import kin.sdk.core.exception.PassphraseException;
 import kin.sdk.core.sample.kin.sdk.core.sample.dialog.KinAlertDialog;
 import org.json.JSONException;
@@ -94,6 +97,9 @@ public class ExportKeystoreActivity extends BaseActivity {
             } catch (JSONException e) {
                 clearAll();
                 KinAlertDialog.createErrorDialog(this, e.getMessage()).show();
+            } catch (OperationFailedException e) {
+                clearAll();
+                KinAlertDialog.createErrorDialog(this, e.getMessage()).show();
             }
         });
     }
@@ -110,9 +116,13 @@ public class ExportKeystoreActivity extends BaseActivity {
         outputTextView.setSelectAllOnFocus(false);
     }
 
-    private String generatePrivateKeyStoreJsonFormat() throws PassphraseException, JSONException {
-        String jsonString = getKinClient().getAccount()
-            .exportKeyStore(getPassphrase(), passphraseInput.getText().toString());
+    private String generatePrivateKeyStoreJsonFormat()
+        throws PassphraseException, JSONException, OperationFailedException {
+        KinAccount account = getKinClient().getAccount();
+        if (account == null) {
+            throw new AccountDeletedOpreationFailedException();
+        }
+        String jsonString = account.exportKeyStore(getPassphrase(), passphraseInput.getText().toString());
         JSONObject jsonObject = new JSONObject(jsonString);
         return jsonObject.toString(1);
     }

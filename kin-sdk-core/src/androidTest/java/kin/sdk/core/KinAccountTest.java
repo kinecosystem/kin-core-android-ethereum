@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import kin.sdk.core.Config.EcdsaAccount;
+import kin.sdk.core.exception.AccountDeletedOpreationFailedException;
 import kin.sdk.core.exception.InsufficientBalanceException;
 import kin.sdk.core.exception.OperationFailedException;
 import kin.sdk.core.exception.PassphraseException;
@@ -69,7 +70,7 @@ public class KinAccountTest extends BaseTest {
     }
 
     @Test
-    public void exportKeyStore() throws PassphraseException {
+    public void exportKeyStore() throws PassphraseException, OperationFailedException {
         String exportedKeyStore = kinAccount.exportKeyStore(PASSPHRASE, "newPassphrase");
 
         assertNotNull(exportedKeyStore);
@@ -91,6 +92,8 @@ public class KinAccountTest extends BaseTest {
             kinAccount.exportKeyStore("wrongPassphrase", "newPassphrase");
         } catch (PassphraseException e) {
             assertEquals("Wrong passphrase - could not decrypt key with given passphrase", e.getMessage());
+        } catch (OperationFailedException e){
+            assertEquals(AccountDeletedOpreationFailedException.ACCOUNT_DELETED_ERROR_MESSAGE, e.getMessage());
         }
     }
 
