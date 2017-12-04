@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import kin.sdk.core.KinAccount;
-import kin.sdk.core.exception.AccountDeletedOpreationFailedException;
+import kin.sdk.core.exception.AccountDeletedException;
 import kin.sdk.core.exception.OperationFailedException;
 import kin.sdk.core.exception.PassphraseException;
 import kin.sdk.core.sample.kin.sdk.core.sample.dialog.KinAlertDialog;
@@ -120,7 +120,7 @@ public class ExportKeystoreActivity extends BaseActivity {
         throws PassphraseException, JSONException, OperationFailedException {
         KinAccount account = getKinClient().getAccount();
         if (account == null) {
-            throw new AccountDeletedOpreationFailedException();
+            throw new AccountDeletedException();
         }
         String jsonString = account.exportKeyStore(getPassphrase(), passphraseInput.getText().toString());
         JSONObject jsonObject = new JSONObject(jsonString);

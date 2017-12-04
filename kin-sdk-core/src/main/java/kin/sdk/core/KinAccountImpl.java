@@ -1,7 +1,7 @@
 package kin.sdk.core;
 
 import java.math.BigDecimal;
-import kin.sdk.core.exception.AccountDeletedOpreationFailedException;
+import kin.sdk.core.exception.AccountDeletedException;
 import kin.sdk.core.exception.DeleteAccountException;
 import kin.sdk.core.exception.InsufficientBalanceException;
 import kin.sdk.core.exception.OperationFailedException;
@@ -14,7 +14,7 @@ final class KinAccountImpl extends AbstractKinAccount {
     private KeyStore keyStore;
     private EthClientWrapper ethClient;
     private Account account;
-    private boolean hasDeleted = false;
+    private boolean isDeleted;
 
     /**
      * Creates a new {@link Account}.
@@ -28,7 +28,7 @@ final class KinAccountImpl extends AbstractKinAccount {
         this.keyStore = ethClientWrapper.getKeyStore();
         this.account = keyStore.newAccount(passphrase);
         this.ethClient = ethClientWrapper;
-        hasDeleted = false;
+        isDeleted = false;
     }
 
     /**
@@ -41,12 +41,12 @@ final class KinAccountImpl extends AbstractKinAccount {
         this.keyStore = ethClientWrapper.getKeyStore();
         this.account = account;
         this.ethClient = ethClientWrapper;
-        hasDeleted = false;
+        isDeleted = false;
     }
 
     @Override
     public String getPublicAddress() {
-        if (!hasDeleted) {
+        if (!isDeleted) {
             return account.getAddress().getHex();
         }
         return "";
@@ -55,9 +55,7 @@ final class KinAccountImpl extends AbstractKinAccount {
     @Override
     public String exportKeyStore(String passphrase, String newPassphrase)
         throws PassphraseException, OperationFailedException {
-        if (hasDeleted) {
-            throw new AccountDeletedOpreationFailedException();
-        }
+        checkValidAccount();
         String jsonKeyStore;
         try {
             byte[] keyInBytes = keyStore.exportKey(account, passphrase, newPassphrase);
@@ -71,25 +69,19 @@ final class KinAccountImpl extends AbstractKinAccount {
     @Override
     public TransactionId sendTransactionSync(String publicAddress, String passphrase, BigDecimal amount)
         throws InsufficientBalanceException, OperationFailedException, PassphraseException {
-        if (hasDeleted) {
-            throw new AccountDeletedOpreationFailedException();
-        }
+        checkValidAccount();
         return ethClient.sendTransaction(account, passphrase, publicAddress, amount);
     }
 
     @Override
     public Balance getBalanceSync() throws OperationFailedException {
-        if (hasDeleted) {
-            throw new AccountDeletedOpreationFailedException();
-        }
+        checkValidAccount();
         return ethClient.getBalance(account);
     }
 
     @Override
     public Balance getPendingBalanceSync() throws OperationFailedException {
-        if (hasDeleted) {
-            throw new AccountDeletedOpreationFailedException();
-        }
+        checkValidAccount();
         return ethClient.getPendingBalance(account);
     }
 
@@ -98,7 +90,13 @@ final class KinAccountImpl extends AbstractKinAccount {
         markAsDeleted();
     }
 
-    public void markAsDeleted() {
-        hasDeleted = true;
+    void markAsDeleted() {
+        isDeleted = true;
+    }
+
+    private void checkValidAccount() throws AccountDeletedException {
+        if (isDeleted) {
+            throw new AccountDeletedException();
+        }
     }
 }

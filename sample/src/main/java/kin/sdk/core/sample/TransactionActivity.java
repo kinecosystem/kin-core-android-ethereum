@@ -11,7 +11,7 @@ import android.widget.EditText;
 import java.math.BigDecimal;
 import kin.sdk.core.KinAccount;
 import kin.sdk.core.TransactionId;
-import kin.sdk.core.exception.AccountDeletedOpreationFailedException;
+import kin.sdk.core.exception.AccountDeletedException;
 import kin.sdk.core.exception.OperationFailedException;
 import kin.sdk.core.sample.kin.sdk.core.sample.dialog.KinAlertDialog;
 
@@ -137,7 +137,7 @@ public class TransactionActivity extends BaseActivity {
             account.sendTransaction(toAddress, getPassphrase(), amount, transactionCallback);
         }else{
             progressBar.setVisibility(View.GONE);
-            throw new AccountDeletedOpreationFailedException();
+            throw new AccountDeletedException();
         }
     }
 

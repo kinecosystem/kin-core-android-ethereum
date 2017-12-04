@@ -10,7 +10,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import kin.sdk.core.Config.EcdsaAccount;
-import kin.sdk.core.exception.AccountDeletedOpreationFailedException;
+import kin.sdk.core.exception.AccountDeletedException;
+import kin.sdk.core.exception.DeleteAccountException;
 import kin.sdk.core.exception.InsufficientBalanceException;
 import kin.sdk.core.exception.OperationFailedException;
 import kin.sdk.core.exception.PassphraseException;
@@ -86,15 +87,31 @@ public class KinAccountTest extends BaseTest {
         assertThat(exportedKeyStore, CoreMatchers.containsString("salt"));
     }
 
+    @Test(expected = PassphraseException.class)
+    public void exportKeyStore_wrongPassphrase() throws OperationFailedException, PassphraseException {
+        kinAccount.exportKeyStore("wrongPassphrase", "newPassphrase");
+    }
+
+    @Test(expected = AccountDeletedException.class)
+    public void exportKeyStore_deletedAccount()
+        throws PassphraseException, OperationFailedException, DeleteAccountException {
+        kinClient.deleteAccount(PASSPHRASE);
+        kinAccount.exportKeyStore(PASSPHRASE, "newPassphrase");
+    }
+
+    @Test(expected = AccountDeletedException.class)
+    public void transaction_deletedAccount()
+        throws PassphraseException, OperationFailedException, DeleteAccountException, InsufficientBalanceException {
+        kinClient.deleteAccount(PASSPHRASE);
+        kinAccount.sendTransactionSync(TO_ADDRESS, PASSPHRASE, new BigDecimal(1));
+    }
+
     @Test
-    public void exportKeyStore_wrongPassphrase() {
-        try {
-            kinAccount.exportKeyStore("wrongPassphrase", "newPassphrase");
-        } catch (PassphraseException e) {
-            assertEquals("Wrong passphrase - could not decrypt key with given passphrase", e.getMessage());
-        } catch (OperationFailedException e){
-            assertEquals(AccountDeletedOpreationFailedException.ACCOUNT_DELETED_ERROR_MESSAGE, e.getMessage());
-        }
+    public void getPublicKey_deletedAccount()
+        throws PassphraseException, OperationFailedException, DeleteAccountException, InsufficientBalanceException {
+        kinClient.deleteAccount(PASSPHRASE);
+        String publicAddress = kinAccount.getPublicAddress();
+        assertEquals("", publicAddress);
     }
 
     @Test
