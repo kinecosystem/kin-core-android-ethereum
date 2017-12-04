@@ -215,7 +215,7 @@ For a more detailed example on how to use the library please take a look at our 
 
 We use [ethereumjs/testrpc](https://github.com/trufflesuite/ganache-cli) and [Truffle framework](http://truffleframework.com/) unit tests.
 
-For the SDK tests target, pre-actions and post-actions scripts in the KinTestHost scheme will setup truffle and testrpc running for the duration of the test.
+For the SDK tests target, pre-actions and post-actions tasks in build.gradle(Module: kin-sdk-core) that will setup truffle and testrpc running for the duration of the test.
 
 ### Requirements
 
