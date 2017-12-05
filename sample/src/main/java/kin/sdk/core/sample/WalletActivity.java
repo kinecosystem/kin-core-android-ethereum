@@ -3,6 +3,7 @@ package kin.sdk.core.sample;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import com.android.volley.Request;
@@ -22,6 +23,13 @@ import kin.sdk.core.sample.kin.sdk.core.sample.dialog.KinAlertDialog;
  */
 public class WalletActivity extends BaseActivity {
 
+    public static final int MIN_SCREEN_XHDPI_HEIGHT = 1280;
+    public static final int MIN_SCREEN__XXHDPI_HEIGHT = 1776;
+    public static final int XHDPI_DENSITY = 2;
+    public static final int XXHDPI_DENSITY = 3;
+
+
+
     public static final String TAG = WalletActivity.class.getSimpleName();
     public static final String URL_GET_KIN = "http://kin-faucet.rounds.video/send?public_address=";
     private View getKinBtn;
@@ -37,8 +45,30 @@ public class WalletActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.wallet_activity);
+        setContentView(getLayoutId());
         initWidgets();
+    }
+
+    public int getLayoutId() {
+        if (isLongScreen()) {
+            return R.layout.wallet_activity;
+        } else {
+            return R.layout.wallet_activity_scrolled;
+        }
+    }
+
+    private boolean isLongScreen() {
+        return Utils.getScreenHeight(this) > getMinScreenHeight();
+    }
+
+    private int getMinScreenHeight(){
+        float density = Utils.getScreenDensity(this);
+        if(density == XHDPI_DENSITY){
+            return MIN_SCREEN_XHDPI_HEIGHT;
+        }else if(density == XXHDPI_DENSITY){
+            return MIN_SCREEN__XXHDPI_HEIGHT;
+        }
+        return 0;
     }
 
     @Override
