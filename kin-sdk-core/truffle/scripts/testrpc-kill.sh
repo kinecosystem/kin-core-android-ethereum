@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-cd truffle
+cd kin-sdk-core/truffle
 
 if [ -f './testrpc.pid' ]; then
     echo "killing testrpc on port $(cat ./testrpc.pid)"

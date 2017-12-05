@@ -10,6 +10,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import kin.sdk.core.Balance;
+import kin.sdk.core.KinAccount;
 import kin.sdk.core.exception.DeleteAccountException;
 import kin.sdk.core.sample.kin.sdk.core.sample.dialog.KinAlertDialog;
 
@@ -117,46 +118,64 @@ public class WalletActivity extends BaseActivity {
     }
 
     private void getKin() {
-        final String publicAddress = getKinClient().getAccount().getPublicAddress();
-        final String url = URL_GET_KIN + publicAddress;
-        final RequestQueue queue = Volley.newRequestQueue(this);
-        final StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-            response -> {
-                updatePendingBalance();
-                getKinBtn.setClickable(true);
-            },
-            e -> {
-                KinAlertDialog.createErrorDialog(this, e.getMessage()).show();
-                getKinBtn.setClickable(true);
-            });
-        stringRequest.setShouldCache(false);
-        queue.add(stringRequest);
+        final KinAccount account = getKinClient().getAccount();
+        if (account != null) {
+            final String publicAddress = account.getPublicAddress();
+            final String url = URL_GET_KIN + publicAddress;
+            final RequestQueue queue = Volley.newRequestQueue(this);
+            final StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                response -> {
+                    updatePendingBalance();
+                    getKinBtn.setClickable(true);
+                },
+                e -> {
+                    KinAlertDialog.createErrorDialog(this, e.getMessage()).show();
+                    getKinBtn.setClickable(true);
+                });
+            stringRequest.setShouldCache(false);
+            queue.add(stringRequest);
+        }
     }
 
     private void updatePublicKey() {
-        publicKey.setText(getKinClient().getAccount().getPublicAddress());
+        String publicKeyStr = "";
+        KinAccount account = getKinClient().getAccount();
+        if (account != null) {
+            publicKeyStr = account.getPublicAddress();
+        }
+        publicKey.setText(publicKeyStr);
     }
 
     private void updateBalance() {
-        balanceProgress.setVisibility(View.VISIBLE);
-        balanceCallback = new DisplayCallback<Balance>(balanceProgress, balance) {
-            @Override
-            public void displayResult(Context context, View view, Balance result) {
-                ((TextView) view).setText(result.value(0));
-            }
-        };
-        getKinClient().getAccount().getBalance(balanceCallback);
+        KinAccount account = getKinClient().getAccount();
+        if (account != null) {
+            balanceProgress.setVisibility(View.VISIBLE);
+            balanceCallback = new DisplayCallback<Balance>(balanceProgress, balance) {
+                @Override
+                public void displayResult(Context context, View view, Balance result) {
+                    ((TextView) view).setText(result.value(0));
+                }
+            };
+            account.getBalance(balanceCallback);
+        } else {
+            balance.setText("");
+        }
     }
 
     private void updatePendingBalance() {
-        pendingBalanceProgress.setVisibility(View.VISIBLE);
-        pendingBalanceCallback = new DisplayCallback<Balance>(pendingBalanceProgress, pendingBalance) {
-            @Override
-            public void displayResult(Context context, View view, Balance result) {
-                ((TextView) view).setText(result.value(0));
-            }
-        };
-        getKinClient().getAccount().getPendingBalance(pendingBalanceCallback);
+        KinAccount account = getKinClient().getAccount();
+        if (account != null) {
+            pendingBalanceProgress.setVisibility(View.VISIBLE);
+            pendingBalanceCallback = new DisplayCallback<Balance>(pendingBalanceProgress, pendingBalance) {
+                @Override
+                public void displayResult(Context context, View view, Balance result) {
+                    ((TextView) view).setText(result.value(0));
+                }
+            };
+            account.getPendingBalance(pendingBalanceCallback);
+        } else {
+            pendingBalance.setText("");
+        }
     }
 
     @Override
