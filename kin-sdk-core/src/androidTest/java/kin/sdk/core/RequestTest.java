@@ -2,6 +2,7 @@ package kin.sdk.core;
 
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -11,7 +12,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLongArray;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -92,33 +92,10 @@ public class RequestTest {
     }
 
     @Test
-    public void run_cancelBeforeRun() throws InterruptedException {
-        CountDownLatch latch = new CountDownLatch(1);
-        AtomicInteger integer = new AtomicInteger(0);
-        Request<Object> dummyRequest = new Request<>(() -> {
-            integer.incrementAndGet();
-            return new Object();
-        });
-        dummyRequest.run(new ResultCallback<Object>() {
-            @Override
-            public void onResult(Object result) {
-                integer.incrementAndGet();
-            }
-
-            @Override
-            public void onError(Exception e) {
-                integer.incrementAndGet();
-            }
-        });
-        dummyRequest.cancel();
-        latch.await(TIMEOUT_DURATION_MILLIS, TimeUnit.MILLISECONDS);
-        assertEquals(0, integer.get());
-    }
-
-    @Test
     public void run_cancelAfterRun() throws InterruptedException {
         CountDownLatch latch = new CountDownLatch(1);
         AtomicBoolean threadInterrupted = new AtomicBoolean(false);
+        AtomicBoolean callbackExecuted = new AtomicBoolean(false);
         Request<Object> dummyRequest = new Request<>(() -> {
             try {
                 Thread.sleep(TASK_DURATION_MILLIS);
@@ -131,16 +108,19 @@ public class RequestTest {
         dummyRequest.run(new ResultCallback<Object>() {
             @Override
             public void onResult(Object result) {
+                callbackExecuted.set(true);
             }
 
             @Override
             public void onError(Exception e) {
+                callbackExecuted.set(true);
             }
         });
         Thread.sleep(TASK_DURATION_MILLIS / 2);
         dummyRequest.cancel();
         assertTrue(latch.await(TIMEOUT_DURATION_MILLIS, TimeUnit.MILLISECONDS));
-        assertEquals(true, threadInterrupted.get());
+        assertTrue(threadInterrupted.get());
+        assertFalse(callbackExecuted.get());
     }
 
     @Test(expected = IllegalArgumentException.class)
