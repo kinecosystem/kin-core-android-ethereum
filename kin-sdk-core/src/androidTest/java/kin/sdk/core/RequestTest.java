@@ -10,9 +10,9 @@ import android.support.test.runner.AndroidJUnit4;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLongArray;
-import java.util.function.Consumer;
-import junit.framework.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -21,6 +21,11 @@ public class RequestTest {
 
     private static final int TASK_DURATION_MILLIS = 50;
     private static final int TIMEOUT_DURATION_MILLIS = 100;
+
+    public interface Consumer<T> {
+
+        void accept(T t);
+    }
 
     private <T> void runRequest(Callable<T> task, Consumer<T> onResultCallback, Consumer<Exception> onErrorCallback)
         throws InterruptedException {
@@ -81,38 +86,44 @@ public class RequestTest {
         Exception expectedException = new Exception("some exception");
         runRequest(() -> {
                 throw expectedException;
-            }, null
+            },
+            null
             , e -> assertEquals(expectedException, e));
     }
 
     @Test
     public void run_cancelBeforeRun() throws InterruptedException {
         CountDownLatch latch = new CountDownLatch(1);
-        Request<Object> dummyRequest = new Request<>(Object::new);
+        AtomicInteger integer = new AtomicInteger(0);
+        Request<Object> dummyRequest = new Request<>(() -> {
+            integer.incrementAndGet();
+            return new Object();
+        });
         dummyRequest.run(new ResultCallback<Object>() {
             @Override
             public void onResult(Object result) {
-                Assert.fail();
+                integer.incrementAndGet();
             }
 
             @Override
             public void onError(Exception e) {
-                Assert.fail();
+                integer.incrementAndGet();
             }
         });
         dummyRequest.cancel();
         latch.await(TIMEOUT_DURATION_MILLIS, TimeUnit.MILLISECONDS);
+        assertEquals(0, integer.get());
     }
 
     @Test
     public void run_cancelAfterRun() throws InterruptedException {
         CountDownLatch latch = new CountDownLatch(1);
-        boolean[] threadInterrupted = new boolean[]{false};
+        AtomicBoolean threadInterrupted = new AtomicBoolean(false);
         Request<Object> dummyRequest = new Request<>(() -> {
             try {
                 Thread.sleep(TASK_DURATION_MILLIS);
             } catch (InterruptedException ie) {
-                threadInterrupted[0] = true;
+                threadInterrupted.set(true);
                 latch.countDown();
             }
             return new Object();
@@ -129,6 +140,57 @@ public class RequestTest {
         Thread.sleep(TASK_DURATION_MILLIS / 2);
         dummyRequest.cancel();
         assertTrue(latch.await(TIMEOUT_DURATION_MILLIS, TimeUnit.MILLISECONDS));
-        assertEquals(true, threadInterrupted[0]);
+        assertEquals(true, threadInterrupted.get());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void request_nullCallable() {
+        new Request<>(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void run_nullCallback() {
+        Request<String> request = new Request<>(() -> "");
+        request.run(null);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void run_twice() {
+        Request<String> request = new Request<>(() -> "");
+        request.run(new ResultCallback<String>() {
+            @Override
+            public void onResult(String result) {
+            }
+
+            @Override
+            public void onError(Exception e) {
+            }
+        });
+        request.run(new ResultCallback<String>() {
+            @Override
+            public void onResult(String result) {
+
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+        });
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void runAfterCancel() {
+        Request<String> request = new Request<>(() -> "");
+        request.cancel();
+        request.run(new ResultCallback<String>() {
+            @Override
+            public void onResult(String result) {
+            }
+
+            @Override
+            public void onError(Exception e) {
+            }
+        });
     }
 }

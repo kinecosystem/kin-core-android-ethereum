@@ -19,22 +19,31 @@ public class Request<T> {
     private ResultCallback<T> resultCallback;
 
     Request(Callable<T> callable) {
+        checkNotNull(callable, "callable");
         this.callable = callable;
         this.mainHandler = new Handler(Looper.getMainLooper());
     }
 
     synchronized public void run(ResultCallback<T> callback) {
-        if (callback == null) {
-            throw new IllegalArgumentException("callback cannot be null.");
-        }
+        checkBeforeRun(callback);
+        executed = true;
+        submitFuture(callable, callback);
+    }
+
+    private void checkBeforeRun(ResultCallback<T> callback) {
+        checkNotNull(callback, "callback");
         if (executed) {
             throw new IllegalStateException("Request already running.");
         }
         if (cancelled) {
             throw new IllegalStateException("Request already cancelled.");
         }
-        executed = true;
-        submitFuture(callable, callback);
+    }
+
+    private void checkNotNull(Object param, String name) {
+        if (param == null) {
+            throw new IllegalArgumentException(name + " cannot be null.");
+        }
     }
 
     private void submitFuture(final Callable<T> callable, ResultCallback<T> callback) {
@@ -58,7 +67,9 @@ public class Request<T> {
     synchronized public void cancel() {
         if (!cancelled) {
             cancelled = true;
-            future.cancel(true);
+            if (future != null) {
+                future.cancel(true);
+            }
             future = null;
             mainHandler.removeCallbacksAndMessages(null);
             mainHandler.post(() -> resultCallback = null);
