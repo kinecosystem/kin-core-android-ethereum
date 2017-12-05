@@ -1,7 +1,6 @@
 package kin.sdk.core;
 
 import java.math.BigDecimal;
-
 import kin.sdk.core.exception.InsufficientBalanceException;
 import kin.sdk.core.exception.OperationFailedException;
 import kin.sdk.core.exception.PassphraseException;
@@ -17,8 +16,8 @@ public interface KinAccount {
      * Exports the keystore json file
      *
      * @param passphrase the passphrase used to create the account
-     * @param newPassphrase the exported json will be encrypted using this new passphrase.
-     * The original keystore and passphrase will not change.
+     * @param newPassphrase the exported json will be encrypted using this new passphrase. The original keystore and
+     * passphrase will not change.
      * @return String the json string
      */
     String exportKeyStore(String passphrase, String newPassphrase) throws PassphraseException;
@@ -31,10 +30,8 @@ public interface KinAccount {
      *
      * @param publicAddress the account address to send the specified kin amount
      * @param amount the amount of kin to transfer
-     * @param callback to be called when method has completed
      */
-    void sendTransaction(String publicAddress, String passphrase, BigDecimal amount,
-        ResultCallback<TransactionId> callback);
+    Request<TransactionId> sendTransaction(String publicAddress, String passphrase, BigDecimal amount);
 
     /**
      * Create, sign and send a transaction of the given amount in kin to the specified public address
@@ -53,10 +50,8 @@ public interface KinAccount {
      * Get the current confirmed balance in kin
      * The method will run on a background thread and callback calls will be done
      * on the main thread
-     *
-     * @param callback to be called when method has completed
      */
-    void getBalance(ResultCallback<Balance> callback);
+    Request<Balance> getBalance();
 
     /**
      * Get the current confirmed balance in kin
@@ -72,10 +67,9 @@ public interface KinAccount {
      * The method will run on a background thread and callback calls will be done
      * on the main thread
      *
-     * @param callback to be called when method has completed
      * @return BigDecimal the balance in kin
      */
-    void getPendingBalance(ResultCallback<Balance> callback);
+    Request<Balance> getPendingBalance();
 
     /**
      * Get the pending balance in kin

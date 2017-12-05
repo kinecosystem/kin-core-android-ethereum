@@ -9,6 +9,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import java.math.BigDecimal;
+import kin.sdk.core.Request;
 import kin.sdk.core.TransactionId;
 import kin.sdk.core.sample.kin.sdk.core.sample.dialog.KinAlertDialog;
 
@@ -25,7 +26,7 @@ public class TransactionActivity extends BaseActivity {
 
     private View sendTransaction, progressBar;
     private EditText toAddressInput, amountInput;
-    private DisplayCallback<TransactionId> transactionCallback;
+    private Request<TransactionId> transactionRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,20 +121,21 @@ public class TransactionActivity extends BaseActivity {
     private void sendTransaction(String toAddress, BigDecimal amount) {
 
         progressBar.setVisibility(View.VISIBLE);
-        transactionCallback = new DisplayCallback<TransactionId>(progressBar) {
+        transactionRequest = getKinClient().getAccount()
+            .sendTransaction(toAddress, getPassphrase(), amount);
+        transactionRequest.run(new DisplayCallback<TransactionId>(progressBar) {
             @Override
             public void displayResult(Context context, View view, TransactionId transactionId) {
                 KinAlertDialog.createErrorDialog(context, "Transaction id " + transactionId.id()).show();
             }
-        };
-        getKinClient().getAccount().sendTransaction(toAddress, getPassphrase(), amount, transactionCallback);
+        });
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (transactionCallback != null) {
-            transactionCallback.onDetach();
+        if (transactionRequest != null) {
+            transactionRequest.cancel();
         }
         progressBar = null;
     }
