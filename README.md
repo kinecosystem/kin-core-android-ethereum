@@ -23,7 +23,7 @@ repositories {
 ...
 dependencies {
     ...
-    compile "kinfoundation.ethereum:geth:1.0.0@aar"
+    compile "kinfoundation.ethereum:geth:1.0.1@aar"
     compile "com.github.kinfoundation:kin-sdk-core-android:LATEST-COMMIT-ON-DEV-BRANCH"
 }
 ```
@@ -215,7 +215,8 @@ For a more detailed example on how to use the library please take a look at our 
 
 We use [ethereumjs/testrpc](https://github.com/trufflesuite/ganache-cli) and [Truffle framework](http://truffleframework.com/) unit tests.
 
-For the SDK tests target, pre-actions and post-actions scripts in the KinTestHost scheme will setup truffle and testrpc running for the duration of the test.
+When running the SDK test target, pre-action and post-action tasks in build.gradle (Module: kin-sdk-core) 
+will setup truffle and testrpc to run for the duration of the test.
 
 ### Requirements
 
@@ -227,11 +228,11 @@ $ brew install node
 Next, install specific npm packages using:
 
 ```bash
-$ cd truffle
+$ cd kin-sdk-core/truffle
 $ npm install
 ```
 
-Next, initialize and update git submodules.  This will include `truffle/kin-token`.
+Next, initialize and update git submodules.  This will include `kin-sdk-core/truffle/kin-token`.
 
 ```bash
 $ git submodule init && git submodule update

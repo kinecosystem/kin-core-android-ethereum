@@ -10,7 +10,10 @@ import android.view.View;
 import android.widget.EditText;
 import java.math.BigDecimal;
 import kin.sdk.core.Request;
+import kin.sdk.core.KinAccount;
 import kin.sdk.core.TransactionId;
+import kin.sdk.core.exception.AccountDeletedException;
+import kin.sdk.core.exception.OperationFailedException;
 import kin.sdk.core.sample.kin.sdk.core.sample.dialog.KinAlertDialog;
 
 /**
@@ -104,7 +107,11 @@ public class TransactionActivity extends BaseActivity {
 
         sendTransaction.setOnClickListener(view -> {
             BigDecimal amount = new BigDecimal(amountInput.getText().toString());
-            sendTransaction(toAddressInput.getText().toString(), amount);
+            try {
+                sendTransaction(toAddressInput.getText().toString(), amount);
+            } catch (OperationFailedException e) {
+                KinAlertDialog.createErrorDialog(TransactionActivity.this, e.getMessage()).show();
+            }
         });
     }
 
@@ -118,17 +125,22 @@ public class TransactionActivity extends BaseActivity {
         return R.string.transaction;
     }
 
-    private void sendTransaction(String toAddress, BigDecimal amount) {
-
+    private void sendTransaction(String toAddress, BigDecimal amount) throws OperationFailedException {
         progressBar.setVisibility(View.VISIBLE);
-        transactionRequest = getKinClient().getAccount()
-            .sendTransaction(toAddress, getPassphrase(), amount);
-        transactionRequest.run(new DisplayCallback<TransactionId>(progressBar) {
-            @Override
-            public void displayResult(Context context, View view, TransactionId transactionId) {
-                KinAlertDialog.createErrorDialog(context, "Transaction id " + transactionId.id()).show();
-            }
-        });
+        KinAccount account = getKinClient().getAccount();
+        if (account != null) {
+            transactionRequest = account
+                .sendTransaction(toAddress, getPassphrase(), amount);
+            transactionRequest.run(new DisplayCallback<TransactionId>(progressBar) {
+                @Override
+                public void displayResult(Context context, View view, TransactionId transactionId) {
+                    KinAlertDialog.createErrorDialog(context, "Transaction id " + transactionId.id()).show();
+                }
+            });
+        } else {
+            progressBar.setVisibility(View.GONE);
+            throw new AccountDeletedException();
+        }
     }
 
     @Override

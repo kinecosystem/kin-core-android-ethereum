@@ -1,6 +1,7 @@
 package kin.sdk.core;
 
 import java.math.BigDecimal;
+import kin.sdk.core.exception.AccountDeletedException;
 import kin.sdk.core.exception.DeleteAccountException;
 import kin.sdk.core.exception.InsufficientBalanceException;
 import kin.sdk.core.exception.OperationFailedException;
@@ -13,6 +14,7 @@ final class KinAccountImpl extends AbstractKinAccount {
     private KeyStore keyStore;
     private EthClientWrapper ethClient;
     private Account account;
+    private boolean isDeleted;
 
     /**
      * Creates a new {@link Account}.
@@ -26,6 +28,7 @@ final class KinAccountImpl extends AbstractKinAccount {
         this.keyStore = ethClientWrapper.getKeyStore();
         this.account = keyStore.newAccount(passphrase);
         this.ethClient = ethClientWrapper;
+        isDeleted = false;
     }
 
     /**
@@ -38,15 +41,21 @@ final class KinAccountImpl extends AbstractKinAccount {
         this.keyStore = ethClientWrapper.getKeyStore();
         this.account = account;
         this.ethClient = ethClientWrapper;
+        isDeleted = false;
     }
 
     @Override
     public String getPublicAddress() {
-        return account.getAddress().getHex();
+        if (!isDeleted) {
+            return account.getAddress().getHex();
+        }
+        return "";
     }
 
     @Override
-    public String exportKeyStore(String passphrase, String newPassphrase) throws PassphraseException {
+    public String exportKeyStore(String passphrase, String newPassphrase)
+        throws PassphraseException, OperationFailedException {
+        checkValidAccount();
         String jsonKeyStore;
         try {
             byte[] keyInBytes = keyStore.exportKey(account, passphrase, newPassphrase);
@@ -60,20 +69,34 @@ final class KinAccountImpl extends AbstractKinAccount {
     @Override
     public TransactionId sendTransactionSync(String publicAddress, String passphrase, BigDecimal amount)
         throws InsufficientBalanceException, OperationFailedException, PassphraseException {
+        checkValidAccount();
         return ethClient.sendTransaction(account, passphrase, publicAddress, amount);
     }
 
     @Override
     public Balance getBalanceSync() throws OperationFailedException {
+        checkValidAccount();
         return ethClient.getBalance(account);
     }
 
     @Override
     public Balance getPendingBalanceSync() throws OperationFailedException {
+        checkValidAccount();
         return ethClient.getPendingBalance(account);
     }
 
     void delete(String passphrase) throws DeleteAccountException {
         ethClient.deleteAccount(account, passphrase);
+        markAsDeleted();
+    }
+
+    void markAsDeleted() {
+        isDeleted = true;
+    }
+
+    private void checkValidAccount() throws AccountDeletedException {
+        if (isDeleted) {
+            throw new AccountDeletedException();
+        }
     }
 }

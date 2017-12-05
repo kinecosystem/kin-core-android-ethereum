@@ -100,6 +100,19 @@ public class KinClient {
         }
     }
 
+    /**
+     * Delete all accounts. This will wipe out recursively the directory that holds all keystore files.
+     * WARNING - if you don't export your account before deleting it, you will lose all your Kin.
+     */
+    public void wipeoutAccount() throws EthereumClientException {
+        ethClient.wipeoutAccount();
+        KinAccount account = getAccount();
+        if (account != null && account instanceof KinAccountImpl) {
+            ((KinAccountImpl) account).markAsDeleted();
+        }
+        kinAccount = null;
+    }
+
     public ServiceProvider getServiceProvider() {
         return ethClient.getServiceProvider();
     }

@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-cd truffle
+cd kin-sdk-core/truffle
 # prepare testrpc accounts parameter string e.g. --account="0x11c..,1000" --account="0xc5d...,1000" ....
 source ./scripts/testrpc-accounts.sh
 
 # create variables
-configFile="../kin-sdk-core/src/androidTest/assets/testConfig.json"
+configFile="../src/androidTest/assets/testConfig.json"
 accounts=""
 
 # clear config file

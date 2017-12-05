@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-cd truffle
+cd kin-sdk-core/truffle
 
 ./node_modules/.bin/truffle deploy --reset > ./truffle.log 2>&1
 
