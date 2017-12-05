@@ -51,14 +51,14 @@ public class Request<T> {
         future = executorService.submit(() -> {
             try {
                 final T result = callable.call();
-                executeOnMainThreadIfNotInterrupted(() -> resultCallback.onResult(result));
+                executeOnMainThreadIfNotCancelled(() -> resultCallback.onResult(result));
             } catch (final Exception e) {
-                executeOnMainThreadIfNotInterrupted(() -> resultCallback.onError(e));
+                executeOnMainThreadIfNotCancelled(() -> resultCallback.onError(e));
             }
         });
     }
 
-    private synchronized void executeOnMainThreadIfNotInterrupted(Runnable runnable) {
+    private synchronized void executeOnMainThreadIfNotCancelled(Runnable runnable) {
         if (!cancelled) {
             mainHandler.post(runnable);
         }

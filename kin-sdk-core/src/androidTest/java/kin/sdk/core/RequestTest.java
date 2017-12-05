@@ -7,6 +7,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.support.test.runner.AndroidJUnit4;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
@@ -137,33 +138,20 @@ public class RequestTest {
     @Test(expected = IllegalStateException.class)
     public void run_twice() {
         Request<String> request = new Request<>(() -> "");
-        request.run(new ResultCallback<String>() {
-            @Override
-            public void onResult(String result) {
-            }
-
-            @Override
-            public void onError(Exception e) {
-            }
-        });
-        request.run(new ResultCallback<String>() {
-            @Override
-            public void onResult(String result) {
-
-            }
-
-            @Override
-            public void onError(Exception e) {
-
-            }
-        });
+        request.run(getEmptyResultCallback());
+        request.run(getEmptyResultCallback());
     }
 
     @Test(expected = IllegalStateException.class)
     public void runAfterCancel() {
         Request<String> request = new Request<>(() -> "");
         request.cancel();
-        request.run(new ResultCallback<String>() {
+        request.run(getEmptyResultCallback());
+    }
+
+    @NonNull
+    private ResultCallback<String> getEmptyResultCallback() {
+        return new ResultCallback<String>() {
             @Override
             public void onResult(String result) {
             }
@@ -171,6 +159,6 @@ public class RequestTest {
             @Override
             public void onError(Exception e) {
             }
-        });
+        };
     }
 }

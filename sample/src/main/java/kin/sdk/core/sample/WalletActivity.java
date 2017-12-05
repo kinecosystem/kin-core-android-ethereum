@@ -24,14 +24,13 @@ public class WalletActivity extends BaseActivity {
 
     public static final String TAG = WalletActivity.class.getSimpleName();
     public static final String URL_GET_KIN = "http://kin-faucet.rounds.video/send?public_address=";
-    private View getKinBtn;
 
     public static Intent getIntent(Context context) {
         return new Intent(context, WalletActivity.class);
     }
 
     private TextView balance, pendingBalance, publicKey;
-
+    private View getKinBtn;
     private View balanceProgress, pendingBalanceProgress;
     private kin.sdk.core.Request<Balance> pendingBalanceRequest;
     private kin.sdk.core.Request<Balance> balanceRequest;
