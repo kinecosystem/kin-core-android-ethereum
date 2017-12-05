@@ -5,5 +5,4 @@
     <dimen name="button_font_size">14sp</dimen>
     <dimen name="title_font_size">14sp</dimen>
     <dimen name="button_margin">10dp</dimen>
-    <dimen name="wallet_min_layout_height">800dp</dimen>
 </resources>

@@ -37,22 +37,8 @@ public class WalletActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(getLayoutId());
+        setContentView(R.layout.wallet_activity);
         initWidgets();
-    }
-
-    public int getLayoutId() {
-        if (isShortScreen()) {
-            return R.layout.wallet_activity_scrolled;
-        } else {
-            return R.layout.wallet_activity;
-        }
-    }
-
-    private boolean isShortScreen() {
-        final float minLayoutSize = getResources().getDimension(R.dimen.wallet_min_layout_height);
-        final int screenHeight = Utils.getScreenHeight(this);
-        return screenHeight < minLayoutSize;
     }
 
     @Override
