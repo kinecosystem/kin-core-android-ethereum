@@ -19,15 +19,11 @@ public class KinClientTest extends BaseTest {
 
     private static final String PASSPHRASE = "testPassphrase";
 
-    @Test
-    public void testWrongServiceProvider() {
+    @Test(expected = EthereumClientException.class)
+    public void testWrongServiceProvider() throws Exception {
         Context context = InstrumentationRegistry.getContext();
         ServiceProvider wrongProvider = new ServiceProvider("wrongProvider", 12);
-        try {
-            kinClient = new KinClient(context, wrongProvider);
-        } catch (EthereumClientException e) {
-            assertEquals("provider - could not establish connection to the provider", e.getMessage());
-        }
+        kinClient = new KinClient(context, wrongProvider);
     }
 
     @Test
@@ -42,50 +38,36 @@ public class KinClientTest extends BaseTest {
     }
 
     @Test
-    public void testCreateSecondAccount() {
-        try {
-            // Create account on the first time - should be ok
-            KinAccount firstAccount = createAccount();
+    public void testCreateSecondAccount() throws Exception {
+        // Create account on the first time - should be ok
+        KinAccount firstAccount = createAccount();
 
-            // Try to create second account
-            // should return the same account (firstAccount).
-            KinAccount secondAccount = createAccount();
+        // Try to create second account
+        // should return the same account (firstAccount).
+        KinAccount secondAccount = createAccount();
 
-            assertEquals(firstAccount, secondAccount);
+        assertEquals(firstAccount, secondAccount);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Test
-    public void testDeleteAccount() {
-        try {
-            createAccount();
-            assertTrue(kinClient.hasAccount());
+    public void testDeleteAccount() throws Exception {
+        createAccount();
+        assertTrue(kinClient.hasAccount());
 
-            kinClient.deleteAccount(PASSPHRASE);
-            assertFalse(kinClient.hasAccount());
-            assertNull(kinClient.getAccount());
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        kinClient.deleteAccount(PASSPHRASE);
+        assertFalse(kinClient.hasAccount());
+        assertNull(kinClient.getAccount());
     }
 
     @Test
-    public void testWipeAccount() {
-        try {
-            createAccount();
-            assertTrue(kinClient.hasAccount());
+    public void testWipeAccount() throws Exception {
+        createAccount();
+        assertTrue(kinClient.hasAccount());
 
-            kinClient.wipeoutAccount();
-            assertFalse(kinClient.hasAccount());
-            assertNull(kinClient.getAccount());
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        kinClient.wipeoutAccount();
+        assertFalse(kinClient.hasAccount());
+        assertNull(kinClient.getAccount());
     }
 
     @Test
