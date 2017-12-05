@@ -106,6 +106,10 @@ public class KinClient {
      */
     public void wipeoutAccount() throws EthereumClientException {
         ethClient.wipeoutAccount();
+        KinAccount account = getAccount();
+        if (account != null && account instanceof KinAccountImpl) {
+            ((KinAccountImpl) account).markAsDeleted();
+        }
         kinAccount = null;
     }
 
