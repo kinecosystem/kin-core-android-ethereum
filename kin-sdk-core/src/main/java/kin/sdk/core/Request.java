@@ -8,6 +8,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+/**
+ * Represents {@link KinAccount} method invocation, each request will run sequentially on background thread,
+ * and will notify {@link ResultCallback} witch success or error on main thread.
+ *
+ * @param <T> request result type
+ */
 public class Request<T> {
 
     private static final ExecutorService executorService = Executors.newSingleThreadExecutor();
@@ -24,6 +30,9 @@ public class Request<T> {
         this.mainHandler = new Handler(Looper.getMainLooper());
     }
 
+    /**
+     * Run request asynchronously, notify {@code callback} with successful result or error
+     */
     synchronized public void run(ResultCallback<T> callback) {
         checkBeforeRun(callback);
         executed = true;
@@ -64,6 +73,10 @@ public class Request<T> {
         }
     }
 
+    /**
+     * Cancel {@code Request} and detach its callback,
+     * an attempt will be made to cancel ongoing request, if request has not run yet it will never run.
+     */
     synchronized public void cancel() {
         if (!cancelled) {
             cancelled = true;
