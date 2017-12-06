@@ -10,7 +10,7 @@ import java.util.concurrent.Future;
 
 public class Request<T> {
 
-    private static final ExecutorService executorService = Executors.newCachedThreadPool();
+    private static final ExecutorService executorService = Executors.newSingleThreadExecutor();
     private final Handler mainHandler;
     private final Callable<T> callable;
     private boolean cancelled;
