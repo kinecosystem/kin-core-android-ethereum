@@ -10,7 +10,9 @@ import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import kin.sdk.core.exception.EthereumClientException;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
 
@@ -19,73 +21,55 @@ public class KinClientTest extends BaseTest {
 
     private static final String PASSPHRASE = "testPassphrase";
 
+    @Rule
+    public ExpectedException expectedEx = ExpectedException.none();
+
     @Test
-    public void testWrongServiceProvider() {
+    public void testWrongServiceProvider() throws Exception {
+        expectedEx.expect(EthereumClientException.class);
+        expectedEx.expectMessage("provider - could not establish connection to the provider");
         Context context = InstrumentationRegistry.getContext();
         ServiceProvider wrongProvider = new ServiceProvider("wrongProvider", 12);
-        try {
-            kinClient = new KinClient(context, wrongProvider);
-        } catch (EthereumClientException e) {
-            assertEquals("provider - could not establish connection to the provider", e.getMessage());
-        }
+        kinClient = new KinClient(context, wrongProvider);
     }
 
     @Test
-    public void testCreateAccount() {
-        try {
-            // Create first account.
-            KinAccount kinAccount = createAccount();
-            assertNotNull(kinAccount);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void testCreateAccount() throws Exception {
+        // Create first account.
+        KinAccount kinAccount = createAccount();
+        assertNotNull(kinAccount);
     }
 
     @Test
-    public void testCreateSecondAccount() {
-        try {
-            // Create account on the first time - should be ok
-            KinAccount firstAccount = createAccount();
+    public void testCreateSecondAccount() throws Exception {
+        // Create account on the first time - should be ok
+        KinAccount firstAccount = createAccount();
 
-            // Try to create second account
-            // should return the same account (firstAccount).
-            KinAccount secondAccount = createAccount();
+        // Try to create second account
+        // should return the same account (firstAccount).
+        KinAccount secondAccount = createAccount();
 
-            assertEquals(firstAccount, secondAccount);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        assertEquals(firstAccount, secondAccount);
     }
 
     @Test
-    public void testDeleteAccount() {
-        try {
-            createAccount();
-            assertTrue(kinClient.hasAccount());
+    public void testDeleteAccount() throws Exception {
+        createAccount();
+        assertTrue(kinClient.hasAccount());
 
-            kinClient.deleteAccount(PASSPHRASE);
-            assertFalse(kinClient.hasAccount());
-            assertNull(kinClient.getAccount());
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        kinClient.deleteAccount(PASSPHRASE);
+        assertFalse(kinClient.hasAccount());
+        assertNull(kinClient.getAccount());
     }
 
     @Test
-    public void testWipeAccount() {
-        try {
-            createAccount();
-            assertTrue(kinClient.hasAccount());
+    public void testWipeAccount() throws Exception {
+        createAccount();
+        assertTrue(kinClient.hasAccount());
 
-            kinClient.wipeoutAccount();
-            assertFalse(kinClient.hasAccount());
-            assertNull(kinClient.getAccount());
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        kinClient.wipeoutAccount();
+        assertFalse(kinClient.hasAccount());
+        assertNull(kinClient.getAccount());
     }
 
     @Test
