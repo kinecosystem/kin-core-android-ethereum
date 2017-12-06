@@ -11,25 +11,24 @@ import org.ethereum.geth.KeyStore;
 
 final class KinAccountImpl extends AbstractKinAccount {
 
-    private KeyStore keyStore;
     private EthClientWrapper ethClient;
     private Account account;
     private boolean isDeleted;
 
-    /**
-     * Creates a new {@link Account}.
-     *
-     * @param ethClientWrapper that will be use to call to Kin smart-contract.
-     * @param passphrase that will be used to store the account private key securely.
-     * @throws Exception if go-ethereum was unable to generate the account (unable to generate new key or store the
-     * key).
-     */
-    KinAccountImpl(EthClientWrapper ethClientWrapper, String passphrase) throws Exception {
-        this.keyStore = ethClientWrapper.getKeyStore();
-        this.account = keyStore.newAccount(passphrase);
-        this.ethClient = ethClientWrapper;
-        isDeleted = false;
-    }
+//    /**
+//     * Creates a new {@link Account}.
+//     *
+//     * @param ethClientWrapper that will be use to call to Kin smart-contract.
+//     * @param passphrase that will be used to store the account private key securely.
+//     * @throws Exception if go-ethereum was unable to generate the account (unable to generate new key or store the
+//     * key).
+//     */
+//    KinAccountImpl(EthClientWrapper ethClientWrapper, String passphrase) throws Exception {
+//        this.keyStore = ethClientWrapper.getKeyStore();
+//        this.account = keyStore.newAccount(passphrase);
+//        this.ethClient = ethClientWrapper;
+//        isDeleted = false;
+//    }
 
     /**
      * Creates a {@link KinAccount} from existing {@link Account}
@@ -38,7 +37,6 @@ final class KinAccountImpl extends AbstractKinAccount {
      * @param account the existing Account.
      */
     KinAccountImpl(EthClientWrapper ethClientWrapper, Account account) {
-        this.keyStore = ethClientWrapper.getKeyStore();
         this.account = account;
         this.ethClient = ethClientWrapper;
         isDeleted = false;
@@ -55,6 +53,7 @@ final class KinAccountImpl extends AbstractKinAccount {
     @Override
     public String exportKeyStore(String passphrase, String newPassphrase)
         throws PassphraseException, OperationFailedException {
+        KeyStore keyStore = ethClient.getKeyStore();
         checkValidAccount();
         String jsonKeyStore;
         try {

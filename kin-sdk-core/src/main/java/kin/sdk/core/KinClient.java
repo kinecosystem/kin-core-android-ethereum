@@ -12,7 +12,8 @@ import kin.sdk.core.exception.EthereumClientException;
 
 public class KinClient {
 
-    private KinAccount kinAccount;
+    //private KinAccount kinAccount;
+    private KinAccounts kinAccounts;
     private EthClientWrapper ethClient;
 
     /**
@@ -26,6 +27,7 @@ public class KinClient {
      */
     public KinClient(Context context, ServiceProvider provider) throws EthereumClientException {
         this.ethClient = new EthClientWrapper(context, provider);
+        kinAccounts = new KinAccounts(ethClient);
     }
 
     /**
@@ -40,14 +42,11 @@ public class KinClient {
      * store the key).
      */
     public KinAccount createAccount(String passphrase) throws CreateAccountException {
-        if (!hasAccount()) {
-            try {
-                kinAccount = new KinAccountImpl(ethClient, passphrase);
-            } catch (Exception e) {
-                throw new CreateAccountException(e);
-            }
-        }
-        return getAccount();
+        return addAccount(passphrase);
+    }
+
+    public KinAccount addAccount(String passphrase) throws CreateAccountException {
+        return kinAccounts.addAccount(passphrase);
     }
 
     /**
@@ -56,34 +55,15 @@ public class KinClient {
      *
      * @return the account if it has been created or null if there is no such account
      */
-    public KinAccount getAccount() {
-        if (kinAccount != null) {
-            return kinAccount;
-        } else {
-            Accounts accounts = ethClient.getKeyStore().getAccounts();
-            Account account;
-            try {
-                account = accounts.get(0);
-            } catch (Exception e) {
-                //There is no account
-                return null;
-            }
-            // The Account is not null
-            kinAccount = new KinAccountImpl(ethClient, account);
-        }
-        return kinAccount;
+    public KinAccount getAccount(int index) {
+        return kinAccounts.getAccount(index);
     }
 
     /**
      * @return true if there is an existing account
      */
     public boolean hasAccount() {
-        if (kinAccount != null) {
-            return true;
-        } else {
-            Accounts accounts = ethClient.getKeyStore().getAccounts();
-            return accounts != null && accounts.size() > 0;
-        }
+        return kinAccounts.hasAccounts();
     }
 
     /**
@@ -92,12 +72,8 @@ public class KinClient {
      *
      * @param passphrase the passphrase used when the account was created
      */
-    public void deleteAccount(String passphrase) throws DeleteAccountException {
-        KinAccountImpl account = (KinAccountImpl) getAccount();
-        if (account != null) {
-            account.delete(passphrase);
-            kinAccount = null;
-        }
+    public void deleteAccount(int index, String passphrase) {
+        kinAccounts.deleteAccount(index, passphrase);
     }
 
     /**
@@ -106,11 +82,7 @@ public class KinClient {
      */
     public void wipeoutAccount() throws EthereumClientException {
         ethClient.wipeoutAccount();
-        KinAccount account = getAccount();
-        if (account != null && account instanceof KinAccountImpl) {
-            ((KinAccountImpl) account).markAsDeleted();
-        }
-        kinAccount = null;
+        kinAccounts.wipeoutAccount();
     }
 
     public ServiceProvider getServiceProvider() {
