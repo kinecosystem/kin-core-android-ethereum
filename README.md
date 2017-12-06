@@ -23,7 +23,7 @@ repositories {
 ...
 dependencies {
     ...
-    compile "kinfoundation.ethereum:geth:1.0.1@aar"
+    compile "kinfoundation.ethereum:geth:1.0.2@aar"
     compile "com.github.kinfoundation:kin-sdk-core-android:LATEST-COMMIT-ON-DEV-BRANCH"
 }
 ```
