@@ -10,7 +10,9 @@ import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import kin.sdk.core.exception.EthereumClientException;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
 
@@ -19,22 +21,23 @@ public class KinClientTest extends BaseTest {
 
     private static final String PASSPHRASE = "testPassphrase";
 
-    @Test(expected = EthereumClientException.class)
+    @Rule
+    public ExpectedException expectedEx = ExpectedException.none();
+
+    @Test
     public void testWrongServiceProvider() throws Exception {
+        expectedEx.expect(EthereumClientException.class);
+        expectedEx.expectMessage("provider - could not establish connection to the provider");
         Context context = InstrumentationRegistry.getContext();
         ServiceProvider wrongProvider = new ServiceProvider("wrongProvider", 12);
         kinClient = new KinClient(context, wrongProvider);
     }
 
     @Test
-    public void testCreateAccount() {
-        try {
-            // Create first account.
-            KinAccount kinAccount = createAccount();
-            assertNotNull(kinAccount);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void testCreateAccount() throws Exception {
+        // Create first account.
+        KinAccount kinAccount = createAccount();
+        assertNotNull(kinAccount);
     }
 
     @Test
@@ -47,7 +50,6 @@ public class KinClientTest extends BaseTest {
         KinAccount secondAccount = createAccount();
 
         assertEquals(firstAccount, secondAccount);
-
     }
 
     @Test

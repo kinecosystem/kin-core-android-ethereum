@@ -17,7 +17,9 @@ import kin.sdk.core.exception.OperationFailedException;
 import kin.sdk.core.exception.PassphraseException;
 import org.hamcrest.CoreMatchers;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
@@ -37,6 +39,9 @@ public class KinAccountTest extends BaseTest {
      * All other accounts (1-9) will have only 100 ETH.
      */
     private List<KinAccount> importedAccounts = new ArrayList<>(10);
+
+    @Rule
+    public ExpectedException expectedEx = ExpectedException.none();
 
     @Override
     @Before
@@ -113,8 +118,10 @@ public class KinAccountTest extends BaseTest {
         kinAccount.sendTransactionSync(TO_ADDRESS, PASSPHRASE, new BigDecimal(1));
     }
 
-    @Test(expected = OperationFailedException.class)
+    @Test
     public void sendTransactionSync_negativeAmount() throws Exception {
+        expectedEx.expect(OperationFailedException.class);
+        expectedEx.expectMessage("Amount can't be negative");
         kinAccount.sendTransactionSync(TO_ADDRESS, PASSPHRASE, new BigDecimal(-1));
     }
 
@@ -149,7 +156,7 @@ public class KinAccountTest extends BaseTest {
         kinAccount.sendTransactionSync(TO_ADDRESS, "wongPassphrase", new BigDecimal(0));
     }
 
-    @Test(expected = PassphraseException.class)
+    @Test
     public void sendTransactionSync_SecondTimeEmptyPassphraseFails() throws Exception {
         KinAccount senderAccount = importedAccounts.get(0);
         Balance senderBalance = senderAccount.getBalanceSync();
@@ -163,10 +170,11 @@ public class KinAccountTest extends BaseTest {
         Balance afterBalance = senderAccount.getBalanceSync();
         assertTrue((senderBalance.value().subtract(amountToSend).compareTo(afterBalance.value())) == 0);
 
+        expectedEx.expect(PassphraseException.class);
         senderAccount.sendTransactionSync(kinAccount.getPublicAddress(), "", new BigDecimal(1));
     }
 
-    @Test(expected = PassphraseException.class)
+    @Test
     public void sendTransactionSync_SecondTimeNullPassphraseFails() throws Exception {
         KinAccount senderAccount = importedAccounts.get(0);
         Balance senderBalance = senderAccount.getBalanceSync();
@@ -176,10 +184,10 @@ public class KinAccountTest extends BaseTest {
 
         Balance kinAccountBalance = kinAccount.getBalanceSync();
         assertTrue(kinAccountBalance.value(0).equals("10"));
-
         Balance afterBalance = senderAccount.getBalanceSync();
         assertTrue((senderBalance.value().subtract(amountToSend).compareTo(afterBalance.value())) == 0);
 
+        expectedEx.expect(PassphraseException.class);
         senderAccount.sendTransactionSync(kinAccount.getPublicAddress(), null, new BigDecimal(1));
     }
 
