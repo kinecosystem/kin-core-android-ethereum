@@ -95,20 +95,20 @@ public class KinAccountTest extends BaseTest {
 
     @Test(expected = AccountDeletedException.class)
     public void exportKeyStore_deletedAccount() throws Exception {
-        kinClient.deleteAccount(PASSPHRASE);
+        kinClient.deleteAccount(0, PASSPHRASE);
         kinAccount.exportKeyStore(PASSPHRASE, "newPassphrase");
     }
 
     @Test(expected = AccountDeletedException.class)
     public void transaction_deletedAccount() throws Exception {
-        kinClient.deleteAccount(PASSPHRASE);
+        kinClient.deleteAccount(0, PASSPHRASE);
         kinAccount.sendTransactionSync(TO_ADDRESS, PASSPHRASE, new BigDecimal(1));
     }
 
     @Test
     public void getPublicKey_deletedAccount()
         throws PassphraseException, OperationFailedException, DeleteAccountException, InsufficientBalanceException {
-        kinClient.deleteAccount(PASSPHRASE);
+        kinClient.deleteAccount(0, PASSPHRASE);
         String publicAddress = kinAccount.getPublicAddress();
         assertEquals("", publicAddress);
     }

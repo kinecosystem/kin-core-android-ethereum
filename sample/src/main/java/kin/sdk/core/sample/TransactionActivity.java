@@ -132,7 +132,7 @@ public class TransactionActivity extends BaseActivity {
                 KinAlertDialog.createErrorDialog(context, "Transaction id " + transactionId.id()).show();
             }
         };
-        KinAccount account = getKinClient().getAccount();
+        KinAccount account = getKinClient().getAccount(0);
         if(account != null) {
             account.sendTransaction(toAddress, getPassphrase(), amount, transactionCallback);
         }else{

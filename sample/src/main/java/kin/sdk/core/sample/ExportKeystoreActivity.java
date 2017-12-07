@@ -118,7 +118,7 @@ public class ExportKeystoreActivity extends BaseActivity {
 
     private String generatePrivateKeyStoreJsonFormat()
         throws PassphraseException, JSONException, OperationFailedException {
-        KinAccount account = getKinClient().getAccount();
+        KinAccount account = getKinClient().getAccount(0);
         if (account == null) {
             throw new AccountDeletedException();
         }

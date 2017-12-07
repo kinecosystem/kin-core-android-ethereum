@@ -1,18 +1,15 @@
 package kin.sdk.core;
 
 import android.content.Context;
-
-import org.ethereum.geth.Account;
-import org.ethereum.geth.Accounts;
-
-import kin.sdk.core.exception.OperationFailedException;
-import kin.sdk.core.exception.DeleteAccountException;
 import kin.sdk.core.exception.CreateAccountException;
+import kin.sdk.core.exception.DeleteAccountException;
 import kin.sdk.core.exception.EthereumClientException;
+import kin.sdk.core.exception.OperationFailedException;
+import org.ethereum.geth.Account;
 
 public class KinClient {
 
-    private KinAccount kinAccount;
+    private KinAccounts kinAccounts;
     private EthClientWrapper ethClient;
 
     /**
@@ -25,14 +22,15 @@ public class KinClient {
      * smart-contract problems.
      */
     public KinClient(Context context, ServiceProvider provider) throws EthereumClientException {
-        this.ethClient = new EthClientWrapper(context, provider);
+        ethClient = new EthClientWrapper(context, provider);
+        kinAccounts = new KinAccounts(ethClient);
     }
 
     /**
      * Create the account if it hasn't yet been created.
-     * Multiple calls to this method will not create an additional account.
+     * Multiple calls to this method will create additional accounts.
      * Once created, the account information will be stored securely on the device and can
-     * be accessed again via the {@link #getAccount()} method.
+     * be accessed again via the {@link #getAccount(int index)} method.
      *
      * @param passphrase a passphrase provided by the user that will be used to store the account private key securely.
      * @return KinAccount the account created
@@ -40,64 +38,52 @@ public class KinClient {
      * store the key).
      */
     public KinAccount createAccount(String passphrase) throws CreateAccountException {
-        if (!hasAccount()) {
-            try {
-                kinAccount = new KinAccountImpl(ethClient, passphrase);
-            } catch (Exception e) {
-                throw new CreateAccountException(e);
-            }
-        }
-        return getAccount();
+        return addAccount(passphrase);
+    }
+
+
+    /**
+     * Add Account additional account created.
+     * Multiple calls to this method will create additional accounts.
+     * Once created, the account information will be stored securely on the device and can
+     * be accessed again via the {@link #getAccount(int index)} method.
+     *
+     * @param passphrase a passphrase provided by the user that will be used to store the account private key securely.
+     * @return KinAccount the account created
+     * @throws CreateAccountException if go-ethereum was unable to generate the account (unable to generate new key or
+     * store the key).
+     */
+    public KinAccount addAccount(String passphrase) throws CreateAccountException {
+        return kinAccounts.addAccount(passphrase);
     }
 
     /**
-     * The method will return an account that has previously been create and stored on the device
-     * via the {@link #createAccount(String)} method.
+     * The method will return an index account that has previously been create and stored on the device
+     *
+     * @param index the index of the account
      *
      * @return the account if it has been created or null if there is no such account
      */
-    public KinAccount getAccount() {
-        if (kinAccount != null) {
-            return kinAccount;
-        } else {
-            Accounts accounts = ethClient.getKeyStore().getAccounts();
-            Account account;
-            try {
-                account = accounts.get(0);
-            } catch (Exception e) {
-                //There is no account
-                return null;
-            }
-            // The Account is not null
-            kinAccount = new KinAccountImpl(ethClient, account);
-        }
-        return kinAccount;
+    public KinAccount getAccount(int index) {
+        return kinAccounts.getAccount(index);
     }
 
     /**
      * @return true if there is an existing account
      */
     public boolean hasAccount() {
-        if (kinAccount != null) {
-            return true;
-        } else {
-            Accounts accounts = ethClient.getKeyStore().getAccounts();
-            return accounts != null && accounts.size() > 0;
-        }
+        return kinAccounts.hasAccount();
     }
 
     /**
-     * Deletes the account (if it exists)
+     * Deletes an account (if it exists)
      * WARNING - if you don't export the account before deleting it, you will lose all your Kin.
      *
+     * @param index the index of the account
      * @param passphrase the passphrase used when the account was created
      */
-    public void deleteAccount(String passphrase) throws DeleteAccountException {
-        KinAccountImpl account = (KinAccountImpl) getAccount();
-        if (account != null) {
-            account.delete(passphrase);
-            kinAccount = null;
-        }
+    public void deleteAccount(int index, String passphrase) throws DeleteAccountException {
+        kinAccounts.deleteAccount(index, passphrase);
     }
 
     /**
@@ -105,12 +91,7 @@ public class KinClient {
      * WARNING - if you don't export your account before deleting it, you will lose all your Kin.
      */
     public void wipeoutAccount() throws EthereumClientException {
-        ethClient.wipeoutAccount();
-        KinAccount account = getAccount();
-        if (account != null && account instanceof KinAccountImpl) {
-            ((KinAccountImpl) account).markAsDeleted();
-        }
-        kinAccount = null;
+        kinAccounts.wipeoutAccount();
     }
 
     public ServiceProvider getServiceProvider() {

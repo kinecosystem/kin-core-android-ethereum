@@ -57,9 +57,9 @@ public class KinClientTest extends BaseTest {
         createAccount();
         assertTrue(kinClient.hasAccount());
 
-        kinClient.deleteAccount(PASSPHRASE);
+        kinClient.deleteAccount(0, PASSPHRASE);
         assertFalse(kinClient.hasAccount());
-        assertNull(kinClient.getAccount());
+        assertNull(kinClient.getAccount(0));
     }
 
     @Test
@@ -69,13 +69,13 @@ public class KinClientTest extends BaseTest {
 
         kinClient.wipeoutAccount();
         assertFalse(kinClient.hasAccount());
-        assertNull(kinClient.getAccount());
+        assertNull(kinClient.getAccount(0));
     }
 
     @Test
     public void testGetAccount_isNull() throws Exception {
         // No account were created, thus the account is null
-        KinAccount kinAccount = kinClient.getAccount();
+        KinAccount kinAccount = kinClient.getAccount(0);
         assertNull(kinAccount);
     }
 
@@ -83,7 +83,7 @@ public class KinClientTest extends BaseTest {
     public void testGetAccount_notNull() throws Exception {
         // Create first account, should return same account.
         KinAccount kinAccount = createAccount();
-        KinAccount sameAccount = kinClient.getAccount();
+        KinAccount sameAccount = kinClient.getAccount(0);
 
         assertNotNull(sameAccount);
         assertEquals(kinAccount, sameAccount);

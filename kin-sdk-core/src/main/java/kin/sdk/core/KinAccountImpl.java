@@ -11,7 +11,6 @@ import org.ethereum.geth.KeyStore;
 
 final class KinAccountImpl extends AbstractKinAccount {
 
-    private KeyStore keyStore;
     private EthClientWrapper ethClient;
     private Account account;
     private boolean isDeleted;
@@ -25,8 +24,7 @@ final class KinAccountImpl extends AbstractKinAccount {
      * key).
      */
     KinAccountImpl(EthClientWrapper ethClientWrapper, String passphrase) throws Exception {
-        this.keyStore = ethClientWrapper.getKeyStore();
-        this.account = keyStore.newAccount(passphrase);
+        this.account = ethClientWrapper.getKeyStore().newAccount(passphrase);
         this.ethClient = ethClientWrapper;
         isDeleted = false;
     }
@@ -38,7 +36,6 @@ final class KinAccountImpl extends AbstractKinAccount {
      * @param account the existing Account.
      */
     KinAccountImpl(EthClientWrapper ethClientWrapper, Account account) {
-        this.keyStore = ethClientWrapper.getKeyStore();
         this.account = account;
         this.ethClient = ethClientWrapper;
         isDeleted = false;
@@ -58,7 +55,7 @@ final class KinAccountImpl extends AbstractKinAccount {
         checkValidAccount();
         String jsonKeyStore;
         try {
-            byte[] keyInBytes = keyStore.exportKey(account, passphrase, newPassphrase);
+            byte[] keyInBytes = ethClient.getKeyStore().exportKey(account, passphrase, newPassphrase);
             jsonKeyStore = new String(keyInBytes, "UTF-8");
         } catch (Exception e) {
             throw new PassphraseException();
