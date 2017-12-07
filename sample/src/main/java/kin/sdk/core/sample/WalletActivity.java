@@ -177,10 +177,10 @@ public class WalletActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         if (pendingBalanceRequest != null) {
-            pendingBalanceRequest.cancel();
+            pendingBalanceRequest.cancel(true);
         }
         if (balanceRequest != null) {
-            balanceRequest.cancel();
+            balanceRequest.cancel(true);
         }
         pendingBalance = null;
         balance = null;

@@ -9,8 +9,8 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import java.math.BigDecimal;
-import kin.sdk.core.Request;
 import kin.sdk.core.KinAccount;
+import kin.sdk.core.Request;
 import kin.sdk.core.TransactionId;
 import kin.sdk.core.exception.AccountDeletedException;
 import kin.sdk.core.exception.OperationFailedException;
@@ -147,7 +147,7 @@ public class TransactionActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         if (transactionRequest != null) {
-            transactionRequest.cancel();
+            transactionRequest.cancel(false);
         }
         progressBar = null;
     }

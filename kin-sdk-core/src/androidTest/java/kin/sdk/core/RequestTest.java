@@ -20,7 +20,7 @@ import org.junit.runner.RunWith;
 @RunWith(AndroidJUnit4.class)
 public class RequestTest {
 
-    private static final int TASK_DURATION_MILLIS = 50;
+    private static final int TASK_DURATION_MILLIS = 10;
     private static final int TIMEOUT_DURATION_MILLIS = 100;
 
     public interface Consumer<T> {
@@ -31,12 +31,12 @@ public class RequestTest {
     private <T> void runRequest(Callable<T> task, Consumer<T> onResultCallback, Consumer<Exception> onErrorCallback)
         throws InterruptedException {
         CountDownLatch latch = new CountDownLatch(1);
-        Request<T> dummyRequest = new Request<>(() -> {
+        Request<T> mockRequest = new Request<>(() -> {
             T result = task.call();
             Thread.sleep(TASK_DURATION_MILLIS);
             return result;
         });
-        dummyRequest.run(new ResultCallback<T>() {
+        mockRequest.run(new ResultCallback<T>() {
             @Override
             public void onResult(T result) {
                 if (onResultCallback != null) {
@@ -93,20 +93,31 @@ public class RequestTest {
     }
 
     @Test
-    public void run_cancelAfterRun() throws InterruptedException {
+    public void run_cancelInterrupt() throws InterruptedException {
+        threadInterruptTest(true);
+    }
+
+    @Test
+    public void run_cancelDoNotInterrupt() throws InterruptedException {
+        threadInterruptTest(false);
+    }
+
+    private void threadInterruptTest(boolean expectThreadInterruptted) throws InterruptedException {
         CountDownLatch latch = new CountDownLatch(1);
+        CountDownLatch runLatch = new CountDownLatch(1);
         AtomicBoolean threadInterrupted = new AtomicBoolean(false);
         AtomicBoolean callbackExecuted = new AtomicBoolean(false);
-        Request<Object> dummyRequest = new Request<>(() -> {
+        Request<Object> mockRequest = new Request<>(() -> {
             try {
+                runLatch.countDown();
                 Thread.sleep(TASK_DURATION_MILLIS);
             } catch (InterruptedException ie) {
                 threadInterrupted.set(true);
-                latch.countDown();
             }
+            latch.countDown();
             return new Object();
         });
-        dummyRequest.run(new ResultCallback<Object>() {
+        mockRequest.run(new ResultCallback<Object>() {
             @Override
             public void onResult(Object result) {
                 callbackExecuted.set(true);
@@ -117,10 +128,10 @@ public class RequestTest {
                 callbackExecuted.set(true);
             }
         });
-        Thread.sleep(TASK_DURATION_MILLIS / 2);
-        dummyRequest.cancel();
+        assertTrue(runLatch.await(TIMEOUT_DURATION_MILLIS, TimeUnit.MILLISECONDS));
+        mockRequest.cancel(expectThreadInterruptted);
         assertTrue(latch.await(TIMEOUT_DURATION_MILLIS, TimeUnit.MILLISECONDS));
-        assertTrue(threadInterrupted.get());
+        assertEquals(expectThreadInterruptted, threadInterrupted.get());
         assertFalse(callbackExecuted.get());
     }
 
@@ -145,7 +156,7 @@ public class RequestTest {
     @Test(expected = IllegalStateException.class)
     public void runAfterCancel() {
         Request<String> request = new Request<>(() -> "");
-        request.cancel();
+        request.cancel(true);
         request.run(getEmptyResultCallback());
     }
 

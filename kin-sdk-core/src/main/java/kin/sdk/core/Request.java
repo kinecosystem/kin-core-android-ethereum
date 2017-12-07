@@ -76,12 +76,15 @@ public class Request<T> {
     /**
      * Cancel {@code Request} and detach its callback,
      * an attempt will be made to cancel ongoing request, if request has not run yet it will never run.
+     *
+     * @param mayInterruptIfRunning true if the request should be interrupted; otherwise,
+     * in-progress requests are allowed to complete
      */
-    synchronized public void cancel() {
+    synchronized public void cancel(boolean mayInterruptIfRunning) {
         if (!cancelled) {
             cancelled = true;
             if (future != null) {
-                future.cancel(true);
+                future.cancel(mayInterruptIfRunning);
             }
             future = null;
             mainHandler.removeCallbacksAndMessages(null);

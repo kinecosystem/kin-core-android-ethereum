@@ -23,11 +23,12 @@ public interface KinAccount {
     String exportKeyStore(String passphrase, String newPassphrase) throws PassphraseException, OperationFailedException;
 
     /**
-     * Create, sign and send a transaction of the given amount in kin to the specified public address
-     * Ethereum gas will be handled internally.
+     * Create {@link Request} for signing and sending a transaction of the given amount in kin to the specified public
+     * address Ethereum gas will be handled internally.
      *
      * @param publicAddress the account address to send the specified kin amount
      * @param amount the amount of kin to transfer
+     * @return {@code Request<TransactionId>}, TransactionId - the transaction identifier
      */
     Request<TransactionId> sendTransaction(String publicAddress, String passphrase, BigDecimal amount);
 
@@ -45,7 +46,9 @@ public interface KinAccount {
         throws InsufficientBalanceException, OperationFailedException, PassphraseException;
 
     /**
-     * Get the current confirmed balance in kin
+     * Create {@link Request} for getting the current confirmed balance in kin
+     *
+     * @return {@code Request<Balance>} Balance - the balance in kin
      */
     Request<Balance> getBalance();
 
@@ -59,9 +62,9 @@ public interface KinAccount {
     Balance getBalanceSync() throws OperationFailedException;
 
     /**
-     * Get the pending balance in kin
+     * Create {@link Request} for getting the pending balance in kin
      *
-     * @return BigDecimal the balance in kin
+     * @return {@code Request<Balance>} Balance - the pending balance in kin
      */
     Request<Balance> getPendingBalance();
 
