@@ -175,12 +175,13 @@ balanceRequest.run(new ResultCallback<Balance>() {
 
 ### Sync vs Async
 
-Asynchronous requests supported by `Request` object, that run on serial background thread, 
-and notify success/failure using `ResultCallback` on android main thread.
-Additionaly, `cancel(boolean)` method has been provided for safely cancel and detach callbacks fron ongoing requests.
+Asynchronous requests are supported by our `Request` object. The `request.run()` method will perform the request on a serial 
+background thread and notify success/failure using `ResultCallback` on the android main thread. 
+In addition, `cancel(boolean)` method can be used to safely cancel requests and detach callbacks.
 
-Synchronous version has also been provided, make sure you call them in a background thread 
-in any way that you are accustomed.
+
+A synchronous version of these methods is also provided. Make sure you call them in a background thread.
+
 ```java
 try {
     account.getBalanceSync();
