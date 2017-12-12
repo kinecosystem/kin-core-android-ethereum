@@ -2,7 +2,6 @@ package kin.sdk.core.sample;
 
 import android.content.Context;
 import android.view.View;
-import java.lang.ref.WeakReference;
 import kin.sdk.core.ResultCallback;
 import kin.sdk.core.sample.kin.sdk.core.sample.dialog.KinAlertDialog;
 
@@ -12,49 +11,32 @@ import kin.sdk.core.sample.kin.sdk.core.sample.dialog.KinAlertDialog;
  */
 public abstract class DisplayCallback<T> implements ResultCallback<T> {
 
-    private WeakReference<View> progressBarReference;
-    private WeakReference<View> displayViewReference;
+    private View progressBar;
+    private View displayView;
 
     public DisplayCallback(View progressBar, View displayView) {
-        progressBarReference = new WeakReference<>(progressBar);
-        displayViewReference = new WeakReference<>(displayView);
+        this.progressBar = progressBar;
+        this.displayView = displayView;
     }
 
     public DisplayCallback(View progressBar) {
-        progressBarReference = new WeakReference<>(progressBar);
+        this.progressBar = progressBar;
     }
 
     /**
-     * Method will only be called if the callback hasn't been canceled
      * displayView will be null if DisplayCallback was constructed using the single parameter constructor.
      */
     abstract public void displayResult(Context context, View displayView, T result);
 
     @Override
     public void onResult(T result) {
-        View progressBar = progressBarReference.get();
-        View displayView = displayViewReference != null ? displayViewReference.get() : null;
-        if (progressBar != null) {
-            progressBar.setVisibility(View.GONE);
-            displayResult(progressBar.getContext(), displayView, result);
-        }
+        progressBar.setVisibility(View.GONE);
+        displayResult(progressBar.getContext(), displayView, result);
     }
 
     @Override
     public void onError(Exception e) {
-        View progressBar = progressBarReference.get();
-        if (progressBar != null) {
-            progressBar.setVisibility(View.GONE);
-            KinAlertDialog.createErrorDialog(progressBar.getContext(), e.getMessage()).show();
-        }
-    }
-
-    public void onDetach() {
-        if (progressBarReference != null) {
-            progressBarReference.clear();
-        }
-        if (displayViewReference != null) {
-            displayViewReference.clear();
-        }
+        progressBar.setVisibility(View.GONE);
+        KinAlertDialog.createErrorDialog(progressBar.getContext(), e.getMessage()).show();
     }
 }

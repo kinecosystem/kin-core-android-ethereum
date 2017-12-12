@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 import java.math.BigDecimal;
 import kin.sdk.core.KinAccount;
+import kin.sdk.core.Request;
 import kin.sdk.core.TransactionId;
 import kin.sdk.core.exception.AccountDeletedException;
 import kin.sdk.core.exception.OperationFailedException;
@@ -28,7 +29,7 @@ public class TransactionActivity extends BaseActivity {
 
     private View sendTransaction, progressBar;
     private EditText toAddressInput, amountInput;
-    private DisplayCallback<TransactionId> transactionCallback;
+    private Request<TransactionId> transactionRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,16 +127,17 @@ public class TransactionActivity extends BaseActivity {
 
     private void sendTransaction(String toAddress, BigDecimal amount) throws OperationFailedException {
         progressBar.setVisibility(View.VISIBLE);
-        transactionCallback = new DisplayCallback<TransactionId>(progressBar) {
-            @Override
-            public void displayResult(Context context, View view, TransactionId transactionId) {
-                KinAlertDialog.createErrorDialog(context, "Transaction id " + transactionId.id()).show();
-            }
-        };
         KinAccount account = getKinClient().getAccount();
-        if(account != null) {
-            account.sendTransaction(toAddress, getPassphrase(), amount, transactionCallback);
-        }else{
+        if (account != null) {
+            transactionRequest = account
+                .sendTransaction(toAddress, getPassphrase(), amount);
+            transactionRequest.run(new DisplayCallback<TransactionId>(progressBar) {
+                @Override
+                public void displayResult(Context context, View view, TransactionId transactionId) {
+                    KinAlertDialog.createErrorDialog(context, "Transaction id " + transactionId.id()).show();
+                }
+            });
+        } else {
             progressBar.setVisibility(View.GONE);
             throw new AccountDeletedException();
         }
@@ -144,8 +146,8 @@ public class TransactionActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (transactionCallback != null) {
-            transactionCallback.onDetach();
+        if (transactionRequest != null) {
+            transactionRequest.cancel(false);
         }
         progressBar = null;
     }

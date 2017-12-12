@@ -24,15 +24,16 @@ public class WalletActivity extends BaseActivity {
 
     public static final String TAG = WalletActivity.class.getSimpleName();
     public static final String URL_GET_KIN = "http://kin-faucet.rounds.video/send?public_address=";
-    private View getKinBtn;
 
     public static Intent getIntent(Context context) {
         return new Intent(context, WalletActivity.class);
     }
 
     private TextView balance, pendingBalance, publicKey;
+    private View getKinBtn;
     private View balanceProgress, pendingBalanceProgress;
-    private DisplayCallback<Balance> balanceCallback, pendingBalanceCallback;
+    private kin.sdk.core.Request<Balance> pendingBalanceRequest;
+    private kin.sdk.core.Request<Balance> balanceRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,14 +85,12 @@ public class WalletActivity extends BaseActivity {
             updatePendingBalance();
         });
 
-        exportKeyStore.setOnClickListener(view -> {
-            startActivity(ExportKeystoreActivity.getIntent(this));
-        });
+        exportKeyStore.setOnClickListener(view -> startActivity(ExportKeystoreActivity.getIntent(this)));
     }
 
     private void showDeleteAlert() {
         KinAlertDialog.createConfirmationDialog(this, getResources().getString(R.string.delete_wallet_warning),
-            getResources().getString(R.string.delete), () -> deleteAccount()).show();
+            getResources().getString(R.string.delete), this::deleteAccount).show();
     }
 
     private void deleteAccount() {
@@ -133,32 +132,32 @@ public class WalletActivity extends BaseActivity {
     }
 
     private void updateBalance() {
+        balanceProgress.setVisibility(View.VISIBLE);
         KinAccount account = getKinClient().getAccount();
         if (account != null) {
-            balanceProgress.setVisibility(View.VISIBLE);
-            balanceCallback = new DisplayCallback<Balance>(balanceProgress, balance) {
+            balanceRequest = account.getBalance();
+            balanceRequest.run(new DisplayCallback<Balance>(balanceProgress, balance) {
                 @Override
                 public void displayResult(Context context, View view, Balance result) {
                     ((TextView) view).setText(result.value(0));
                 }
-            };
-            account.getBalance(balanceCallback);
+            });
         } else {
             balance.setText("");
         }
     }
 
     private void updatePendingBalance() {
+        pendingBalanceProgress.setVisibility(View.VISIBLE);
         KinAccount account = getKinClient().getAccount();
         if (account != null) {
-            pendingBalanceProgress.setVisibility(View.VISIBLE);
-            pendingBalanceCallback = new DisplayCallback<Balance>(pendingBalanceProgress, pendingBalance) {
+            pendingBalanceRequest = getKinClient().getAccount().getPendingBalance();
+            pendingBalanceRequest.run(new DisplayCallback<Balance>(pendingBalanceProgress, pendingBalance) {
                 @Override
                 public void displayResult(Context context, View view, Balance result) {
                     ((TextView) view).setText(result.value(0));
                 }
-            };
-            account.getPendingBalance(pendingBalanceCallback);
+            });
         } else {
             pendingBalance.setText("");
         }
@@ -177,11 +176,11 @@ public class WalletActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (pendingBalanceCallback != null) {
-            pendingBalanceCallback.onDetach();
+        if (pendingBalanceRequest != null) {
+            pendingBalanceRequest.cancel(true);
         }
-        if (balanceCallback != null) {
-            balanceCallback.onDetach();
+        if (balanceRequest != null) {
+            balanceRequest.cancel(true);
         }
         pendingBalance = null;
         balance = null;

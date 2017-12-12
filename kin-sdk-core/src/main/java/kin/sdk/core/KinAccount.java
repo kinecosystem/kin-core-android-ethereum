@@ -23,17 +23,14 @@ public interface KinAccount {
     String exportKeyStore(String passphrase, String newPassphrase) throws PassphraseException, OperationFailedException;
 
     /**
-     * Create, sign and send a transaction of the given amount in kin to the specified public address
-     * Ethereum gas will be handled internally.
-     * The method will run on a background thread and callback calls will be done
-     * on the main thread
+     * Create {@link Request} for signing and sending a transaction of the given amount in kin to the specified public
+     * address Ethereum gas will be handled internally.
      *
      * @param publicAddress the account address to send the specified kin amount
      * @param amount the amount of kin to transfer
-     * @param callback to be called when method has completed
+     * @return {@code Request<TransactionId>}, TransactionId - the transaction identifier
      */
-    void sendTransaction(String publicAddress, String passphrase, BigDecimal amount,
-        ResultCallback<TransactionId> callback);
+    Request<TransactionId> sendTransaction(String publicAddress, String passphrase, BigDecimal amount);
 
     /**
      * Create, sign and send a transaction of the given amount in kin to the specified public address
@@ -49,13 +46,11 @@ public interface KinAccount {
         throws InsufficientBalanceException, OperationFailedException, PassphraseException;
 
     /**
-     * Get the current confirmed balance in kin
-     * The method will run on a background thread and callback calls will be done
-     * on the main thread
+     * Create {@link Request} for getting the current confirmed balance in kin
      *
-     * @param callback to be called when method has completed
+     * @return {@code Request<Balance>} Balance - the balance in kin
      */
-    void getBalance(ResultCallback<Balance> callback);
+    Request<Balance> getBalance();
 
     /**
      * Get the current confirmed balance in kin
@@ -67,14 +62,11 @@ public interface KinAccount {
     Balance getBalanceSync() throws OperationFailedException;
 
     /**
-     * Get the pending balance in kin
-     * The method will run on a background thread and callback calls will be done
-     * on the main thread
+     * Create {@link Request} for getting the pending balance in kin
      *
-     * @param callback to be called when method has completed
-     * @return BigDecimal the balance in kin
+     * @return {@code Request<Balance>} Balance - the pending balance in kin
      */
-    void getPendingBalance(ResultCallback<Balance> callback);
+    Request<Balance> getPendingBalance();
 
     /**
      * Get the pending balance in kin
