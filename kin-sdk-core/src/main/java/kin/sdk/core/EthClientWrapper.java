@@ -143,7 +143,7 @@ final class EthClientWrapper {
      * @param publicAddress the address to send the KIN to
      * @param amount the amount of KIN to send
      * @return {@link TransactionId} of the transaction
-     * @throws InsufficientBalanceException if the account has not enough KIN
+     * @throws InsufficientBalanceException this is never thrown - will remove completely on next version
      * @throws PassphraseException if the transaction could not be signed with the passphrase specified
      * @throws OperationFailedException another error occurred
      */
@@ -166,11 +166,7 @@ final class EthClientWrapper {
 
         // Make sure the amount is positive and the sender account has enough KIN to send.
         if (amount.signum() != -1) {
-            if (hasEnoughBalance(from, amount)) {
-                amountBigInt = KinConverter.fromKin(amount);
-            } else {
-                throw new InsufficientBalanceException();
-            }
+            amountBigInt = KinConverter.fromKin(amount);
         } else {
             throw new OperationFailedException("Amount can't be negative");
         }

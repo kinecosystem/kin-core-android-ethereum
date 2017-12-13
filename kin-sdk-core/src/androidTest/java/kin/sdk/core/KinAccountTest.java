@@ -10,7 +10,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import kin.sdk.core.Config.EcdsaAccount;
-import kin.sdk.core.exception.InsufficientBalanceException;
 import kin.sdk.core.exception.OperationFailedException;
 import kin.sdk.core.exception.PassphraseException;
 import org.hamcrest.CoreMatchers;
@@ -91,15 +90,6 @@ public class KinAccountTest extends BaseTest {
             kinAccount.exportKeyStore("wrongPassphrase", "newPassphrase");
         } catch (PassphraseException e) {
             assertEquals("Wrong passphrase - could not decrypt key with given passphrase", e.getMessage());
-        }
-    }
-
-    @Test
-    public void sendTransactionSync_insufficientBalance() {
-        try {
-            kinAccount.sendTransactionSync(TO_ADDRESS, PASSPHRASE, new BigDecimal(1));
-        } catch (Exception e) {
-            assertTrue(e instanceof InsufficientBalanceException);
         }
     }
 
