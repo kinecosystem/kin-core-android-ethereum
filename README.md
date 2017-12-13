@@ -23,7 +23,7 @@ repositories {
 ...
 dependencies {
     ...
-    compile "kinfoundation.ethereum:geth:1.0.0@aar"
+    compile "kinfoundation.ethereum:geth:1.0.2@aar"
     compile "com.github.kinfoundation:kin-sdk-core-android:LATEST-COMMIT-ON-DEV-BRANCH"
 }
 ```
@@ -104,17 +104,18 @@ You can export the account keystore file as JSON using the `exportKeyStore` meth
 ### Retrieving Balance
 To retrieve the balance of your account in KIN call the `getBalance` method: 
 ```java
-account.getBalance(new ResultCallback<Balance>() {
-    
+Request<Balance> balanceRequest = account.getBalance();
+balanceRequest.run(new ResultCallback<Balance>() {
+
     @Override
     public void onResult(Balance result) {
         Log.d("example", "The balance is: " + result.value(2));
     }
 
     @Override
-    public void onError(Exception e) {
-        e.printStackTrace();
-    }
+        public void onError(Exception e) {
+            e.printStackTrace();
+        }
 });
 ```
 
@@ -128,17 +129,19 @@ String toAddress = "#AB12349ACF123";
 String passphrase = "yourPassphrase";
 BigDecimal amountInKin = new BigDecimal("20");
 
-account.sendTransaction(toAddress, passphrase, amountInKin, new ResultCallback<TransactionId>() {
-    
-    @Override
-    public void onResult(TransactionId result) {
-        Log.d("example","The transaction id: " + result.toString());
-    }
+
+transactionRequest = account.sendTransaction(toAddress, getPassphrase(), amount);
+transactionRequest.run(new ResultCallback<TransactionId>() {
 
     @Override
-    public void onError(Exception e) {
-        e.printStackTrace();
-    }
+        public void onResult(TransactionId result) {
+            Log.d("example", "The transaction id: " + result.toString());
+        }
+
+        @Override
+        public void onError(Exception e) {
+            e.printStackTrace();
+        }
 });
 ```
 
@@ -155,29 +158,30 @@ gets to be confirmed `getBalance` will return 40KIN and `getPendingBalance` will
 Similarly if you have 30KIN and someone else transfer 2KIN to you, until the transaction gets to be confirmed
 `getBalance` will return 30KIN and `getPendingBalance` will return 32KIN.
 ```java
-account.getPendingBalance(new ResultCallback<Balance>() {
-    
-    @Override
-    public void onResult(Balance result) {
-        Log.d("example", "The balance is: " + result.toString());
-    }
+Request<Balance> balanceRequest = account.getPendingBalance();
+balanceRequest.run(new ResultCallback<Balance>() {
 
     @Override
-    public void onError(Exception e) {
-        e.printStackTrace();
-    }
+        public void onResult(Balance result) {
+            Log.d("example", "The balance is: " + result.toString());
+        }
+
+        @Override
+        public void onError(Exception e) {
+            e.printStackTrace();
+        }
 });
 ```
 
 ### Sync vs Async
-As you have seen above we have provided a very simple solution for accessing the ethereum network on a background thread.
-In this solution `getBalance`, `getPendingBalance` and `sendTransaction` methods, run on a background thread 
-and accesses the Ethereum network. The `onResult` and `onError` callback methods are executed on the android UI thread.
-This solution suffers from inability to cancel the tasks and you need to use it very carefully to avoid leaking Activity context.
-An example of how this can be used without leaking context can be found in our [Sample App](sample/).
 
-We will be providing with a better solution shortly. In the meantime you are welcome to use the synchronous version of `getBalance`, 
-`sendTransaction` and `getPendingBalance` methods making sure you call them in a background thread in any way that you are accustomed.
+Asynchronous requests are supported by our `Request` object. The `request.run()` method will perform the request on a serial 
+background thread and notify success/failure using `ResultCallback` on the android main thread. 
+In addition, `cancel(boolean)` method can be used to safely cancel requests and detach callbacks.
+
+
+A synchronous version of these methods is also provided. Make sure you call them in a background thread.
+
 ```java
 try {
     account.getBalanceSync();
@@ -215,7 +219,8 @@ For a more detailed example on how to use the library please take a look at our 
 
 We use [ethereumjs/testrpc](https://github.com/trufflesuite/ganache-cli) and [Truffle framework](http://truffleframework.com/) unit tests.
 
-For the SDK tests target, pre-actions and post-actions scripts in the KinTestHost scheme will setup truffle and testrpc running for the duration of the test.
+When running the SDK test target, pre-action and post-action tasks in build.gradle (Module: kin-sdk-core) 
+will setup truffle and testrpc to run for the duration of the test.
 
 ### Requirements
 

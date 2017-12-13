@@ -24,11 +24,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
 
-    implementation ('kinfoundation.ethereum:geth:1.0.1@aar')
+    implementation ('kinfoundation.ethereum:geth:1.0.2@aar')
 
     implementation supportDependencies.appCompat
 

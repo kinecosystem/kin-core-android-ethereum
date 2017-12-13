@@ -1,48 +1,34 @@
 package kin.sdk.core;
 
 import java.math.BigDecimal;
-import java.util.concurrent.Callable;
-
-import kin.sdk.core.concurrent.Concurrency;
 
 abstract class AbstractKinAccount implements KinAccount {
 
-    private final Concurrency concurrency = Concurrency.getInstance();
-
     @Override
-    public void sendTransaction(final String publicAddress, final String passphrase, final BigDecimal amount,
-        final ResultCallback<TransactionId> callback) {
-        concurrency.execute(new Callable<TransactionId>() {
-            @Override
-            public TransactionId call() throws Exception {
-                return sendTransactionSync(publicAddress, passphrase, amount);
-            }
-        }, callback);
+    public Request<TransactionId> sendTransaction(final String publicAddress, final String passphrase,
+        final BigDecimal amount) {
+        return new Request<>(() -> sendTransactionSync(publicAddress, passphrase, amount));
     }
 
     @Override
-    public void getBalance(final ResultCallback<Balance> callback) {
-        concurrency.execute(new Callable<Balance>() {
-            @Override
-            public Balance call() throws Exception {
-                return getBalanceSync();
-            }
-        }, callback);
+    public Request<Balance> getBalance() {
+        return new Request<>(this::getBalanceSync);
     }
 
     @Override
-    public void getPendingBalance(final ResultCallback<Balance> callback) {
-        concurrency.execute(new Callable<Balance>() {
-            @Override
-            public Balance call() throws Exception {
-                return getPendingBalanceSync();
-            }
-        }, callback);
+    public Request<Balance> getPendingBalance() {
+        return new Request<>(this::getPendingBalanceSync);
     }
 
     @Override
     public boolean equals(Object obj) {
-        KinAccount account = (KinAccount)obj;
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        KinAccount account = (KinAccount) obj;
         return getPublicAddress().equals(account.getPublicAddress());
     }
 }
