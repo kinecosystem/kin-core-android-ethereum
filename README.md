@@ -200,10 +200,6 @@ catch (OperationFailedException e){
 try {
     account.sendTransactionSync(toAddress, passphrase, amountInKin);
 }
-catch (InsufficientBalanceException e){
-    // you don't have enough kin in your account
-    // this could also occur if you don't have enough ether for gas
-} 
 catch (PassphraseException e){
     // there passphrase used was wrong
 }

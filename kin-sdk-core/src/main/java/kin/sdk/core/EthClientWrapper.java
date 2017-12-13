@@ -4,7 +4,6 @@ import java.io.File;
 import java.math.BigDecimal;
 import kin.sdk.core.exception.DeleteAccountException;
 import kin.sdk.core.exception.EthereumClientException;
-import kin.sdk.core.exception.InsufficientBalanceException;
 import kin.sdk.core.exception.OperationFailedException;
 import kin.sdk.core.exception.PassphraseException;
 import kin.sdk.core.util.HexUtils;
@@ -143,12 +142,11 @@ final class EthClientWrapper {
      * @param publicAddress the address to send the KIN to
      * @param amount the amount of KIN to send
      * @return {@link TransactionId} of the transaction
-     * @throws InsufficientBalanceException this is never thrown - will remove completely on next version
      * @throws PassphraseException if the transaction could not be signed with the passphrase specified
      * @throws OperationFailedException another error occurred
      */
     TransactionId sendTransaction(Account from, String passphrase, String publicAddress, BigDecimal amount)
-        throws InsufficientBalanceException, OperationFailedException, PassphraseException {
+        throws OperationFailedException, PassphraseException {
         Transaction transaction;
         Address toAddress;
         BigInt amountBigInt;
@@ -164,7 +162,7 @@ final class EthClientWrapper {
             throw new OperationFailedException(e);
         }
 
-        // Make sure the amount is positive and the sender account has enough KIN to send.
+        // Make sure the amount is positive
         if (amount.signum() != -1) {
             amountBigInt = KinConverter.fromKin(amount);
         } else {

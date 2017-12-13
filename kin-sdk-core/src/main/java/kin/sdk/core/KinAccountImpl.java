@@ -3,7 +3,6 @@ package kin.sdk.core;
 import java.math.BigDecimal;
 import kin.sdk.core.exception.AccountDeletedException;
 import kin.sdk.core.exception.DeleteAccountException;
-import kin.sdk.core.exception.InsufficientBalanceException;
 import kin.sdk.core.exception.OperationFailedException;
 import kin.sdk.core.exception.PassphraseException;
 import org.ethereum.geth.Account;
@@ -68,7 +67,7 @@ final class KinAccountImpl extends AbstractKinAccount {
 
     @Override
     public TransactionId sendTransactionSync(String publicAddress, String passphrase, BigDecimal amount)
-        throws InsufficientBalanceException, OperationFailedException, PassphraseException {
+        throws OperationFailedException, PassphraseException {
         checkValidAccount();
         return ethClient.sendTransaction(account, passphrase, publicAddress, amount);
     }
