@@ -12,7 +12,6 @@ import java.util.List;
 import kin.sdk.core.Config.EcdsaAccount;
 import kin.sdk.core.exception.AccountDeletedException;
 import kin.sdk.core.exception.DeleteAccountException;
-import kin.sdk.core.exception.InsufficientBalanceException;
 import kin.sdk.core.exception.OperationFailedException;
 import kin.sdk.core.exception.PassphraseException;
 import org.hamcrest.CoreMatchers;
@@ -105,18 +104,13 @@ public class KinAccountTest extends BaseTest {
         kinAccount.sendTransactionSync(TO_ADDRESS, PASSPHRASE, new BigDecimal(1));
     }
 
-    @Test
     public void getPublicKey_deletedAccount()
-        throws PassphraseException, OperationFailedException, DeleteAccountException, InsufficientBalanceException {
+        throws PassphraseException, OperationFailedException, DeleteAccountException {
         kinClient.deleteAccount(PASSPHRASE);
         String publicAddress = kinAccount.getPublicAddress();
         assertEquals("", publicAddress);
     }
 
-    @Test(expected = InsufficientBalanceException.class)
-    public void sendTransactionSync_insufficientBalance() throws Exception {
-        kinAccount.sendTransactionSync(TO_ADDRESS, PASSPHRASE, new BigDecimal(1));
-    }
 
     @Test
     public void sendTransactionSync_negativeAmount() throws Exception {
