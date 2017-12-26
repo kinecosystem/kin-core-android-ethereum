@@ -1,7 +1,6 @@
 package kin.sdk.core;
 
 import java.math.BigDecimal;
-import kin.sdk.core.exception.InsufficientBalanceException;
 import kin.sdk.core.exception.OperationFailedException;
 import kin.sdk.core.exception.PassphraseException;
 
@@ -43,7 +42,7 @@ public interface KinAccount {
      * @return TransactionId the transaction identifier
      */
     TransactionId sendTransactionSync(String publicAddress, String passphrase, BigDecimal amount)
-        throws InsufficientBalanceException, OperationFailedException, PassphraseException;
+        throws OperationFailedException, PassphraseException;
 
     /**
      * Create {@link Request} for getting the current confirmed balance in kin
