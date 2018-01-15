@@ -3,7 +3,6 @@ package kin.sdk.core;
 import java.math.BigDecimal;
 import kin.sdk.core.exception.AccountDeletedException;
 import kin.sdk.core.exception.DeleteAccountException;
-import kin.sdk.core.exception.InsufficientBalanceException;
 import kin.sdk.core.exception.OperationFailedException;
 import kin.sdk.core.exception.PassphraseException;
 import org.stellar.sdk.KeyPair;
@@ -11,9 +10,9 @@ import org.stellar.sdk.KeyPair;
 
 final class KinAccountImpl extends AbstractKinAccount {
 
-    private ClientWrapper ethClient;
-    private KeyPair account;
-    private boolean isDeleted;
+    private final ClientWrapper clientWrapper;
+    private final EncryptedAccount account;
+    private boolean isDeleted = false;
 
     /**
      * Creates a new {@link KeyPair}.
@@ -24,13 +23,8 @@ final class KinAccountImpl extends AbstractKinAccount {
      * key).
      */
     KinAccountImpl(ClientWrapper clientWrapper, String passphrase) throws Exception {
-        this.account = KeyPair.random();
-        this.ethClient = clientWrapper;
-        this.ethClient.saveSeed(KinConsts.ACCOUNT_SEED, account.getSecretSeed());
-        if(this.ethClient.getServiceProvider().isMainNet()) {
-            this.ethClient.createAccountAndGetXLM(account);
-        }
-        isDeleted = false;
+        this.clientWrapper = clientWrapper;
+        this.account = clientWrapper.getKeyStore().newAccount(passphrase);
     }
 
     /**
@@ -39,10 +33,9 @@ final class KinAccountImpl extends AbstractKinAccount {
      * @param clientWrapper that will be use to call to Kin smart-contract.
      * @param account the existing Account.
      */
-    KinAccountImpl(ClientWrapper clientWrapper, KeyPair account) {
+    KinAccountImpl(ClientWrapper clientWrapper, EncryptedAccount account) {
         this.account = account;
-        this.ethClient = clientWrapper;
-        isDeleted = false;
+        this.clientWrapper = clientWrapper;
     }
 
     @Override
@@ -57,31 +50,31 @@ final class KinAccountImpl extends AbstractKinAccount {
     public String exportKeyStore(String passphrase, String newPassphrase)
         throws PassphraseException, OperationFailedException {
         checkValidAccount();
-        return new String(account.getSecretSeed());
+        KeyStore keyStore = clientWrapper.getKeyStore();
+        return keyStore.exportAccount(account, passphrase);
     }
 
     @Override
     public TransactionId sendTransactionSync(String publicAddress, String passphrase, BigDecimal amount)
-        throws InsufficientBalanceException, OperationFailedException, PassphraseException {
+        throws OperationFailedException, PassphraseException {
         checkValidAccount();
-        return ethClient.sendTransaction(account, publicAddress, amount);
+        return clientWrapper.sendTransaction(account, publicAddress, amount);
     }
 
     @Override
     public Balance getBalanceSync() throws OperationFailedException {
         checkValidAccount();
-        return ethClient.getBalance(account);
+        return clientWrapper.getBalance(account);
     }
 
     @Override
     public Balance getPendingBalanceSync() throws OperationFailedException {
         checkValidAccount();
-        //TODO remove or change !?@
-        return ethClient.getBalance(account);
+        return clientWrapper.getBalance(account);
     }
 
     void delete(String passphrase) throws DeleteAccountException {
-        ethClient.deleteAccount(account, passphrase);
+        clientWrapper.getKeyStore().deleteAccount(account, passphrase);
         markAsDeleted();
     }
 
@@ -93,5 +86,9 @@ final class KinAccountImpl extends AbstractKinAccount {
         if (isDeleted) {
             throw new AccountDeletedException();
         }
+    }
+
+    EncryptedAccount encryptedAccount() {
+        return account;
     }
 }
